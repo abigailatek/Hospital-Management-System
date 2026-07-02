@@ -16,34 +16,32 @@ public class AdminDashboardScreen extends JPanel {
         wrapper.setBackground(Theme.BACKGROUND);
         wrapper.setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        JLabel heading = new JLabel("ADMIN DASHBOARD");
+        JLabel heading = new JLabel("Dashboard Overview");
         heading.setFont(new Font("Segoe UI", Font.BOLD, 24));
         heading.setForeground(Theme.PRIMARY_GREEN);
 
         wrapper.add(heading, BorderLayout.NORTH);
 
-        JPanel tiles = new JPanel(new GridLayout(3, 3, 20, 20));
+        JPanel tiles = new JPanel(new GridLayout(3, 3, 22, 22));
         tiles.setBackground(Theme.BACKGROUND);
 
         tiles.add(tile("assets/icons/dashboard.png", "Dashboard", "22"));
         tiles.add(tile("assets/icons/doctor.png", "Doctors", "7"));
         tiles.add(tile("assets/icons/appointment.png", "Appointments", "3"));
-
         tiles.add(tile("assets/icons/patient.png", "Patients", "5"));
         tiles.add(tile("assets/icons/diagnosis.png", "Diagnosis", "3"));
         tiles.add(tile("assets/icons/prescription.png", "Prescription", "6"));
-
-        tiles.add(tile("assets/icons/billing.png", "Medical Store", "6"));
+        tiles.add(tile("assets/icons/medical_store.png", "Medical Store", "6"));
         tiles.add(tile("assets/icons/billing.png", "Accounts", "0"));
         tiles.add(tile("assets/icons/report.png", "Reports", "2"));
 
         wrapper.add(tiles, BorderLayout.CENTER);
 
-        JPanel right = new JPanel(new GridLayout(2, 1, 15, 15));
-        right.setPreferredSize(new Dimension(300, 0));
-        right.setBackground(Theme.BACKGROUND);
+        JPanel rightPanel = new JPanel(new GridLayout(2, 1, 15, 15));
+        rightPanel.setPreferredSize(new Dimension(310, 0));
+        rightPanel.setBackground(Theme.BACKGROUND);
 
-        right.add(sidePanel("Quick Links", new String[]{
+        rightPanel.add(sidePanel("Quick Links", new String[]{
                 "New Appointment",
                 "New Patient",
                 "Add Prescription",
@@ -51,7 +49,7 @@ public class AdminDashboardScreen extends JPanel {
                 "Billing"
         }));
 
-        right.add(sidePanel("Notes", new String[]{
+        rightPanel.add(sidePanel("Notes", new String[]{
                 "Support Center",
                 "How to use it",
                 "Help Line",
@@ -59,40 +57,48 @@ public class AdminDashboardScreen extends JPanel {
         }));
 
         add(wrapper, BorderLayout.CENTER);
-        add(right, BorderLayout.EAST);
+        add(rightPanel, BorderLayout.EAST);
     }
 
     private JPanel tile(String iconPath, String title, String count) {
-        JPanel card = new JPanel(new BorderLayout());
+        JPanel card = new JPanel(new BorderLayout(5, 5));
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(220, 220, 220)),
-                new EmptyBorder(20, 20, 20, 20)
+                BorderFactory.createLineBorder(new Color(215, 215, 215)),
+                new EmptyBorder(18, 18, 14, 18)
         ));
 
-        JLabel iconLabel = new JLabel("", SwingConstants.CENTER);
+        JLabel countLabel = new JLabel(count, SwingConstants.RIGHT);
+        countLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        countLabel.setForeground(Color.WHITE);
+        countLabel.setOpaque(true);
+        countLabel.setBackground(Theme.PRIMARY_GREEN);
+        countLabel.setBorder(new EmptyBorder(3, 8, 3, 8));
+
+        JLabel iconLabel = new JLabel();
+        iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         ImageIcon icon = new ImageIcon(iconPath);
-        Image img = icon.getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH);
-        iconLabel.setIcon(new ImageIcon(img));
+        if (icon.getIconWidth() > 0) {
+            Image img = icon.getImage().getScaledInstance(72, 72, Image.SCALE_SMOOTH);
+            iconLabel.setIcon(new ImageIcon(img));
+        } else {
+            iconLabel.setText("□");
+            iconLabel.setFont(new Font("Segoe UI", Font.BOLD, 40));
+            iconLabel.setForeground(Theme.PRIMARY_GREEN);
+        }
 
         JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        titleLabel.setForeground(new Color(70, 70, 70));
+        titleLabel.setForeground(new Color(65, 65, 65));
 
-        JLabel countLabel = new JLabel(count, SwingConstants.CENTER);
-        countLabel.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        countLabel.setOpaque(true);
-        countLabel.setBackground(new Color(235, 235, 235));
-        countLabel.setPreferredSize(new Dimension(35, 25));
+        JPanel top = new JPanel(new BorderLayout());
+        top.setBackground(Color.WHITE);
+        top.add(countLabel, BorderLayout.EAST);
 
-        JPanel bottom = new JPanel(new BorderLayout());
-        bottom.setBackground(Color.WHITE);
-        bottom.add(titleLabel, BorderLayout.CENTER);
-        bottom.add(countLabel, BorderLayout.EAST);
-
+        card.add(top, BorderLayout.NORTH);
         card.add(iconLabel, BorderLayout.CENTER);
-        card.add(bottom, BorderLayout.SOUTH);
+        card.add(titleLabel, BorderLayout.SOUTH);
 
         return card;
     }
@@ -102,8 +108,8 @@ public class AdminDashboardScreen extends JPanel {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(Color.WHITE);
         panel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(220, 220, 220)),
-                new EmptyBorder(15, 18, 15, 18)
+                BorderFactory.createLineBorder(new Color(215, 215, 215)),
+                new EmptyBorder(18, 18, 18, 18)
         ));
 
         JLabel header = new JLabel(title);
@@ -112,13 +118,13 @@ public class AdminDashboardScreen extends JPanel {
         header.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         panel.add(header);
-        panel.add(Box.createVerticalStrut(15));
+        panel.add(Box.createVerticalStrut(18));
 
         for (String item : items) {
-            JLabel label = new JLabel("• " + item);
-            label.setFont(Theme.NORMAL);
+            JLabel label = new JLabel("•  " + item);
+            label.setFont(new Font("Segoe UI", Font.PLAIN, 15));
             label.setForeground(Theme.TEXT);
-            label.setBorder(new EmptyBorder(8, 0, 8, 0));
+            label.setBorder(new EmptyBorder(9, 0, 9, 0));
             label.setAlignmentX(Component.LEFT_ALIGNMENT);
             panel.add(label);
         }
