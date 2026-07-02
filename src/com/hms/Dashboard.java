@@ -27,7 +27,7 @@ public class Dashboard extends JFrame {
         title.setFont(new Font("Segoe UI", Font.BOLD, 22));
         title.setForeground(Color.WHITE);
 
-        JLabel user = new JLabel("Admin   |   Logout   ");
+        JLabel user = new JLabel("👤 Admin   |   🚪 Logout   ");
         user.setFont(Theme.NORMAL);
         user.setForeground(Color.WHITE);
 
@@ -39,18 +39,18 @@ public class Dashboard extends JFrame {
         sidebar.setBackground(Color.WHITE);
         sidebar.setBorder(BorderFactory.createEmptyBorder(15, 10, 15, 10));
 
-        JButton dashboardBtn = menuButton("🏠  Dashboard");
+        JButton dashboardBtn = menuButton("🏥 Dashboard");
         JButton patientsBtn = menuButton("👤  Patients");
         JButton doctorsBtn = menuButton("🩺  Doctors");
         JButton appointmentsBtn = menuButton("📅  Appointments");
-        JButton diagnosisBtn = menuButton("🧾  Diagnosis");
+        JButton diagnosisBtn = menuButton("📝  Diagnosis");
         JButton prescriptionBtn = menuButton("💊  Prescription");
         JButton billingBtn = menuButton("💰  Billing");
         JButton medicalStoreBtn = menuButton("🏥  Medical Store");
         JButton reportsBtn = menuButton("📊  Reports");
         JButton hrmBtn = menuButton("👥  HRM");
-        JButton adminBtn = menuButton("⚙  Administration");
-        JButton settingsBtn = menuButton("⚙  Settings");
+        JButton adminBtn = menuButton("🛠️  Administration");
+        JButton settingsBtn = menuButton("⚙️  Settings");
 
         sidebar.add(dashboardBtn);
         sidebar.add(patientsBtn);
@@ -159,7 +159,7 @@ public class Dashboard extends JFrame {
 
     private JButton menuButton(String text) {
         JButton btn = new JButton(text);
-        btn.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        btn.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 15));
         btn.setHorizontalAlignment(SwingConstants.LEFT);
         btn.setFocusPainted(false);
         btn.setBackground(Color.WHITE);

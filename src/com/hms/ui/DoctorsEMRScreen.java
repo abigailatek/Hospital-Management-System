@@ -20,61 +20,70 @@ public class DoctorsEMRScreen extends JPanel {
         JTabbedPane tabs = new JTabbedPane();
         tabs.setFont(Theme.NORMAL);
 
-        tabs.addTab("Patient Info", createPatientInfoPanel());
-        tabs.addTab("History", createHistoryPanel());
-        tabs.addTab("Diagnosis", createDiagnosisPanel());
-        tabs.addTab("Labs", createLabsPanel());
+        tabs.addTab("Patient Info", patientInfoPanel());
+        tabs.addTab("History", historyPanel());
+        tabs.addTab("Diagnosis", diagnosisPanel());
+        tabs.addTab("Labs", labsPanel());
 
         add(title, BorderLayout.NORTH);
         add(tabs, BorderLayout.CENTER);
     }
 
-    private JPanel createPatientInfoPanel() {
-        JPanel panel = basePanel();
+    private JPanel patientInfoPanel() {
+        JPanel panel = new JPanel(new GridLayout(5, 2, 15, 15));
+        panel.setBackground(Color.WHITE);
+        panel.setBorder(new EmptyBorder(30, 40, 30, 40));
 
-        panel.add(label("Patient Name: John Doe"));
-        panel.add(label("Age: 35"));
-        panel.add(label("Gender: Male"));
-        panel.add(label("Phone: 07XXXXXXXX"));
-        panel.add(label("Patient ID: P-001"));
+        panel.add(label("Patient Name:"));
+        panel.add(new JTextField());
+
+        panel.add(label("Patient ID:"));
+        panel.add(new JTextField());
+
+        panel.add(label("Age:"));
+        panel.add(new JTextField());
+
+        panel.add(label("Gender:"));
+        panel.add(new JTextField());
+
+        panel.add(label("Phone:"));
+        panel.add(new JTextField());
 
         return panel;
     }
 
-    private JPanel createHistoryPanel() {
-        JPanel panel = basePanel();
+    private JPanel historyPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(Color.WHITE);
+        panel.setBorder(new EmptyBorder(30, 40, 30, 40));
 
-        JTextArea history = new JTextArea(
-                "Previous Visit: Fever and headache\n" +
-                "Medication: Paracetamol\n" +
-                "Allergies: None\n" +
-                "Last Visit Date: 10/07/2026"
-        );
+        JTextArea history = new JTextArea();
         history.setFont(Theme.NORMAL);
         history.setLineWrap(true);
         history.setWrapStyleWord(true);
 
-        panel.add(new JScrollPane(history));
+        panel.add(new JScrollPane(history), BorderLayout.CENTER);
 
         return panel;
     }
 
-    private JPanel createDiagnosisPanel() {
+    private JPanel diagnosisPanel() {
         JPanel panel = new JPanel(new BorderLayout(15, 15));
         panel.setBackground(Color.WHITE);
-        panel.setBorder(new EmptyBorder(25, 30, 25, 30));
+        panel.setBorder(new EmptyBorder(30, 40, 30, 40));
 
         JPanel form = new JPanel(new GridLayout(2, 2, 15, 15));
         form.setBackground(Color.WHITE);
 
-        JTextArea diagnosis = new JTextArea(4, 30);
-        JTextArea treatment = new JTextArea(4, 30);
+        JTextArea diagnosis = new JTextArea();
+        JTextArea treatment = new JTextArea();
 
         diagnosis.setLineWrap(true);
         treatment.setLineWrap(true);
 
         form.add(label("Diagnosis:"));
         form.add(new JScrollPane(diagnosis));
+
         form.add(label("Treatment:"));
         form.add(new JScrollPane(treatment));
 
@@ -91,29 +100,31 @@ public class DoctorsEMRScreen extends JPanel {
         return panel;
     }
 
-    private JPanel createLabsPanel() {
-        JPanel panel = basePanel();
-
-        panel.add(label("Requested Labs: Blood Test, Malaria Test"));
-        panel.add(label("Lab Status: Pending"));
-        panel.add(label("Results: Not yet available"));
-
-        return panel;
-    }
-
-    private JPanel basePanel() {
-        JPanel panel = new JPanel();
+    private JPanel labsPanel() {
+        JPanel panel = new JPanel(new BorderLayout(15, 15));
         panel.setBackground(Color.WHITE);
-        panel.setBorder(new EmptyBorder(25, 30, 25, 30));
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(new EmptyBorder(30, 40, 30, 40));
+
+        JPanel form = new JPanel(new GridLayout(3, 2, 15, 15));
+        form.setBackground(Color.WHITE);
+
+        form.add(label("Requested Test:"));
+        form.add(new JTextField());
+
+        form.add(label("Status:"));
+        form.add(new JTextField());
+
+        form.add(label("Results:"));
+        form.add(new JScrollPane(new JTextArea()));
+
+        panel.add(form, BorderLayout.NORTH);
+
         return panel;
     }
 
     private JLabel label(String text) {
         JLabel label = new JLabel(text);
         label.setFont(Theme.NORMAL);
-        label.setForeground(Theme.TEXT);
-        label.setBorder(new EmptyBorder(8, 0, 8, 0));
         return label;
     }
 

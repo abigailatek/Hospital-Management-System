@@ -1,108 +1,150 @@
 package com.hms.ui;
 
-import com.hms.models.Patient;
-import com.hms.services.PatientService;
+import com.hms.utils.Theme;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 public class PatientsScreen extends JPanel {
 
-    JTextField nameField, ageField, genderField, searchField;
-    DefaultTableModel model;
-
     public PatientsScreen() {
+        setLayout(new BorderLayout(15, 15));
+        setBackground(Theme.BACKGROUND);
+        setBorder(new EmptyBorder(20, 25, 20, 25));
 
-        setLayout(new BorderLayout());
+        JLabel title = new JLabel("PATIENT MANAGEMENT");
+        title.setFont(Theme.TITLE);
+        title.setForeground(Theme.PRIMARY_GREEN);
 
-        // ===== FORM =====
-        JPanel form = new JPanel(new GridLayout(6, 2, 10, 10));
-        nameField = new JTextField();
-        ageField = new JTextField();
-        genderField = new JTextField();
-        searchField = new JTextField();
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBackground(Color.WHITE);
+        formPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(215, 215, 215)),
+                new EmptyBorder(20, 25, 20, 25)
+        ));
 
-        JButton addBtn = new JButton("Add Patient");
-        JButton deleteBtn = new JButton("Delete Patient");
-        JButton searchBtn = new JButton("Search");
-        JButton refreshBtn = new JButton("Refresh");
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        form.add(new JLabel("Name"));
-        form.add(nameField);
+        JTextField patientId = field();
+        JTextField fullName = field();
+        JTextField gender = field();
+        JTextField age = field();
+        JTextField phone = field();
+        JTextField status = field();
 
-        form.add(new JLabel("Age"));
-        form.add(ageField);
+        addRow(formPanel, gbc, 0, "Patient ID:", patientId, "Full Name:", fullName);
+        addRow(formPanel, gbc, 1, "Gender:", gender, "Age:", age);
+        addRow(formPanel, gbc, 2, "Phone:", phone, "Status:", status);
 
-        form.add(new JLabel("Gender"));
-        form.add(genderField);
+        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
+        buttons.setBackground(Color.WHITE);
 
-        form.add(addBtn);
-        form.add(deleteBtn);
+        JButton add = button("Add Patient");
+        JButton update = button("Update");
+        JButton clear = button("Clear");
+        JButton delete = button("Delete");
 
-        form.add(new JLabel("Search"));
-        form.add(searchField);
+        buttons.add(add);
+        buttons.add(update);
+        buttons.add(clear);
+        buttons.add(delete);
 
-        form.add(searchBtn);
-        form.add(refreshBtn);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 4;
+        formPanel.add(buttons, gbc);
 
-        // ===== TABLE =====
-        model = new DefaultTableModel(new String[]{"Name", "Age", "Gender"}, 0);
+        DefaultTableModel model = new DefaultTableModel(
+                new String[]{"Patient ID", "Full Name", "Gender", "Age", "Phone", "Status"}, 0
+        );
+
         JTable table = new JTable(model);
+        table.setRowHeight(28);
 
-        refreshTable(PatientService.getPatients());
+        JScrollPane tablePane = new JScrollPane(table);
 
-        table.getSelectionModel().addListSelectionListener(e -> {
-    int selectedRow = table.getSelectedRow();
+        add.addActionListener(e -> model.addRow(new Object[]{
+                patientId.getText(),
+                fullName.getText(),
+                gender.getText(),
+                age.getText(),
+                phone.getText(),
+                status.getText()
+        }));
 
-    if (selectedRow >= 0) {
-        nameField.setText(model.getValueAt(selectedRow, 0).toString());
-        ageField.setText(model.getValueAt(selectedRow, 1).toString());
-        genderField.setText(model.getValueAt(selectedRow, 2).toString());
-    }
+        clear.addActionListener(e -> {
+            patientId.setText("");
+            fullName.setText("");
+            gender.setText("");
+            age.setText("");
+            phone.setText("");
+            status.setText("");
         });
 
-        // ===== ACTIONS =====
-
-        addBtn.addActionListener(e -> {
-            String name = nameField.getText();
-            int age = Integer.parseInt(ageField.getText());
-            String gender = genderField.getText();
-
-            Patient p = new Patient(name, age, gender);
-            PatientService.addPatient(p);
-
-            refreshTable(PatientService.getPatients());
+        delete.addActionListener(e -> {
+            int row = table.getSelectedRow();
+            if (row >= 0) {
+                model.removeRow(row);
+            }
         });
 
-        deleteBtn.addActionListener(e -> {
-            String name = nameField.getText();
-            PatientService.deletePatient(name);
-            refreshTable(PatientService.getPatients());
-        });
+        JPanel center = new JPanel(new BorderLayout(15, 15));
+        center.setBackground(Theme.BACKGROUND);
+        center.add(formPanel, BorderLayout.NORTH);
+        center.add(tablePane, BorderLayout.CENTER);
 
-        searchBtn.addActionListener(e -> {
-            String keyword = searchField.getText();
-            refreshTable(PatientService.searchPatient(keyword));
-        });
-
-        refreshBtn.addActionListener(e -> {
-            refreshTable(PatientService.getPatients());
-        });
-
-        add(form, BorderLayout.NORTH);
-        add(new JScrollPane(table), BorderLayout.CENTER);
+        add(title, BorderLayout.NORTH);
+        add(center, BorderLayout.CENTER);
     }
 
-    private void refreshTable(java.util.List<Patient> list) {
-        model.setRowCount(0);
+    private void addRow(
+            JPanel panel,
+            GridBagConstraints gbc,
+            int row,
+            String label1,
+            JComponent field1,
+            String label2,
+            JComponent field2
+    ) {
+        gbc.gridy = row;
+        gbc.gridwidth = 1;
 
-        for (Patient p : list) {
-            model.addRow(new Object[]{
-                    p.getName(),
-                    p.getAge(),
-                    p.getGender()
-            });
-        }
+        gbc.gridx = 0;
+        panel.add(label(label1), gbc);
+
+        gbc.gridx = 1;
+        panel.add(field1, gbc);
+
+        gbc.gridx = 2;
+        panel.add(label(label2), gbc);
+
+        gbc.gridx = 3;
+        panel.add(field2, gbc);
+    }
+
+    private JTextField field() {
+        JTextField field = new JTextField(18);
+        field.setFont(Theme.NORMAL);
+        return field;
+    }
+
+    private JLabel label(String text) {
+        JLabel label = new JLabel(text);
+        label.setFont(Theme.NORMAL);
+        label.setForeground(Theme.TEXT);
+        return label;
+    }
+
+    private JButton button(String text) {
+        JButton btn = new JButton(text);
+        btn.setFont(Theme.NORMAL);
+        btn.setBackground(Theme.PRIMARY_GREEN);
+        btn.setForeground(Color.WHITE);
+        btn.setFocusPainted(false);
+        return btn;
     }
 }

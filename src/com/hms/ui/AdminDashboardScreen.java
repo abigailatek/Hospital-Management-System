@@ -9,123 +9,102 @@ import java.awt.*;
 public class AdminDashboardScreen extends JPanel {
 
     public AdminDashboardScreen() {
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(20, 20));
         setBackground(Theme.BACKGROUND);
 
-        JPanel wrapper = new JPanel(new BorderLayout(18, 18));
-        wrapper.setBackground(Theme.BACKGROUND);
-        wrapper.setBorder(new EmptyBorder(20, 20, 20, 20));
+        JPanel mainPanel = new JPanel(new BorderLayout(20, 20));
+        mainPanel.setBackground(Theme.BACKGROUND);
+        mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        JLabel heading = new JLabel("Dashboard Overview");
-        heading.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        heading.setForeground(Theme.PRIMARY_GREEN);
+        JLabel title = new JLabel("Dashboard Overview");
+        title.setFont(new Font("Segoe UI", Font.BOLD, 28));
+        title.setForeground(Theme.PRIMARY_GREEN);
 
-        wrapper.add(heading, BorderLayout.NORTH);
+        mainPanel.add(title, BorderLayout.NORTH);
 
-        JPanel tiles = new JPanel(new GridLayout(3, 3, 22, 22));
+        JPanel tiles = new JPanel(new GridLayout(3, 3, 20, 20));
         tiles.setBackground(Theme.BACKGROUND);
 
-        tiles.add(tile("assets/icons/dashboard.png", "Dashboard", "22"));
-        tiles.add(tile("assets/icons/doctor.png", "Doctors", "7"));
-        tiles.add(tile("assets/icons/appointment.png", "Appointments", "3"));
-        tiles.add(tile("assets/icons/patient.png", "Patients", "5"));
-        tiles.add(tile("assets/icons/diagnosis.png", "Diagnosis", "3"));
-        tiles.add(tile("assets/icons/prescription.png", "Prescription", "6"));
-        tiles.add(tile("assets/icons/medical_store.png", "Medical Store", "6"));
-        tiles.add(tile("assets/icons/billing.png", "Accounts", "0"));
-        tiles.add(tile("assets/icons/report.png", "Reports", "2"));
+        tiles.add(createTile("🏠", "Dashboard"));
+        tiles.add(createTile("👨‍⚕️", "Doctors"));
+        tiles.add(createTile("📅", "Appointments"));
 
-        wrapper.add(tiles, BorderLayout.CENTER);
+        tiles.add(createTile("👤", "Patients"));
+        tiles.add(createTile("🩺", "Diagnosis"));
+        tiles.add(createTile("💊", "Prescription"));
+
+        tiles.add(createTile("🏥", "Medical Store"));
+        tiles.add(createTile("💰", "Accounts"));
+        tiles.add(createTile("📊", "Reports"));
+
+        mainPanel.add(tiles, BorderLayout.CENTER);
 
         JPanel rightPanel = new JPanel(new GridLayout(2, 1, 15, 15));
-        rightPanel.setPreferredSize(new Dimension(310, 0));
+        rightPanel.setPreferredSize(new Dimension(280, 0));
         rightPanel.setBackground(Theme.BACKGROUND);
 
-        rightPanel.add(sidePanel("Quick Links", new String[]{
-                "New Appointment",
-                "New Patient",
-                "Add Prescription",
-                "View Report",
-                "Billing"
+        rightPanel.add(createSidePanel("⚡ Quick Links", new String[]{
+                "📅  New Appointment",
+                "👤  New Patient",
+                "💊  Add Prescription",
+                "📊  View Report",
+                "💰  Billing"
         }));
 
-        rightPanel.add(sidePanel("Notes", new String[]{
-                "Support Center",
-                "How to use it",
-                "Help Line",
-                "Customer Feedback"
+        rightPanel.add(createSidePanel("📝 Notes", new String[]{
+                "📞  Support Center",
+                "❓  How to use it",
+                "☎️  Help Line",
+                "💬  Customer Feedback"
         }));
 
-        add(wrapper, BorderLayout.CENTER);
+        add(mainPanel, BorderLayout.CENTER);
         add(rightPanel, BorderLayout.EAST);
     }
 
-    private JPanel tile(String iconPath, String title, String count) {
-        JPanel card = new JPanel(new BorderLayout(5, 5));
+    private JPanel createTile(String emoji, String title) {
+        JPanel card = new JPanel(new BorderLayout());
         card.setBackground(Color.WHITE);
+
         card.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(215, 215, 215)),
-                new EmptyBorder(18, 18, 14, 18)
+                BorderFactory.createLineBorder(new Color(220, 220, 220)),
+                new EmptyBorder(20, 20, 20, 20)
         ));
 
-        JLabel countLabel = new JLabel(count, SwingConstants.RIGHT);
-        countLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        countLabel.setForeground(Color.WHITE);
-        countLabel.setOpaque(true);
-        countLabel.setBackground(Theme.PRIMARY_GREEN);
-        countLabel.setBorder(new EmptyBorder(3, 8, 3, 8));
-
-        JLabel iconLabel = new JLabel();
-        iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
-        ImageIcon icon = new ImageIcon(iconPath);
-        if (icon.getIconWidth() > 0) {
-            Image img = icon.getImage().getScaledInstance(72, 72, Image.SCALE_SMOOTH);
-            iconLabel.setIcon(new ImageIcon(img));
-        } else {
-            iconLabel.setText("□");
-            iconLabel.setFont(new Font("Segoe UI", Font.BOLD, 40));
-            iconLabel.setForeground(Theme.PRIMARY_GREEN);
-        }
+        JLabel iconLabel = new JLabel(emoji, SwingConstants.CENTER);
+        iconLabel.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 48));
 
         JLabel titleLabel = new JLabel(title, SwingConstants.CENTER);
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        titleLabel.setForeground(new Color(65, 65, 65));
+        titleLabel.setForeground(new Color(70, 70, 70));
 
-        JPanel top = new JPanel(new BorderLayout());
-        top.setBackground(Color.WHITE);
-        top.add(countLabel, BorderLayout.EAST);
-
-        card.add(top, BorderLayout.NORTH);
         card.add(iconLabel, BorderLayout.CENTER);
         card.add(titleLabel, BorderLayout.SOUTH);
 
         return card;
     }
 
-    private JPanel sidePanel(String title, String[] items) {
+    private JPanel createSidePanel(String heading, String[] items) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(Color.WHITE);
+
         panel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(215, 215, 215)),
-                new EmptyBorder(18, 18, 18, 18)
+                BorderFactory.createLineBorder(new Color(220, 220, 220)),
+                new EmptyBorder(15, 18, 15, 18)
         ));
 
-        JLabel header = new JLabel(title);
-        header.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        header.setForeground(Theme.PRIMARY_GREEN);
-        header.setAlignmentX(Component.LEFT_ALIGNMENT);
+        JLabel title = new JLabel(heading);
+        title.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        title.setForeground(Theme.PRIMARY_GREEN);
 
-        panel.add(header);
+        panel.add(title);
         panel.add(Box.createVerticalStrut(18));
 
         for (String item : items) {
-            JLabel label = new JLabel("•  " + item);
+            JLabel label = new JLabel(item);
             label.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-            label.setForeground(Theme.TEXT);
-            label.setBorder(new EmptyBorder(9, 0, 9, 0));
-            label.setAlignmentX(Component.LEFT_ALIGNMENT);
+            label.setBorder(new EmptyBorder(8, 0, 8, 0));
             panel.add(label);
         }
 
