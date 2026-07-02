@@ -95,37 +95,37 @@ public class Dashboard extends JFrame {
 
         prescriptionBtn.addActionListener(e -> {
             setActive(prescriptionBtn);
-            showPlaceholder("PRESCRIPTION");
+            showScreen(new PrescriptionScreen());
         });
 
         billingBtn.addActionListener(e -> {
             setActive(billingBtn);
-            showPlaceholder("BILLING");
+            showScreen(new BillingScreen());
         });
 
         medicalStoreBtn.addActionListener(e -> {
             setActive(medicalStoreBtn);
-            showPlaceholder("MEDICAL STORE");
+            showScreen(new MedicalStoreScreen());
         });
 
         reportsBtn.addActionListener(e -> {
             setActive(reportsBtn);
-            showPlaceholder("REPORTS");
+            showScreen(new ReportsScreen());
         });
 
         hrmBtn.addActionListener(e -> {
             setActive(hrmBtn);
-            showPlaceholder("HRM");
+            showScreen(new HRMScreen());
         });
 
         adminBtn.addActionListener(e -> {
             setActive(adminBtn);
-            showPlaceholder("ADMINISTRATION");
+            showScreen(new AdministrationScreen());
         });
 
         settingsBtn.addActionListener(e -> {
             setActive(settingsBtn);
-            showPlaceholder("SETTINGS");
+            showScreen(new SettingsScreen());
         });
 
         main.add(topBar, BorderLayout.NORTH);
