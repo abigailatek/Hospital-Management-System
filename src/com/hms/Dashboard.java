@@ -1,6 +1,6 @@
 package com.hms;
 
-import com.hms.ui.AdminDashboardScreen;
+import com.hms.ui.*;
 import com.hms.utils.Theme;
 
 import javax.swing.*;
@@ -9,96 +9,192 @@ import java.awt.*;
 public class Dashboard extends JFrame {
 
     private JPanel contentPanel;
+    private JButton activeButton;
 
     public Dashboard() {
-
         setTitle("Hospital Management System");
         setSize(1400, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // ================= MAIN PANEL =================
-
-        JPanel mainPanel = new JPanel(new BorderLayout());
-
-        // ================= TOP BAR =================
+        JPanel main = new JPanel(new BorderLayout());
 
         JPanel topBar = new JPanel(new BorderLayout());
-        topBar.setPreferredSize(new Dimension(1400,60));
         topBar.setBackground(Theme.PRIMARY_GREEN);
+        topBar.setPreferredSize(new Dimension(1400, 65));
 
-        JLabel logo = new JLabel(" 🏥 HMS");
-        logo.setFont(new Font("Segoe UI",Font.BOLD,22));
-        logo.setForeground(Color.WHITE);
+        JLabel title = new JLabel("  🏥 Hospital Management System");
+        title.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        title.setForeground(Color.WHITE);
 
-        JLabel user = new JLabel("Administrator   ");
-        user.setForeground(Color.WHITE);
+        JLabel user = new JLabel("Admin   |   Logout   ");
         user.setFont(Theme.NORMAL);
+        user.setForeground(Color.WHITE);
 
-        topBar.add(logo,BorderLayout.WEST);
-        topBar.add(user,BorderLayout.EAST);
+        topBar.add(title, BorderLayout.WEST);
+        topBar.add(user, BorderLayout.EAST);
 
-        // ================= SIDEBAR =================
-
-        JPanel sidebar = new JPanel();
+        JPanel sidebar = new JPanel(new GridLayout(12, 1, 5, 5));
+        sidebar.setPreferredSize(new Dimension(230, 800));
         sidebar.setBackground(Color.WHITE);
-        sidebar.setPreferredSize(new Dimension(220,800));
-        sidebar.setLayout(new GridLayout(12,1));
+        sidebar.setBorder(BorderFactory.createEmptyBorder(15, 10, 15, 10));
 
-        sidebar.add(createButton("🏠 Dashboard"));
-        sidebar.add(createButton("👤 Patients"));
-        sidebar.add(createButton("🩺 Doctors"));
-        sidebar.add(createButton("📅 Appointments"));
-        sidebar.add(createButton("🧾 Diagnosis"));
-        sidebar.add(createButton("💊 Prescription"));
-        sidebar.add(createButton("💰 Billing"));
-        sidebar.add(createButton("🏥 Medical Store"));
-        sidebar.add(createButton("📊 Reports"));
-        sidebar.add(createButton("👥 HRM"));
-        sidebar.add(createButton("⚙ Administration"));
-        sidebar.add(createButton("⚙ Settings"));
+        JButton dashboardBtn = menuButton("🏠  Dashboard");
+        JButton patientsBtn = menuButton("👤  Patients");
+        JButton doctorsBtn = menuButton("🩺  Doctors");
+        JButton appointmentsBtn = menuButton("📅  Appointments");
+        JButton diagnosisBtn = menuButton("🧾  Diagnosis");
+        JButton prescriptionBtn = menuButton("💊  Prescription");
+        JButton billingBtn = menuButton("💰  Billing");
+        JButton medicalStoreBtn = menuButton("🏥  Medical Store");
+        JButton reportsBtn = menuButton("📊  Reports");
+        JButton hrmBtn = menuButton("👥  HRM");
+        JButton adminBtn = menuButton("⚙  Administration");
+        JButton settingsBtn = menuButton("⚙  Settings");
 
-        // ================= CONTENT =================
+        sidebar.add(dashboardBtn);
+        sidebar.add(patientsBtn);
+        sidebar.add(doctorsBtn);
+        sidebar.add(appointmentsBtn);
+        sidebar.add(diagnosisBtn);
+        sidebar.add(prescriptionBtn);
+        sidebar.add(billingBtn);
+        sidebar.add(medicalStoreBtn);
+        sidebar.add(reportsBtn);
+        sidebar.add(hrmBtn);
+        sidebar.add(adminBtn);
+        sidebar.add(settingsBtn);
 
         contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBackground(Theme.BACKGROUND);
 
-        contentPanel.add(new AdminDashboardScreen());
+        dashboardBtn.addActionListener(e -> {
+            setActive(dashboardBtn);
+            showScreen(new AdminDashboardScreen());
+        });
 
-        // ================= ADD PANELS =================
+        patientsBtn.addActionListener(e -> {
+            setActive(patientsBtn);
+            showScreen(new PatientRegistrationScreen());
+        });
 
-        mainPanel.add(topBar,BorderLayout.NORTH);
-        mainPanel.add(sidebar,BorderLayout.WEST);
-        mainPanel.add(contentPanel,BorderLayout.CENTER);
+        doctorsBtn.addActionListener(e -> {
+            setActive(doctorsBtn);
+            showScreen(new DoctorManagePatientScreen());
+        });
 
-        add(mainPanel);
+        appointmentsBtn.addActionListener(e -> {
+            setActive(appointmentsBtn);
+            showScreen(new AppointmentScreen());
+        });
+
+        diagnosisBtn.addActionListener(e -> {
+            setActive(diagnosisBtn);
+            showScreen(new DoctorsEMRScreen());
+        });
+
+        prescriptionBtn.addActionListener(e -> {
+            setActive(prescriptionBtn);
+            showPlaceholder("PRESCRIPTION");
+        });
+
+        billingBtn.addActionListener(e -> {
+            setActive(billingBtn);
+            showPlaceholder("BILLING");
+        });
+
+        medicalStoreBtn.addActionListener(e -> {
+            setActive(medicalStoreBtn);
+            showPlaceholder("MEDICAL STORE");
+        });
+
+        reportsBtn.addActionListener(e -> {
+            setActive(reportsBtn);
+            showPlaceholder("REPORTS");
+        });
+
+        hrmBtn.addActionListener(e -> {
+            setActive(hrmBtn);
+            showPlaceholder("HRM");
+        });
+
+        adminBtn.addActionListener(e -> {
+            setActive(adminBtn);
+            showPlaceholder("ADMINISTRATION");
+        });
+
+        settingsBtn.addActionListener(e -> {
+            setActive(settingsBtn);
+            showPlaceholder("SETTINGS");
+        });
+
+        main.add(topBar, BorderLayout.NORTH);
+        main.add(sidebar, BorderLayout.WEST);
+        main.add(contentPanel, BorderLayout.CENTER);
+
+        add(main);
+
+        setActive(dashboardBtn);
+        showScreen(new AdminDashboardScreen());
     }
 
-    private JButton createButton(String text){
+    private void showScreen(JPanel screen) {
+        contentPanel.removeAll();
+        contentPanel.add(screen, BorderLayout.CENTER);
+        contentPanel.revalidate();
+        contentPanel.repaint();
+    }
 
-        JButton button = new JButton(text);
+    private void showPlaceholder(String title) {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(Theme.BACKGROUND);
 
-        button.setFont(Theme.NORMAL);
-        button.setHorizontalAlignment(SwingConstants.LEFT);
+        JLabel label = new JLabel(title + " SCREEN", SwingConstants.CENTER);
+        label.setFont(Theme.TITLE);
+        label.setForeground(Theme.PRIMARY_GREEN);
 
-        button.setBackground(Color.WHITE);
-        button.setFocusPainted(false);
+        panel.add(label, BorderLayout.CENTER);
+        showScreen(panel);
+    }
 
-        button.setBorder(BorderFactory.createEmptyBorder(
-                10,20,10,10));
+    private JButton menuButton(String text) {
+        JButton btn = new JButton(text);
+        btn.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        btn.setHorizontalAlignment(SwingConstants.LEFT);
+        btn.setFocusPainted(false);
+        btn.setBackground(Color.WHITE);
+        btn.setForeground(Theme.TEXT);
+        btn.setBorder(BorderFactory.createEmptyBorder(12, 15, 12, 10));
 
-        return button;
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                if (btn != activeButton) {
+                    btn.setBackground(Theme.LIGHT_GREEN);
+                }
+            }
 
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                if (btn != activeButton) {
+                    btn.setBackground(Color.WHITE);
+                }
+            }
+        });
+
+        return btn;
+    }
+
+    private void setActive(JButton btn) {
+        if (activeButton != null) {
+            activeButton.setBackground(Color.WHITE);
+            activeButton.setForeground(Theme.TEXT);
+        }
+
+        activeButton = btn;
+        activeButton.setBackground(Theme.PRIMARY_GREEN);
+        activeButton.setForeground(Color.WHITE);
     }
 
     public static void main(String[] args) {
-
-        SwingUtilities.invokeLater(() -> {
-
-            new Dashboard().setVisible(true);
-
-        });
-
+        SwingUtilities.invokeLater(() -> new Dashboard().setVisible(true));
     }
-
 }
