@@ -1,32 +1,39 @@
 package com.hms.services;
 
+import com.hms.dao.PatientDAO;
 import com.hms.models.Patient;
-import java.util.ArrayList;
+
+import java.util.List;
 
 public class PatientService {
 
-    private static ArrayList<Patient> patients = new ArrayList<>();
+    private PatientDAO patientDAO;
 
-    public static void addPatient(Patient p) {
-        patients.add(p);
+    public PatientService() {
+        patientDAO = new PatientDAO();
     }
 
-    public static void deletePatient(String name) {
-        patients.removeIf(p -> p.getFirstName().equalsIgnoreCase(name));
+    public boolean addPatient(Patient patient) {
+        return patientDAO.addPatient(patient);
     }
 
-    public static ArrayList<Patient> getPatients() {
-        return patients;
+    public Patient getPatientById(int patientId) {
+        return patientDAO.getPatientById(patientId);
     }
 
-    public static ArrayList<Patient> searchPatient(String keyword) {
-        ArrayList<Patient> result = new ArrayList<>();
+    public List<Patient> getAllPatients() {
+        return patientDAO.getAllPatients();
+    }
 
-        for (Patient p : patients) {
-            if (p.getFirstName().toLowerCase().contains(keyword.toLowerCase())) {
-                result.add(p);
-            }
-        }
-        return result;
+    public boolean updatePatient(Patient patient) {
+        return patientDAO.updatePatient(patient);
+    }
+
+    public boolean deletePatient(int patientId) {
+        return patientDAO.deletePatient(patientId);
+    }
+
+    public List<Patient> searchPatients(String keyword) {
+        return patientDAO.searchPatients(keyword);
     }
 }
