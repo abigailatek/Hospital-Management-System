@@ -2,135 +2,74 @@ package com.hms.ui;
 
 import com.hms.utils.Theme;
 
+import com.hms.models.User;
+import com.hms.ui.UITheme;
+
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-public class AdministrationScreen extends JPanel {
+/**
+ * AdminDashboard.java
+ * ---------------------------------------------------------------------
+ * The screen a user is redirected to after signing in with the
+ * ADMINISTRATOR role. Demonstrates role-based redirection with
+ * administrative placeholder widgets (system stats, quick actions).
+ * ---------------------------------------------------------------------
+ */
+public class AdministrationScreen extends BaseDashboard {
 
-    public AdministrationScreen() {
-        setLayout(new BorderLayout(15, 15));
-        setBackground(Theme.BACKGROUND);
-        setBorder(new EmptyBorder(20, 25, 20, 25));
-
-        JLabel title = new JLabel("ADMINISTRATION");
-        title.setFont(Theme.TITLE);
-        title.setForeground(Theme.PRIMARY_GREEN);
-
-        JPanel formPanel = new JPanel(new GridBagLayout());
-        formPanel.setBackground(Color.WHITE);
-        formPanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(215, 215, 215)),
-                new EmptyBorder(20, 25, 20, 25)
-        ));
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        JTextField username = field();
-        JComboBox<String> role = new JComboBox<>(new String[]{
-                "Admin", "Doctor", "Receptionist", "Pharmacist", "Accountant"
-        });
-        JPasswordField password = new JPasswordField(18);
-        JComboBox<String> status = new JComboBox<>(new String[]{
-                "Active", "Inactive"
-        });
-
-        addRow(formPanel, gbc, 0, "Username:", username, "Role:", role);
-        addRow(formPanel, gbc, 1, "Password:", password, "Status:", status);
-
-        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
-        buttons.setBackground(Color.WHITE);
-
-        JButton add = button("Add User");
-        JButton update = button("Update");
-        JButton clear = button("Clear");
-        JButton delete = button("Delete");
-
-        buttons.add(add);
-        buttons.add(update);
-        buttons.add(clear);
-        buttons.add(delete);
-
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.gridwidth = 4;
-        formPanel.add(buttons, gbc);
-
-        DefaultTableModel model = new DefaultTableModel(
-                new String[]{"Username", "Role", "Status"}, 0
-        );
-
-        JTable table = new JTable(model);
-        table.setRowHeight(28);
-
-        add.addActionListener(e -> model.addRow(new Object[]{
-                username.getText(),
-                role.getSelectedItem(),
-                status.getSelectedItem()
-        }));
-
-        clear.addActionListener(e -> {
-            username.setText("");
-            password.setText("");
-            role.setSelectedIndex(0);
-            status.setSelectedIndex(0);
-        });
-
-        delete.addActionListener(e -> {
-            int row = table.getSelectedRow();
-            if (row >= 0) model.removeRow(row);
-        });
-
-        JPanel center = new JPanel(new BorderLayout(15, 15));
-        center.setBackground(Theme.BACKGROUND);
-        center.add(formPanel, BorderLayout.NORTH);
-        center.add(new JScrollPane(table), BorderLayout.CENTER);
-
-        add(title, BorderLayout.NORTH);
-        add(center, BorderLayout.CENTER);
+    public AdministrationScreen(User user) {
+        super(user, "City Hospital – Administrator Portal");
     }
 
-    private void addRow(JPanel panel, GridBagConstraints gbc, int row,
-                        String label1, JComponent field1,
-                        String label2, JComponent field2) {
-        gbc.gridy = row;
-        gbc.gridwidth = 1;
+    @Override
+    protected JComponent buildContent() {
+        JPanel content = new JPanel(new BorderLayout(20, 20));
+        content.setBorder(BorderFactory.createEmptyBorder(24, 24, 24, 24));
+        content.setBackground(UITheme.BACKGROUND);
 
-        gbc.gridx = 0;
-        panel.add(label(label1), gbc);
+        JPanel statsRow = new JPanel(new GridLayout(1, 3, 20, 0));
+        statsRow.setOpaque(false);
+        statsRow.add(createStatCard("Registered Patients", "1,248"));
+        statsRow.add(createStatCard("Active Doctors", "63"));
+        statsRow.add(createStatCard("Pending Approvals", "4"));
 
-        gbc.gridx = 1;
-        panel.add(field1, gbc);
+        JLabel actionsHeading = new JLabel("Quick Actions");
+        actionsHeading.setFont(UITheme.FONT_TITLE.deriveFont(16f));
+        actionsHeading.setForeground(UITheme.TEXT_PRIMARY);
+        actionsHeading.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
 
-        gbc.gridx = 2;
-        panel.add(label(label2), gbc);
+        JPanel actionsRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 0));
+        actionsRow.setOpaque(false);
+        actionsRow.add(UITheme.createPrimaryButton("Manage Staff Accounts"));
+        actionsRow.add(UITheme.createPrimaryButton("View System Logs"));
+        actionsRow.add(UITheme.createPrimaryButton("Hospital Settings"));
 
-        gbc.gridx = 3;
-        panel.add(field2, gbc);
+        JPanel bottom = new JPanel(new BorderLayout());
+        bottom.setOpaque(false);
+        bottom.add(actionsHeading, BorderLayout.NORTH);
+        bottom.add(actionsRow, BorderLayout.CENTER);
+
+        content.add(statsRow, BorderLayout.NORTH);
+        content.add(bottom, BorderLayout.CENTER);
+        return content;
     }
 
-    private JTextField field() {
-        JTextField field = new JTextField(18);
-        field.setFont(Theme.NORMAL);
-        return field;
-    }
+    /** Small "stat card" tile used to summarize a single system metric. */
+    private JPanel createStatCard(String label, String value) {
+        UITheme.RoundedPanel card = new UITheme.RoundedPanel(14, new BorderLayout(0, 6));
+        card.setBorder(BorderFactory.createEmptyBorder(18, 18, 18, 18));
 
-    private JLabel label(String text) {
-        JLabel label = new JLabel(text);
-        label.setFont(Theme.NORMAL);
-        label.setForeground(Theme.TEXT);
-        return label;
-    }
+        JLabel valueLabel = new JLabel(value);
+        valueLabel.setFont(UITheme.FONT_LOGO.deriveFont(28f));
+        valueLabel.setForeground(UITheme.PRIMARY);
 
-    private JButton button(String text) {
-        JButton btn = new JButton(text);
-        btn.setFont(Theme.NORMAL);
-        btn.setBackground(Theme.PRIMARY_GREEN);
-        btn.setForeground(Color.WHITE);
-        btn.setFocusPainted(false);
-        return btn;
+        JLabel captionLabel = new JLabel(label);
+        captionLabel.setFont(UITheme.FONT_SUBTITLE);
+        captionLabel.setForeground(UITheme.TEXT_SECONDARY);
+
+        card.add(valueLabel, BorderLayout.NORTH);
+        card.add(captionLabel, BorderLayout.CENTER);
+        return card;
     }
 }

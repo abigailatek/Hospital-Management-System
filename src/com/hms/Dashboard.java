@@ -1,6 +1,7 @@
 package com.hms;
 
 import com.hms.ui.*;
+import com.hms.ui.LoginScreen;
 import com.hms.utils.Theme;
 
 import javax.swing.*;
@@ -8,7 +9,7 @@ import java.awt.*;
 
 public class Dashboard extends JFrame {
 
-    private JPanel contentPanel;
+    private final JPanel contentPanel;
     private JButton activeButton;
 
     public Dashboard() {
@@ -118,10 +119,6 @@ public class Dashboard extends JFrame {
             showScreen(new HRMScreen());
         });
 
-        adminBtn.addActionListener(e -> {
-            setActive(adminBtn);
-            showScreen(new AdministrationScreen());
-        });
 
         settingsBtn.addActionListener(e -> {
             setActive(settingsBtn);
