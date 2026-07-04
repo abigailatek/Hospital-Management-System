@@ -6,14 +6,14 @@ import com.hms.utils.Theme;
 import javax.swing.*;
 import java.awt.*;
 
-public class Dashboard extends JFrame {
+public class DoctorDashboard extends JFrame {
 
     private JPanel contentPanel;
     private JButton activeButton;
     private Timer sessionTimer;
 
-    public Dashboard() {
-        setTitle("Admin Dashboard - Hospital Management System");
+    public DoctorDashboard() {
+        setTitle("Doctor Dashboard - Hospital Management System");
         setSize(1400, 800);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -26,67 +26,42 @@ public class Dashboard extends JFrame {
 
         JPanel main = new JPanel(new BorderLayout());
 
-        // TOP BAR
         JPanel topBar = new JPanel(new BorderLayout());
         topBar.setBackground(Theme.PRIMARY_GREEN);
         topBar.setPreferredSize(new Dimension(1400, 65));
 
-        JLabel title = new JLabel("  Hospital Management System - Admin");
+        JLabel title = new JLabel("  Hospital Management System - Doctor");
         title.setFont(new Font("Segoe UI", Font.BOLD, 22));
         title.setForeground(Color.WHITE);
 
-        JPanel topRight = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 15));
-        topRight.setOpaque(false);
-
-        JLabel user = new JLabel("Admin");
+        JLabel user = new JLabel("Doctor   |   Logout   ");
         user.setFont(Theme.NORMAL);
         user.setForeground(Color.WHITE);
 
-        JButton topLogoutBtn = new JButton("Logout");
-        topLogoutBtn.setFont(Theme.NORMAL);
-        topLogoutBtn.setFocusPainted(false);
-        topLogoutBtn.setBackground(Color.WHITE);
-        topLogoutBtn.setForeground(Theme.PRIMARY_GREEN);
-        topLogoutBtn.addActionListener(e -> confirmLogout());
-
-        topRight.add(user);
-        topRight.add(topLogoutBtn);
-
         topBar.add(title, BorderLayout.WEST);
-        topBar.add(topRight, BorderLayout.EAST);
+        topBar.add(user, BorderLayout.EAST);
 
-        // SIDEBAR
-        JPanel sidebar = new JPanel(new GridLayout(13, 1, 5, 5));
+        JPanel sidebar = new JPanel(new GridLayout(8, 1, 5, 5));
         sidebar.setPreferredSize(new Dimension(230, 800));
         sidebar.setBackground(Color.WHITE);
         sidebar.setBorder(BorderFactory.createEmptyBorder(15, 10, 15, 10));
 
         JButton dashboardBtn = sidebarButton("Dashboard");
-        JButton patientsBtn = sidebarButton("Patients");
-        JButton doctorsBtn = sidebarButton("Doctors");
+        JButton patientsBtn = sidebarButton("My Patients");
         JButton appointmentsBtn = sidebarButton("Appointments");
-        JButton diagnosisBtn = sidebarButton("Diagnosis");
+        JButton emrBtn = sidebarButton("Patient EMR");
         JButton prescriptionBtn = sidebarButton("Prescription");
-        JButton billingBtn = sidebarButton("Billing");
-        JButton medicalStoreBtn = sidebarButton("Medical Store");
         JButton reportsBtn = sidebarButton("Reports");
-        JButton hrmBtn = sidebarButton("HRM");
-        JButton adminBtn = sidebarButton("Administration");
-        JButton settingsBtn = sidebarButton("Settings");
+        JButton profileBtn = sidebarButton("Profile");
         JButton logoutBtn = sidebarButton("Logout");
 
         sidebar.add(dashboardBtn);
         sidebar.add(patientsBtn);
-        sidebar.add(doctorsBtn);
         sidebar.add(appointmentsBtn);
-        sidebar.add(diagnosisBtn);
+        sidebar.add(emrBtn);
         sidebar.add(prescriptionBtn);
-        sidebar.add(billingBtn);
-        sidebar.add(medicalStoreBtn);
         sidebar.add(reportsBtn);
-        sidebar.add(hrmBtn);
-        sidebar.add(adminBtn);
-        sidebar.add(settingsBtn);
+        sidebar.add(profileBtn);
         sidebar.add(logoutBtn);
 
         contentPanel = new JPanel(new BorderLayout());
@@ -94,16 +69,11 @@ public class Dashboard extends JFrame {
 
         dashboardBtn.addActionListener(e -> {
             setActive(dashboardBtn);
-            showAdminDashboard();
+            showScreen(new DoctorHomeScreen());
         });
 
         patientsBtn.addActionListener(e -> {
             setActive(patientsBtn);
-            showScreen(new PatientRegistrationScreen());
-        });
-
-        doctorsBtn.addActionListener(e -> {
-            setActive(doctorsBtn);
             showScreen(new DoctorManagePatientScreen());
         });
 
@@ -112,8 +82,8 @@ public class Dashboard extends JFrame {
             showScreen(new AppointmentScreen());
         });
 
-        diagnosisBtn.addActionListener(e -> {
-            setActive(diagnosisBtn);
+        emrBtn.addActionListener(e -> {
+            setActive(emrBtn);
             showScreen(new DoctorsEMRScreen());
         });
 
@@ -122,34 +92,14 @@ public class Dashboard extends JFrame {
             showScreen(new PrescriptionScreen());
         });
 
-        billingBtn.addActionListener(e -> {
-            setActive(billingBtn);
-            showScreen(new BillingScreen());
-        });
-
-        medicalStoreBtn.addActionListener(e -> {
-            setActive(medicalStoreBtn);
-            showScreen(new MedicalStoreScreen());
-        });
-
         reportsBtn.addActionListener(e -> {
             setActive(reportsBtn);
             showScreen(new ReportsScreen());
         });
 
-        hrmBtn.addActionListener(e -> {
-            setActive(hrmBtn);
-            showScreen(new HRMScreen());
-        });
-
-        adminBtn.addActionListener(e -> {
-            setActive(adminBtn);
-            showScreen(new AdministrationScreen());
-        });
-
-        settingsBtn.addActionListener(e -> {
-            setActive(settingsBtn);
-            showScreen(new SettingsScreen());
+        profileBtn.addActionListener(e -> {
+            setActive(profileBtn);
+            showScreen(new DoctorProfileScreen());
         });
 
         logoutBtn.addActionListener(e -> confirmLogout());
@@ -161,21 +111,8 @@ public class Dashboard extends JFrame {
         add(main);
 
         setActive(dashboardBtn);
-        showAdminDashboard();
+        showScreen(new DoctorHomeScreen());
         startSessionTimeout();
-    }
-
-    private void showAdminDashboard() {
-        showScreen(new AdminDashboardScreen(
-                () -> showScreen(new PatientRegistrationScreen()),
-                () -> showScreen(new DoctorManagePatientScreen()),
-                () -> showScreen(new AppointmentScreen()),
-                () -> showScreen(new DoctorsEMRScreen()),
-                () -> showScreen(new PrescriptionScreen()),
-                () -> showScreen(new MedicalStoreScreen()),
-                () -> showScreen(new BillingScreen()),
-                () -> showScreen(new ReportsScreen())
-        ));
     }
 
     private void showScreen(JPanel screen) {
@@ -199,15 +136,11 @@ public class Dashboard extends JFrame {
 
         btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                if (btn != activeButton) {
-                    btn.setBackground(Theme.LIGHT_GREEN);
-                }
+                if (btn != activeButton) btn.setBackground(Theme.LIGHT_GREEN);
             }
 
             public void mouseExited(java.awt.event.MouseEvent e) {
-                if (btn != activeButton) {
-                    btn.setBackground(Color.WHITE);
-                }
+                if (btn != activeButton) btn.setBackground(Color.WHITE);
             }
         });
 
@@ -275,6 +208,6 @@ public class Dashboard extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Dashboard().setVisible(true));
+        SwingUtilities.invokeLater(() -> new DoctorDashboard().setVisible(true));
     }
 }
