@@ -26,7 +26,6 @@ public class Dashboard extends JFrame {
 
         JPanel main = new JPanel(new BorderLayout());
 
-        // TOP BAR
         JPanel topBar = new JPanel(new BorderLayout());
         topBar.setBackground(Theme.PRIMARY_GREEN);
         topBar.setPreferredSize(new Dimension(1400, 65));
@@ -42,21 +41,20 @@ public class Dashboard extends JFrame {
         user.setFont(Theme.NORMAL);
         user.setForeground(Color.WHITE);
 
-        JButton topLogoutBtn = new JButton("Logout");
-        topLogoutBtn.setFont(Theme.NORMAL);
-        topLogoutBtn.setFocusPainted(false);
-        topLogoutBtn.setBackground(Color.WHITE);
-        topLogoutBtn.setForeground(Theme.PRIMARY_GREEN);
-        topLogoutBtn.addActionListener(e -> confirmLogout());
+        JButton logoutTopBtn = new JButton("Logout");
+        logoutTopBtn.setFont(Theme.NORMAL);
+        logoutTopBtn.setFocusPainted(false);
+        logoutTopBtn.setBackground(Color.WHITE);
+        logoutTopBtn.setForeground(Theme.PRIMARY_GREEN);
+        logoutTopBtn.addActionListener(e -> confirmLogout());
 
         topRight.add(user);
-        topRight.add(topLogoutBtn);
+        topRight.add(logoutTopBtn);
 
         topBar.add(title, BorderLayout.WEST);
         topBar.add(topRight, BorderLayout.EAST);
 
-        // SIDEBAR
-        JPanel sidebar = new JPanel(new GridLayout(13, 1, 5, 5));
+        JPanel sidebar = new JPanel(new GridLayout(12, 1, 5, 5));
         sidebar.setPreferredSize(new Dimension(230, 800));
         sidebar.setBackground(Color.WHITE);
         sidebar.setBorder(BorderFactory.createEmptyBorder(15, 10, 15, 10));
@@ -73,7 +71,6 @@ public class Dashboard extends JFrame {
         JButton hrmBtn = sidebarButton("HRM");
         JButton adminBtn = sidebarButton("Administration");
         JButton settingsBtn = sidebarButton("Settings");
-        JButton logoutBtn = sidebarButton("Logout");
 
         sidebar.add(dashboardBtn);
         sidebar.add(patientsBtn);
@@ -87,7 +84,6 @@ public class Dashboard extends JFrame {
         sidebar.add(hrmBtn);
         sidebar.add(adminBtn);
         sidebar.add(settingsBtn);
-        sidebar.add(logoutBtn);
 
         contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBackground(Theme.BACKGROUND);
@@ -152,8 +148,6 @@ public class Dashboard extends JFrame {
             showScreen(new SettingsScreen());
         });
 
-        logoutBtn.addActionListener(e -> confirmLogout());
-
         main.add(topBar, BorderLayout.NORTH);
         main.add(sidebar, BorderLayout.WEST);
         main.add(contentPanel, BorderLayout.CENTER);
@@ -199,15 +193,11 @@ public class Dashboard extends JFrame {
 
         btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                if (btn != activeButton) {
-                    btn.setBackground(Theme.LIGHT_GREEN);
-                }
+                if (btn != activeButton) btn.setBackground(Theme.LIGHT_GREEN);
             }
 
             public void mouseExited(java.awt.event.MouseEvent e) {
-                if (btn != activeButton) {
-                    btn.setBackground(Color.WHITE);
-                }
+                if (btn != activeButton) btn.setBackground(Color.WHITE);
             }
         });
 
@@ -233,9 +223,7 @@ public class Dashboard extends JFrame {
                 JOptionPane.YES_NO_OPTION
         );
 
-        if (confirm == JOptionPane.YES_OPTION) {
-            dispose();
-        }
+        if (confirm == JOptionPane.YES_OPTION) dispose();
     }
 
     private void confirmClose() {
@@ -246,9 +234,7 @@ public class Dashboard extends JFrame {
                 JOptionPane.YES_NO_OPTION
         );
 
-        if (confirm == JOptionPane.YES_OPTION) {
-            dispose();
-        }
+        if (confirm == JOptionPane.YES_OPTION) dispose();
     }
 
     private void startSessionTimeout() {
@@ -269,9 +255,7 @@ public class Dashboard extends JFrame {
     }
 
     private void resetSessionTimer() {
-        if (sessionTimer != null) {
-            sessionTimer.restart();
-        }
+        if (sessionTimer != null) sessionTimer.restart();
     }
 
     public static void main(String[] args) {
