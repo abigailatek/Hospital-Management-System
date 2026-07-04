@@ -12,7 +12,7 @@ public class PatientService {
     }
 
     public static void deletePatient(String name) {
-        patients.removeIf(p -> p.getName().equalsIgnoreCase(name));
+        patients.removeIf(p -> p.getFirstName().equalsIgnoreCase(name));
     }
 
     public static ArrayList<Patient> getPatients() {
@@ -23,7 +23,7 @@ public class PatientService {
         ArrayList<Patient> result = new ArrayList<>();
 
         for (Patient p : patients) {
-            if (p.getName().toLowerCase().contains(keyword.toLowerCase())) {
+            if (p.getFirstName().toLowerCase().contains(keyword.toLowerCase())) {
                 result.add(p);
             }
         }
