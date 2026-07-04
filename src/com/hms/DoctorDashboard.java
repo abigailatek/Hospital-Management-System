@@ -34,14 +34,27 @@ public class DoctorDashboard extends JFrame {
         title.setFont(new Font("Segoe UI", Font.BOLD, 22));
         title.setForeground(Color.WHITE);
 
-        JLabel user = new JLabel("Doctor   |   Logout   ");
+        JPanel topRight = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 15));
+        topRight.setOpaque(false);
+
+        JLabel user = new JLabel("Doctor");
         user.setFont(Theme.NORMAL);
         user.setForeground(Color.WHITE);
 
-        topBar.add(title, BorderLayout.WEST);
-        topBar.add(user, BorderLayout.EAST);
+        JButton logoutTopBtn = new JButton("Logout");
+        logoutTopBtn.setFont(Theme.NORMAL);
+        logoutTopBtn.setFocusPainted(false);
+        logoutTopBtn.setBackground(Color.WHITE);
+        logoutTopBtn.setForeground(Theme.PRIMARY_GREEN);
+        logoutTopBtn.addActionListener(e -> confirmLogout());
 
-        JPanel sidebar = new JPanel(new GridLayout(8, 1, 5, 5));
+        topRight.add(user);
+        topRight.add(logoutTopBtn);
+
+        topBar.add(title, BorderLayout.WEST);
+        topBar.add(topRight, BorderLayout.EAST);
+
+        JPanel sidebar = new JPanel(new GridLayout(7, 1, 5, 5));
         sidebar.setPreferredSize(new Dimension(230, 800));
         sidebar.setBackground(Color.WHITE);
         sidebar.setBorder(BorderFactory.createEmptyBorder(15, 10, 15, 10));
@@ -53,7 +66,6 @@ public class DoctorDashboard extends JFrame {
         JButton prescriptionBtn = sidebarButton("Prescription");
         JButton reportsBtn = sidebarButton("Reports");
         JButton profileBtn = sidebarButton("Profile");
-        JButton logoutBtn = sidebarButton("Logout");
 
         sidebar.add(dashboardBtn);
         sidebar.add(patientsBtn);
@@ -62,14 +74,13 @@ public class DoctorDashboard extends JFrame {
         sidebar.add(prescriptionBtn);
         sidebar.add(reportsBtn);
         sidebar.add(profileBtn);
-        sidebar.add(logoutBtn);
 
         contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBackground(Theme.BACKGROUND);
 
         dashboardBtn.addActionListener(e -> {
             setActive(dashboardBtn);
-            showScreen(new DoctorHomeScreen());
+            showDoctorHome();
         });
 
         patientsBtn.addActionListener(e -> {
@@ -102,8 +113,6 @@ public class DoctorDashboard extends JFrame {
             showScreen(new DoctorProfileScreen());
         });
 
-        logoutBtn.addActionListener(e -> confirmLogout());
-
         main.add(topBar, BorderLayout.NORTH);
         main.add(sidebar, BorderLayout.WEST);
         main.add(contentPanel, BorderLayout.CENTER);
@@ -111,8 +120,19 @@ public class DoctorDashboard extends JFrame {
         add(main);
 
         setActive(dashboardBtn);
-        showScreen(new DoctorHomeScreen());
+        showDoctorHome();
         startSessionTimeout();
+    }
+
+    private void showDoctorHome() {
+        showScreen(new DoctorHomeScreen(
+                () -> showScreen(new DoctorManagePatientScreen()),
+                () -> showScreen(new AppointmentScreen()),
+                () -> showScreen(new DoctorsEMRScreen()),
+                () -> showScreen(new PrescriptionScreen()),
+                () -> showScreen(new ReportsScreen()),
+                () -> showScreen(new DoctorProfileScreen())
+        ));
     }
 
     private void showScreen(JPanel screen) {
@@ -166,9 +186,7 @@ public class DoctorDashboard extends JFrame {
                 JOptionPane.YES_NO_OPTION
         );
 
-        if (confirm == JOptionPane.YES_OPTION) {
-            dispose();
-        }
+        if (confirm == JOptionPane.YES_OPTION) dispose();
     }
 
     private void confirmClose() {
@@ -179,9 +197,7 @@ public class DoctorDashboard extends JFrame {
                 JOptionPane.YES_NO_OPTION
         );
 
-        if (confirm == JOptionPane.YES_OPTION) {
-            dispose();
-        }
+        if (confirm == JOptionPane.YES_OPTION) dispose();
     }
 
     private void startSessionTimeout() {
@@ -202,9 +218,7 @@ public class DoctorDashboard extends JFrame {
     }
 
     private void resetSessionTimer() {
-        if (sessionTimer != null) {
-            sessionTimer.restart();
-        }
+        if (sessionTimer != null) sessionTimer.restart();
     }
 
     public static void main(String[] args) {
