@@ -10,6 +10,7 @@ public class AppointmentService {
     public AppointmentService() {
         appointmentDAO = new AppointmentDAO();
     }
+
     public boolean addAppointment(Appointment appointment) {
         return appointmentDAO.addAppointment(appointment);
     }
