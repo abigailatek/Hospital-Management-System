@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 public class PatientDAO {
     public boolean addPatient(Patient patient) {
-
     String sql = """
         INSERT INTO Patients
         (
@@ -29,12 +28,10 @@ public class PatientDAO {
         VALUES
         (?,?,?,?,?,?,?,?)
         """;
-
     try (
             Connection conn = DatabaseConnection.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql)
     ) {
-
         ps.setString(1, patient.getFirstName());
         ps.setString(2, patient.getLastName());
         ps.setString(3, patient.getGender());
@@ -43,24 +40,17 @@ public class PatientDAO {
         ps.setString(6, patient.getEmail());
         ps.setString(7, patient.getAddress());
         ps.setString(8, patient.getEmergencyContact());
-
         return ps.executeUpdate() > 0;
-
     } catch (SQLException e) {
-
         e.printStackTrace();
-
         return false;
     }
 }public Patient getPatientById(int patientId) {
-
     String sql = "SELECT * FROM Patients WHERE PatientID = ?";
-
     try (
             Connection conn = DatabaseConnection.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql)
     ) {
-
         ps.setInt(1, patientId);
 
         ResultSet rs = ps.executeQuery();
@@ -218,14 +208,11 @@ public class PatientDAO {
             patient.setEmail(rs.getString("Email"));
             patient.setAddress(rs.getString("Address"));
             patient.setEmergencyContact(rs.getString("EmergencyContact"));
-
             patients.add(patient);
         }
-
     } catch (SQLException e) {
         e.printStackTrace();
     }
-
     return patients;
 }
 }
