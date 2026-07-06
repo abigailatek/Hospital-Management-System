@@ -1,5 +1,6 @@
 package com.hms.tests;
 
+import com.hms.exceptions.ValidationException;
 import com.hms.models.Patient;
 import com.hms.services.PatientService;
 
@@ -21,13 +22,17 @@ public class TestPatientCRUD {
         patient.setEmail("precious@example.com");
         patient.setAddress("Kampala");
         patient.setEmergencyContact("Precious's Mom: 0707654321");
+ try {
+    boolean success = service.addPatient(patient);
 
-        boolean success = service.addPatient(patient);
-
-        if (success) {
-            System.out.println("Patient Added Successfully!");
-        } else {
-            System.out.println("Failed to Add Patient!");
-        }
+    if (success) {
+        System.out.println("Patient Added Successfully!");
+    } else {
+        System.out.println("Failed to Add Patient!");
     }
+
+ } catch (final ValidationException e) {
+    System.out.println(e.getMessage());
+  }
+ }
 }
