@@ -12,7 +12,7 @@ public class DoctorService {
     }
 
     public static void deleteDoctor(String name) {
-        doctors.removeIf(d -> d.getName().equalsIgnoreCase(name));
+        doctors.removeIf(d -> d.getFirstName().equalsIgnoreCase(name));
     }
 
     public static ArrayList<Doctor> getDoctors() {
