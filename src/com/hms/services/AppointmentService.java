@@ -28,8 +28,20 @@ if (!appointmentDAO.isDoctorAvailable(
 
     System.out.println("Doctor is already booked at that time.");
     return false;
+}if (!appointmentDAO.isDoctorAvailable(
+        appointment.getDoctorId(),
+        appointment.getAppointmentDate(),
+        appointment.getAppointmentTime())) {
+
+    System.out.println("--------------------------------");
+    System.out.println("Doctor is already booked!");
+    System.out.println("--------------------------------");
+
+    return false;
 }
-        return appointmentDAO.addAppointment(appointment);
+
+return appointmentDAO.addAppointment(appointment);
+        
     }
 
     public Appointment getAppointmentById(int id) {

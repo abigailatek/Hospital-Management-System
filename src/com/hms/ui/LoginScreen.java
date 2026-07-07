@@ -70,7 +70,7 @@ public class LoginScreen extends JFrame {
         loginPanel.add(loginBtn);
         loginPanel.add(clearBtn);
 
-        JLabel footer = new JLabel("© 2026 Hospital Management System", SwingConstants.CENTER);
+        JLabel footer = new JLabel("©️ 2026 Hospital Management System", SwingConstants.CENTER);
 
         mainPanel.add(header, BorderLayout.NORTH);
         mainPanel.add(loginPanel, BorderLayout.CENTER);
