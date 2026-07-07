@@ -1,0 +1,16 @@
+Doctor doctor = new Doctor();
+
+doctor.setUserId(2);
+doctor.setFirstName("Grace");
+doctor.setLastName("Nankya");
+doctor.setSpecialization("Pediatrics");
+doctor.setPhone("0701234567");
+doctor.setEmail("grace@hms.com");
+
+DoctorService service = new DoctorService();
+
+if(service.addDoctor(doctor)){
+    System.out.println("Doctor added successfully!");
+}else{
+    System.out.println("Failed.");
+}
