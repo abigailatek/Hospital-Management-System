@@ -4,6 +4,7 @@ public class Prescription {
 
     private int prescriptionId;
     private int recordId;
+
     private String medicineName;
     private String dosage;
     private String duration;
