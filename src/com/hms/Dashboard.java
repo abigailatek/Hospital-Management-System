@@ -27,7 +27,7 @@ public class Dashboard extends JFrame {
         JPanel main = new JPanel(new BorderLayout());
 
         JPanel topBar = new JPanel(new BorderLayout());
-        topBar.setBackground(Theme.PRIMARY_GREEN);
+        topBar.setBackground(Theme.PRIMARY);
         topBar.setPreferredSize(new Dimension(1400, 65));
 
         JLabel title = new JLabel("  Hospital Management System - Admin");
@@ -44,8 +44,8 @@ public class Dashboard extends JFrame {
         JButton logoutTopBtn = new JButton("Logout");
         logoutTopBtn.setFont(Theme.NORMAL);
         logoutTopBtn.setFocusPainted(false);
-        logoutTopBtn.setBackground(Color.WHITE);
-        logoutTopBtn.setForeground(Theme.PRIMARY_GREEN);
+        logoutTopBtn.setBackground(Theme.LIGHT_GREEN);
+        logoutTopBtn.setForeground(Theme.PRIMARY);
         logoutTopBtn.addActionListener(e -> confirmLogout());
 
         topRight.add(user);
@@ -56,7 +56,7 @@ public class Dashboard extends JFrame {
 
         JPanel sidebar = new JPanel(new GridLayout(12, 1, 5, 5));
         sidebar.setPreferredSize(new Dimension(230, 800));
-        sidebar.setBackground(Color.WHITE);
+        sidebar.setBackground(Theme.SIDEBAR);
         sidebar.setBorder(BorderFactory.createEmptyBorder(15, 10, 15, 10));
 
         JButton dashboardBtn = sidebarButton("Dashboard");
@@ -187,17 +187,21 @@ public class Dashboard extends JFrame {
         btn.setFocusPainted(false);
         btn.setBorderPainted(false);
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btn.setBackground(Color.WHITE);
-        btn.setForeground(Theme.TEXT);
+        btn.setBackground(Theme.SIDEBAR);
+        btn.setForeground(Color.WHITE);
         btn.setBorder(BorderFactory.createEmptyBorder(12, 15, 12, 10));
 
         btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                if (btn != activeButton) btn.setBackground(Theme.LIGHT_GREEN);
+                if (btn != activeButton) {
+                    btn.setBackground(Theme.DARK_GREEN);
+                }
             }
 
             public void mouseExited(java.awt.event.MouseEvent e) {
-                if (btn != activeButton) btn.setBackground(Color.WHITE);
+                if (btn != activeButton) {
+                    btn.setBackground(Theme.SIDEBAR);
+                }
             }
         });
 
@@ -206,13 +210,13 @@ public class Dashboard extends JFrame {
 
     private void setActive(JButton btn) {
         if (activeButton != null) {
-            activeButton.setBackground(Color.WHITE);
-            activeButton.setForeground(Theme.TEXT);
+            activeButton.setBackground(Theme.SIDEBAR);
+            activeButton.setForeground(Color.WHITE);
         }
 
         activeButton = btn;
-        activeButton.setBackground(Theme.PRIMARY_GREEN);
-        activeButton.setForeground(Color.WHITE);
+        activeButton.setBackground(Theme.LIGHT_GREEN);
+        activeButton.setForeground(Theme.PRIMARY);
     }
 
     private void confirmLogout() {
@@ -223,7 +227,9 @@ public class Dashboard extends JFrame {
                 JOptionPane.YES_NO_OPTION
         );
 
-        if (confirm == JOptionPane.YES_OPTION) dispose();
+        if (confirm == JOptionPane.YES_OPTION) {
+            dispose();
+        }
     }
 
     private void confirmClose() {
@@ -234,7 +240,9 @@ public class Dashboard extends JFrame {
                 JOptionPane.YES_NO_OPTION
         );
 
-        if (confirm == JOptionPane.YES_OPTION) dispose();
+        if (confirm == JOptionPane.YES_OPTION) {
+            dispose();
+        }
     }
 
     private void startSessionTimeout() {
@@ -255,7 +263,9 @@ public class Dashboard extends JFrame {
     }
 
     private void resetSessionTimer() {
-        if (sessionTimer != null) sessionTimer.restart();
+        if (sessionTimer != null) {
+            sessionTimer.restart();
+        }
     }
 
     public static void main(String[] args) {

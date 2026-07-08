@@ -4,97 +4,203 @@ import com.hms.utils.Theme;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 public class PatientRegistrationScreen extends JPanel {
 
+    private JTextField firstNameField;
+    private JTextField lastNameField;
+    private JTextField dobField;
+    private JTextField phoneField;
+    private JTextField emailField;
+    private JTextArea addressArea;
+
+    private JRadioButton maleBtn;
+    private JRadioButton femaleBtn;
+    private JRadioButton otherBtn;
+    private ButtonGroup genderGroup;
+
+    private DefaultTableModel tableModel;
+
     public PatientRegistrationScreen() {
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(15, 15));
         setBackground(Theme.BACKGROUND);
         setBorder(new EmptyBorder(20, 25, 20, 25));
 
-        JLabel title = new JLabel("PATIENT REGISTRATION", SwingConstants.CENTER);
+        JLabel title = new JLabel("PATIENT REGISTRATION");
         title.setFont(Theme.TITLE);
         title.setForeground(Theme.PRIMARY_GREEN);
 
-        JPanel form = new JPanel(new GridBagLayout());
-        form.setBackground(Color.WHITE);
-        form.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(215, 215, 215)),
-                new EmptyBorder(25, 30, 25, 30)
+        JPanel formPanel = createFormPanel();
+        JTable patientTable = createPatientTable();
+
+        JPanel center = new JPanel(new BorderLayout(15, 15));
+        center.setBackground(Theme.BACKGROUND);
+        center.add(formPanel, BorderLayout.NORTH);
+        center.add(new JScrollPane(patientTable), BorderLayout.CENTER);
+
+        add(title, BorderLayout.NORTH);
+        add(center, BorderLayout.CENTER);
+    }
+
+    private JPanel createFormPanel() {
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBackground(Color.WHITE);
+        formPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(220, 220, 220)),
+                new EmptyBorder(20, 25, 20, 25)
         ));
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.insets = new Insets(8, 10, 8, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JTextField firstName = new JTextField(18);
-        JTextField lastName = new JTextField(18);
-        JTextField dob = new JTextField(18);
-        JTextField phone = new JTextField(18);
-        JTextField email = new JTextField(18);
+        firstNameField = field();
+        lastNameField = field();
+        dobField = field();
+        phoneField = field();
+        emailField = field();
 
-        JRadioButton male = new JRadioButton("M");
-        JRadioButton female = new JRadioButton("F");
-        JRadioButton other = new JRadioButton("O");
+        maleBtn = new JRadioButton("Male");
+        femaleBtn = new JRadioButton("Female");
+        otherBtn = new JRadioButton("Other");
 
-        ButtonGroup genderGroup = new ButtonGroup();
-        genderGroup.add(male);
-        genderGroup.add(female);
-        genderGroup.add(other);
+        maleBtn.setBackground(Color.WHITE);
+        femaleBtn.setBackground(Color.WHITE);
+        otherBtn.setBackground(Color.WHITE);
 
-        JPanel genderPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        genderGroup = new ButtonGroup();
+        genderGroup.add(maleBtn);
+        genderGroup.add(femaleBtn);
+        genderGroup.add(otherBtn);
+
+        JPanel genderPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
         genderPanel.setBackground(Color.WHITE);
-        genderPanel.add(male);
-        genderPanel.add(female);
-        genderPanel.add(other);
+        genderPanel.add(maleBtn);
+        genderPanel.add(femaleBtn);
+        genderPanel.add(otherBtn);
 
-        JTextArea address = new JTextArea(4, 40);
-        address.setLineWrap(true);
-        address.setWrapStyleWord(true);
+        addressArea = new JTextArea(3, 40);
+        addressArea.setFont(Theme.NORMAL);
+        addressArea.setLineWrap(true);
+        addressArea.setWrapStyleWord(true);
 
-        addRow(form, gbc, 0, "First Name:", firstName, "Last Name:", lastName);
-        addRow(form, gbc, 1, "DOB:", dob, "Gender:", genderPanel);
-        addRow(form, gbc, 2, "Phone:", phone, "Email:", email);
+        addRow(formPanel, gbc, 0, "First Name:", firstNameField, "Last Name:", lastNameField);
+        addRow(formPanel, gbc, 1, "DOB:", dobField, "Gender:", genderPanel);
+        addRow(formPanel, gbc, 2, "Phone:", phoneField, "Email:", emailField);
 
         gbc.gridx = 0;
         gbc.gridy = 3;
-        form.add(label("Address:"), gbc);
+        gbc.gridwidth = 1;
+        formPanel.add(label("Address:"), gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 3;
         gbc.gridwidth = 3;
-        form.add(new JScrollPane(address), gbc);
-        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        formPanel.add(new JScrollPane(addressArea), gbc);
 
         JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
         buttons.setBackground(Color.WHITE);
 
-        JButton save = button("Save");
-        JButton clear = button("Clear");
-        JButton cancel = button("Cancel");
+        JButton saveBtn = button("Save");
+        JButton clearBtn = button("Clear");
+        JButton cancelBtn = button("Cancel");
 
-        buttons.add(save);
-        buttons.add(clear);
-        buttons.add(cancel);
+        saveBtn.addActionListener(e -> savePatient());
+        clearBtn.addActionListener(e -> clearForm());
+        cancelBtn.addActionListener(e -> clearForm());
+
+        buttons.add(saveBtn);
+        buttons.add(clearBtn);
+        buttons.add(cancelBtn);
 
         gbc.gridx = 0;
         gbc.gridy = 4;
         gbc.gridwidth = 4;
-        form.add(buttons, gbc);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        formPanel.add(buttons, gbc);
 
-        add(title, BorderLayout.NORTH);
-        add(form, BorderLayout.CENTER);
+        return formPanel;
+    }
 
-        clear.addActionListener(e -> {
-            firstName.setText("");
-            lastName.setText("");
-            dob.setText("");
-            phone.setText("");
-            email.setText("");
-            address.setText("");
-            genderGroup.clearSelection();
+    private JTable createPatientTable() {
+        tableModel = new DefaultTableModel(
+                new String[]{
+                        "First Name",
+                        "Last Name",
+                        "DOB",
+                        "Gender",
+                        "Phone",
+                        "Email",
+                        "Address"
+                },
+                0
+        );
+
+        JTable table = new JTable(tableModel);
+        table.setRowHeight(28);
+        table.setFont(Theme.NORMAL);
+        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+
+        return table;
+    }
+
+    private void savePatient() {
+        String firstName = firstNameField.getText().trim();
+        String lastName = lastNameField.getText().trim();
+        String dob = dobField.getText().trim();
+        String gender = getSelectedGender();
+        String phone = phoneField.getText().trim();
+        String email = emailField.getText().trim();
+        String address = addressArea.getText().trim();
+
+        if (firstName.isEmpty() || lastName.isEmpty() || phone.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter First Name, Last Name, and Phone.",
+                    "Missing Information",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        tableModel.addRow(new Object[]{
+                firstName,
+                lastName,
+                dob,
+                gender,
+                phone,
+                email,
+                address
         });
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Patient details saved successfully.",
+                "Saved",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+
+        clearForm();
+    }
+
+    private String getSelectedGender() {
+        if (maleBtn.isSelected()) return "Male";
+        if (femaleBtn.isSelected()) return "Female";
+        if (otherBtn.isSelected()) return "Other";
+        return "";
+    }
+
+    private void clearForm() {
+        firstNameField.setText("");
+        lastNameField.setText("");
+        dobField.setText("");
+        phoneField.setText("");
+        emailField.setText("");
+        addressArea.setText("");
+        genderGroup.clearSelection();
     }
 
     private void addRow(
@@ -107,6 +213,8 @@ public class PatientRegistrationScreen extends JPanel {
             JComponent field2
     ) {
         gbc.gridy = row;
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
         gbc.gridx = 0;
         panel.add(label(label1), gbc);
@@ -119,6 +227,12 @@ public class PatientRegistrationScreen extends JPanel {
 
         gbc.gridx = 3;
         panel.add(field2, gbc);
+    }
+
+    private JTextField field() {
+        JTextField field = new JTextField(18);
+        field.setFont(Theme.NORMAL);
+        return field;
     }
 
     private JLabel label(String text) {
