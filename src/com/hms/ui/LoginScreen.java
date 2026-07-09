@@ -1,112 +1,250 @@
 package com.hms.ui;
+ import com.hms.Dashboard;
+ import com.hms.DoctorDashboard;
+import com.hms.models.User;
 
-import com.hms.Dashboard;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.*;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
 
-public class LoginScreen extends JFrame {
+public class LoginScreen extends JFrame{
+     final private Font mainFont = new Font("Segoe UI", Font.PLAIN,16); 
+     final private Color themeColor = new Color(25,80,45);
+JPasswordField pfPassword;
+JTextField tfUsername;
+JComboBox<String> cbRole;
 
-    private JTextField usernameField;
-    private JPasswordField passwordField;
+public void initialize() {
+    /************Form Panel ************/
+    JLabel lblHospitalName = new JLabel("LifeCare Hospital", SwingConstants.CENTER);
+    JLabel lblUsername = new JLabel("Username");
+    lblUsername.setFont(mainFont);
+    lblUsername.setForeground(Color.WHITE);
 
-    private final Color PRIMARY_GREEN = new Color(46, 125, 50);
-    private final Color LIGHT_GREEN = new Color(232, 245, 233);
+    tfUsername = new JTextField();
+    tfUsername.setFont(mainFont);
+    tfUsername.setBackground(Color.WHITE);
+    tfUsername.setBorder(BorderFactory.createLineBorder(new Color(245,245,220),2));
 
-    public LoginScreen() {
+    JLabel lblRole = new JLabel("Role");
+    lblRole.setFont(mainFont);
+    lblRole.setForeground(Color.WHITE);
 
-        setTitle("Hospital Management System");
-        setSize(500, 550);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
+    cbRole = new JComboBox<>(new String[]{"Admin", "Doctor","Patient"});
+    cbRole.setFont(mainFont);
+    cbRole.setBackground(Color.WHITE);
 
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(Color.WHITE);
+    lblHospitalName.setFont(new Font("Georgia", Font.BOLD, 30));
+    lblHospitalName.setForeground(new Color(218, 165, 32));
 
-        // ================= HEADER =================
 
-        JPanel header = new JPanel();
-        header.setBackground(PRIMARY_GREEN);
-        header.setPreferredSize(new Dimension(500,100));
+    JLabel IbPassword = new JLabel("Password");
+    IbPassword.setFont(mainFont);
+    IbPassword.setForeground(Color.WHITE);
 
-        JLabel title = new JLabel("Hospital Management System");
-        title.setForeground(Color.WHITE);
-        title.setFont(new Font("Segoe UI", Font.BOLD, 24));
+    pfPassword = new JPasswordField();
+    pfPassword.setFont(mainFont);
+    pfPassword.setBackground(Color.WHITE);
+    pfPassword.setBorder(BorderFactory.createLineBorder(new Color(102,204,170),2));
 
-        header.add(title);
+    JCheckBox cbShowPassword = new JCheckBox("Show Password");
+    cbShowPassword.setFont(mainFont);
+    cbShowPassword.setBackground(themeColor);
 
-        // ================= LOGIN PANEL =================
-
-        JPanel loginPanel = new JPanel();
-        loginPanel.setBackground(Color.WHITE);
-        loginPanel.setBorder(new EmptyBorder(30,40,30,40));
-        loginPanel.setLayout(new GridLayout(8,1,10,10));
-
-        JLabel welcome = new JLabel("Welcome Back");
-        welcome.setFont(new Font("Segoe UI", Font.BOLD,20));
-
-        usernameField = new JTextField();
-        passwordField = new JPasswordField();
-
-        JButton loginBtn = new JButton("LOGIN");
-        JButton clearBtn = new JButton("CLEAR");
-
-        loginBtn.setBackground(PRIMARY_GREEN);
-        loginBtn.setForeground(Color.WHITE);
-        loginBtn.setFocusPainted(false);
-
-        clearBtn.setBackground(LIGHT_GREEN);
-
-        loginPanel.add(welcome);
-
-        loginPanel.add(new JLabel("Username"));
-        loginPanel.add(usernameField);
-
-        loginPanel.add(new JLabel("Password"));
-        loginPanel.add(passwordField);
-
-        loginPanel.add(loginBtn);
-        loginPanel.add(clearBtn);
-
-        JLabel footer = new JLabel("©️ 2026 Hospital Management System", SwingConstants.CENTER);
-
-        mainPanel.add(header, BorderLayout.NORTH);
-        mainPanel.add(loginPanel, BorderLayout.CENTER);
-        mainPanel.add(footer, BorderLayout.SOUTH);
-
-        add(mainPanel);
-
-        // ================= BUTTONS =================
-
-        loginBtn.addActionListener(e -> login());
-
-        clearBtn.addActionListener(e -> {
-            usernameField.setText("");
-            passwordField.setText("");
-        });
-    }
-
-    private void login(){
-
-        String username = usernameField.getText();
-        String password = String.valueOf(passwordField.getPassword());
-
-        if(username.equals("admin") && password.equals("admin123")){
-
-            dispose();
-
-            new Dashboard().setVisible(true);
-
-        }else{
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Invalid username or password.",
-                    "Login Failed",
-                    JOptionPane.ERROR_MESSAGE
-            );
+cbShowPassword.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (cbShowPassword.isSelected()) {
+            pfPassword.setEchoChar((char) 0);
+        } else {
+            pfPassword.setEchoChar('\u2022');
         }
     }
+});
+
+JButton btnForgotPassword = new JButton("Forgot Password?");
+    btnForgotPassword.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+    btnForgotPassword.setForeground(new Color(0, 102, 204));
+    btnForgotPassword.setBorderPainted(false);
+    btnForgotPassword.setContentAreaFilled(false);
+    btnForgotPassword.setFocusPainted(false);
+    btnForgotPassword.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+    btnForgotPassword.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        JOptionPane.showMessageDialog(
+            LoginScreen.this,
+            "Please contact the system administrator to reset your password.",
+            "Forgot Password",
+            JOptionPane.INFORMATION_MESSAGE
+        );
+    }
+});
+
+
+    JPanel formPanel = new JPanel();
+    formPanel.setLayout(new GridLayout(0,1,8,8));
+    formPanel.setBackground(themeColor);
+    formPanel.setBorder(BorderFactory.createEmptyBorder(30,50,30,50));
+    formPanel.add(lblHospitalName);
+    formPanel.add(lblUsername);
+    formPanel.add(tfUsername);
+    formPanel.add(lblRole);
+    formPanel.add(cbRole);
+    formPanel.add(IbPassword);
+    formPanel.add(pfPassword);
+    formPanel.add(cbShowPassword);
+    formPanel.add(btnForgotPassword);
+
+    
+
+    /************Buttons Panel************/
+    JButton btnLogin = new JButton("Login");
+    btnLogin.setFont(mainFont);
+    btnLogin.setBackground(new Color(102,204,170));
+    btnLogin.setForeground(Color.WHITE);
+    btnLogin.setFocusPainted(false);
+
+    btnLogin.addActionListener(new ActionListener(){
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("Login button clicked");
+            String username = tfUsername.getText();
+            String password = String.valueOf(pfPassword.getPassword());
+String role = cbRole.getSelectedItem().toString();
+
+User user = getAuthenticatedUser(
+    username,
+    password,
+    role
+);
+
+           if (user != null) {
+
+    if(role.equals("Admin")){
+
+    Dashboard dashboard = new Dashboard();
+    dashboard.setVisible(true);
+
+}
+else if(role.equals("Doctor")){
+
+    DoctorDashboard dashboard = new DoctorDashboard();
+    dashboard.setVisible(true);
+
+}
+else if(role.equals("Patient")){
+
+    PatientScreen screen = new PatientScreen();
+    screen.setVisible(true);
+
+}
+
+    dispose();
+}
+            else{
+                JOptionPane.showMessageDialog(LoginScreen.this,
+                    "Email or Password Invalid",
+                    "Try again",
+                    JOptionPane.ERROR_MESSAGE
+                );
+            }
+        }
+
+
+    });
+
+    JButton btnClear = new JButton("Clear");
+    btnClear.setFont(mainFont);
+    btnClear.setBackground(new Color(255,153,153));
+    btnClear.setForeground(Color.WHITE);
+    btnClear.setFocusPainted(false);
+
+    btnClear.addActionListener(new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            tfUsername.setText("");
+    pfPassword.setText("");
+    cbRole.setSelectedIndex(0);
+        }
+        
+    });
+
+    JButton btnExit = new JButton("Exit");
+    btnExit.setFont(mainFont);
+    btnExit.setBackground(new Color(255,102,102));
+    btnExit.setForeground(Color.WHITE);
+
+    btnExit.addActionListener(e -> System.exit(0));
+
+    JPanel buttonsPanel = new JPanel();
+    buttonsPanel.setLayout(new GridLayout(1,3,10,0));
+    buttonsPanel.setBorder(BorderFactory.createEmptyBorder(30,50,30,50));
+    buttonsPanel.setBackground(themeColor);
+    buttonsPanel.add(btnLogin);
+    buttonsPanel.add(btnClear);
+    buttonsPanel.add(btnExit);
+
+
+
+    /************Initialise the Frame************/
+    add(formPanel,BorderLayout.NORTH);
+    add(buttonsPanel,BorderLayout.SOUTH);
+    getContentPane().setBackground(themeColor);
+
+
+    setTitle("LifeCare Hospital");
+    setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+   setSize(450,600);
+   setResizable(false);
+   setLocationRelativeTo(null);
+   setVisible(true);
+}
+
+private User getAuthenticatedUser(String username,
+                                  String password,
+                                  String role) {
+    User user = null;
+
+    final String DB_URL = "jdbc:sqlserver://localhost:1600;databaseName=HMS;encrypt=true;trustServerCertificate=true";
+    final String USERNAME = "sa";
+    final String PASSWORD = "12345678";
+    try{
+        Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+        //Connected to database successfully........
+        String sql = "SELECT * FROM users WHERE username=? AND email=? AND password=? AND role=?";
+        PreparedStatement preparedStatement = conn.prepareStatement(sql);
+        preparedStatement.setString(1,username);
+        preparedStatement.setString(3,password);
+        preparedStatement.setString(4, role);
+        
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()) {
+            user = new User();
+            user.name = resultSet.getString("name");
+            user.email = resultSet.getString("email");
+            user.phone = resultSet.getString("phone");
+            user.address = resultSet.getString("address");
+            user.password = resultSet.getString("password");
+        }
+        preparedStatement.close();
+        conn.close();
+    }catch(Exception e){
+        System.out.println("Database connection failed!");
+    }
+
+
+    return user;
+}
+
+public static void main(String[] args) {
+    LoginScreen loginScreen = new LoginScreen();
+    loginScreen.initialize();
+}
 }

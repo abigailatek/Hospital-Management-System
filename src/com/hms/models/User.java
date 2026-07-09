@@ -10,6 +10,11 @@ public class User {
     private int roleID;
     private String roleName;
     private LocalDateTime createdAt;
+    public String email;
+    public String name;
+    public String phone;
+    public String address;
+    public String password;
 
     // Default Constructor
     public User() {

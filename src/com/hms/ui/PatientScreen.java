@@ -7,9 +7,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
-public class PatientsScreen extends JPanel {
+public class PatientScreen extends JPanel {
 
-    public PatientsScreen() {
+    public PatientScreen() {
         setLayout(new BorderLayout(15, 15));
         setBackground(Theme.BACKGROUND);
         setBorder(new EmptyBorder(20, 25, 20, 25));
