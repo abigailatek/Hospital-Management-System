@@ -53,7 +53,6 @@ public void initialize() {
     JCheckBox cbShowPassword = new JCheckBox("Show Password");
     cbShowPassword.setFont(mainFont);
     cbShowPassword.setBackground(themeColor);
-
 cbShowPassword.addActionListener(new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -64,7 +63,6 @@ cbShowPassword.addActionListener(new ActionListener() {
         }
     }
 });
-
 JButton btnForgotPassword = new JButton("Forgot Password?");
     btnForgotPassword.setFont(new Font("Segoe UI", Font.PLAIN, 14));
     btnForgotPassword.setForeground(new Color(0, 102, 204));
@@ -72,7 +70,7 @@ JButton btnForgotPassword = new JButton("Forgot Password?");
     btnForgotPassword.setContentAreaFilled(false);
     btnForgotPassword.setFocusPainted(false);
     btnForgotPassword.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
+    
     btnForgotPassword.addActionListener(new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -142,7 +140,6 @@ else if(role.equals("Patient")){
 
     PatientScreen screen = new PatientScreen();
     screen.setVisible(true);
-
 }
 
     dispose();
@@ -155,8 +152,6 @@ else if(role.equals("Patient")){
                 );
             }
         }
-
-
     });
 
     JButton btnClear = new JButton("Clear");

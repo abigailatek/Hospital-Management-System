@@ -64,7 +64,11 @@ public class PatientDAO {
             patient.setFirstName(rs.getString("FirstName"));
             patient.setLastName(rs.getString("LastName"));
             patient.setGender(rs.getString("Gender"));
-            patient.setDateOfBirth(rs.getDate("DateOfBirth").toLocalDate());
+            Date dob = rs.getDate("DateOfBirth");
+
+if (dob != null) {
+    patient.setDateOfBirth(dob.toLocalDate());
+}
             patient.setPhone(rs.getString("Phone"));
             patient.setEmail(rs.getString("Email"));
             patient.setAddress(rs.getString("Address"));
@@ -98,7 +102,11 @@ public class PatientDAO {
             patient.setFirstName(rs.getString("FirstName"));
             patient.setLastName(rs.getString("LastName"));
             patient.setGender(rs.getString("Gender"));
-            patient.setDateOfBirth(rs.getDate("DateOfBirth").toLocalDate());
+            Date dob = rs.getDate("DateOfBirth");
+
+if (dob != null) {
+    patient.setDateOfBirth(dob.toLocalDate());
+}
             patient.setPhone(rs.getString("Phone"));
             patient.setEmail(rs.getString("Email"));
             patient.setAddress(rs.getString("Address"));
@@ -204,7 +212,11 @@ public class PatientDAO {
             patient.setFirstName(rs.getString("FirstName"));
             patient.setLastName(rs.getString("LastName"));
             patient.setGender(rs.getString("Gender"));
-            patient.setDateOfBirth(rs.getDate("DateOfBirth").toLocalDate());
+            Date dob = rs.getDate("DateOfBirth");
+
+if (dob != null) {
+    patient.setDateOfBirth(dob.toLocalDate());
+}
             patient.setPhone(rs.getString("Phone"));
             patient.setEmail(rs.getString("Email"));
             patient.setAddress(rs.getString("Address"));
@@ -238,7 +250,11 @@ public List<Patient> getAllPatients1() {
             patient.setFirstName(rs.getString("FirstName"));
             patient.setLastName(rs.getString("LastName"));
             patient.setGender(rs.getString("Gender"));
-            patient.setDateOfBirth(rs.getDate("DateOfBirth").toLocalDate());
+            Date dob = rs.getDate("DateOfBirth");
+
+if (dob != null) {
+    patient.setDateOfBirth(dob.toLocalDate());
+}
             patient.setPhone(rs.getString("Phone"));
             patient.setEmail(rs.getString("Email"));
             patient.setAddress(rs.getString("Address"));
