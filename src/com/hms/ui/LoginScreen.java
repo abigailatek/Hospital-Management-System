@@ -29,7 +29,7 @@ public void initialize() {
     tfUsername.setBackground(Color.WHITE);
     tfUsername.setBorder(BorderFactory.createLineBorder(new Color(245,245,220),2));
 
-    JLabel lblRole = new JLabel("Role");
+    JLabel lblRole = new JLabel("Switch User");
     lblRole.setFont(mainFont);
     lblRole.setForeground(Color.WHITE);
 
@@ -39,7 +39,6 @@ public void initialize() {
 
     lblHospitalName.setFont(new Font("Georgia", Font.BOLD, 30));
     lblHospitalName.setForeground(new Color(218, 165, 32));
-
 
     JLabel IbPassword = new JLabel("Password");
     IbPassword.setFont(mainFont);
@@ -70,7 +69,6 @@ JButton btnForgotPassword = new JButton("Forgot Password?");
     btnForgotPassword.setContentAreaFilled(false);
     btnForgotPassword.setFocusPainted(false);
     btnForgotPassword.setCursor(new Cursor(Cursor.HAND_CURSOR));
-    
     btnForgotPassword.addActionListener(new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -146,7 +144,7 @@ else if(role.equals("Patient")){
 }
             else{
                 JOptionPane.showMessageDialog(LoginScreen.this,
-                    "Email or Password Invalid",
+                    "Username or Password Invalid",
                     "Try again",
                     JOptionPane.ERROR_MESSAGE
                 );
@@ -186,8 +184,6 @@ else if(role.equals("Patient")){
     buttonsPanel.add(btnClear);
     buttonsPanel.add(btnExit);
 
-
-
     /************Initialise the Frame************/
     add(formPanel,BorderLayout.NORTH);
     add(buttonsPanel,BorderLayout.SOUTH);
@@ -207,17 +203,17 @@ private User getAuthenticatedUser(String username,
                                   String role) {
     User user = null;
 
-    final String DB_URL = "jdbc:sqlserver://localhost:1600;databaseName=HMS;encrypt=true;trustServerCertificate=true";
+    final String DB_URL = "jdbc:sqlserver://localhost:1433;databaseName=HMS;encrypt=true;trustServerCertificate=true";
     final String USERNAME = "sa";
     final String PASSWORD = "12345678";
     try{
         Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
         //Connected to database successfully........
-        String sql = "SELECT * FROM users WHERE username=? AND email=? AND password=? AND role=?";
+        String sql = "SELECT * FROM users WHERE username=? AND password=? AND role=?";
         PreparedStatement preparedStatement = conn.prepareStatement(sql);
         preparedStatement.setString(1,username);
-        preparedStatement.setString(3,password);
-        preparedStatement.setString(4, role);
+        preparedStatement.setString(2,password);
+        preparedStatement.setString(3, role);
         
         ResultSet resultSet = preparedStatement.executeQuery();
         if (resultSet.next()) {
@@ -231,9 +227,9 @@ private User getAuthenticatedUser(String username,
         preparedStatement.close();
         conn.close();
     }catch(Exception e){
-        System.out.println("Database connection failed!");
+        
+        e.printStackTrace();
     }
-
 
     return user;
 }
