@@ -44,23 +44,4 @@ public boolean addMedicalRecord(MedicalRecord record) {
 
     return false;
 }
-
-      private MedicalRecord mapResultSet(ResultSet rs) throws SQLException {
-
-    MedicalRecord record = new MedicalRecord();
-
-    record.setRecordId(rs.getInt("RecordID"));
-    record.setPatientId(rs.getInt("PatientID"));
-    record.setDoctorId(rs.getInt("DoctorID"));
-
-    record.setDiagnosis(rs.getString("Diagnosis"));
-    record.setTreatment(rs.getString("Treatment"));
-    record.setAllergies(rs.getString("Allergies"));
-    record.setChronicConditions(rs.getString("ChronicConditions"));
-
-    record.setRecordDate(
-            rs.getDate("RecordDate").toLocalDate());
-
-    return record;
-}
 }
