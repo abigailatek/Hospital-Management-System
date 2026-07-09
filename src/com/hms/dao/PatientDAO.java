@@ -1,7 +1,6 @@
  package com.hms.dao;
 
 import com.hms.database.DatabaseConnection;
-import com.hms.models.MedicalRecord;
 import com.hms.models.Patient;
 
 import java.sql.Connection;
@@ -13,6 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 public class PatientDAO {
+    
     public boolean addPatient(Patient patient) {
     String sql = """
         INSERT INTO Patients
@@ -216,60 +216,41 @@ public class PatientDAO {
     }
     return patients;
 }
-      private MedicalRecord mapResultSet(ResultSet rs) throws SQLException {
 
-    MedicalRecord record = new MedicalRecord();
 
-    record.setRecordId(rs.getInt("RecordID"));
-    record.setPatientId(rs.getInt("PatientID"));
-    record.setDoctorId(rs.getInt("DoctorID"));
+public List<Patient> getAllPatients1() {
 
-    record.setDiagnosis(rs.getString("Diagnosis"));
-    record.setTreatment(rs.getString("Treatment"));
-    record.setAllergies(rs.getString("Allergies"));
-    record.setChronicConditions(rs.getString("ChronicConditions"));
+    List<Patient> patients = new ArrayList<>();
 
-    record.setRecordDate(
-            rs.getDate("RecordDate").toLocalDate());
-
-    return record;
-}
-public boolean addMedicalRecord(MedicalRecord record) {
-
-    String sql = """
-        INSERT INTO MedicalRecords
-        (
-            PatientID,
-            DoctorID,
-            Diagnosis,
-            Treatment,
-            Allergies,
-            ChronicConditions,
-            RecordDate
-        )
-        VALUES
-        (?,?,?,?,?,?,?)
-        """;
+    String sql = "SELECT * FROM Patients";
 
     try (
-        Connection conn = DatabaseConnection.getConnection();
-        PreparedStatement ps = conn.prepareStatement(sql)
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery()
     ) {
 
-        ps.setInt(1, record.getPatientId());
-        ps.setInt(2, record.getDoctorId());
-        ps.setString(3, record.getDiagnosis());
-        ps.setString(4, record.getTreatment());
-        ps.setString(5, record.getAllergies());
-        ps.setString(6, record.getChronicConditions());
-        ps.setDate(7, Date.valueOf(record.getRecordDate()));
+        while (rs.next()) {
 
-        return ps.executeUpdate() > 0;
+            Patient patient = new Patient();
+
+            patient.setPatientID(rs.getInt("PatientID"));
+            patient.setFirstName(rs.getString("FirstName"));
+            patient.setLastName(rs.getString("LastName"));
+            patient.setGender(rs.getString("Gender"));
+            patient.setDateOfBirth(rs.getDate("DateOfBirth").toLocalDate());
+            patient.setPhone(rs.getString("Phone"));
+            patient.setEmail(rs.getString("Email"));
+            patient.setAddress(rs.getString("Address"));
+            patient.setEmergencyContact(rs.getString("EmergencyContact"));
+
+            patients.add(patient);
+        }
 
     } catch (SQLException e) {
         e.printStackTrace();
     }
 
-    return false;
+    return patients;
 }
 }
