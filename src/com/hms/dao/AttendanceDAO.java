@@ -1,29 +1,26 @@
 package com.hms.dao;
 
 import com.hms.database.DatabaseConnection;
-import com.hms.models.LabTest;
+import com.hms.models.Attendance;
 
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class LabTestDAO {
+public class AttendanceDAO {
 
-    public boolean addLabTest(LabTest test) {
+    public boolean addAttendance(Attendance attendance) {
 
         String sql = """
-            INSERT INTO LabTests
+            INSERT INTO Attendance
             (
-                PatientID,
-                DoctorID,
-                TestName,
-                Result,
-                TestDate,
+                StaffID,
+                AttendanceDate,
                 Status
             )
             VALUES
-            (?,?,?,?,?,?)
+            (?,?,?)
             """;
 
         try (
@@ -31,12 +28,9 @@ public class LabTestDAO {
                 PreparedStatement ps = conn.prepareStatement(sql)
         ) {
 
-            ps.setInt(1, test.getPatientId());
-            ps.setInt(2, test.getDoctorId());
-            ps.setString(3, test.getTestName());
-            ps.setString(4, test.getResult());
-            ps.setDate(5, Date.valueOf(test.getTestDate()));
-            ps.setString(6, test.getStatus());
+            ps.setInt(1, attendance.getStaffId());
+            ps.setDate(2, Date.valueOf(attendance.getAttendanceDate()));
+            ps.setString(3, attendance.getStatus());
 
             return ps.executeUpdate() > 0;
 
