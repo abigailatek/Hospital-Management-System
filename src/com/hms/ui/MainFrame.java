@@ -1,14 +1,36 @@
 package com.hms.ui;
 
-import java.awt.*;
+import com.hms.models.User;
+import com.hms.utils.UserSession;
+
 import javax.swing.*;
+import java.awt.*;
 
 public class MainFrame extends JFrame {
-private JPanel sidebar;
-private JPanel contentPanel;
-private CardLayout cardLayout;
+
+    private JPanel sidebar;
+    private JPanel contentPanel;
+    private CardLayout cardLayout;
+
+    private JButton btnDashboard;
+    private JButton btnPatients;
+    private JButton btnDoctors;
+    private JButton btnAppointments;
+    private JButton btnMedicalRecords;
+    private JButton btnPrescriptions;
+    private JButton btnLaboratory;
+    private JButton btnInventory;
+    private JButton btnBilling;
+    private JButton btnPayments;
+    private JButton btnStaff;
+    private JButton btnAttendance;
+    private JButton btnReports;
+    private JButton btnSettings;
+    private JButton btnLogout;
+
     public MainFrame() {
         initialize();
+        applyRolePermissions();
     }
 
     private void initialize() {
@@ -19,74 +41,109 @@ private CardLayout cardLayout;
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        //-------------------------
-        // Sidebar
-        //-------------------------
-
         sidebar = new JPanel();
         sidebar.setPreferredSize(new Dimension(250, 800));
         sidebar.setBackground(new Color(16, 120, 110));
         sidebar.setLayout(new GridLayout(15, 1));
 
-        addButton("Dashboard");
-        addButton("Patients");
-        addButton("Doctors");
-        addButton("Appointments");
-        addButton("Medical Records");
-        addButton("Prescriptions");
-        addButton("Laboratory");
-        addButton("Inventory");
-        addButton("Billing");
-        addButton("Payments");
-        addButton("Staff");
-        addButton("Attendance");
-        addButton("Reports");
-        addButton("Settings");
-        addButton("Logout");
+        btnDashboard = createButton("Dashboard");
+        btnPatients = createButton("Patients");
+        btnDoctors = createButton("Doctors");
+        btnAppointments = createButton("Appointments");
+        btnMedicalRecords = createButton("Medical Records");
+        btnPrescriptions = createButton("Prescriptions");
+        btnLaboratory = createButton("Laboratory");
+        btnInventory = createButton("Inventory");
+        btnBilling = createButton("Billing");
+        btnPayments = createButton("Payments");
+        btnStaff = createButton("Staff");
+        btnAttendance = createButton("Attendance");
+        btnReports = createButton("Reports");
+        btnSettings = createButton("Settings");
+        btnLogout = createButton("Logout");
 
-        //-------------------------
-        // Content Panel
-        //-------------------------
-    cardLayout = new CardLayout();
+        cardLayout = new CardLayout();
 
-contentPanel = new JPanel(cardLayout);
-contentPanel.add(new DashboardPanel(), "Dashboard");
-contentPanel.add(new PatientPanel(), "Patients");
-contentPanel.add(new JPanel(), "Doctors");
-contentPanel.add(new JPanel(), "Appointments");
-contentPanel.add(new JPanel(), "Medical Records");
-contentPanel.add(new JPanel(), "Prescriptions");
-contentPanel.add(new JPanel(), "Laboratory");
-contentPanel.add(new JPanel(), "Inventory");
-contentPanel.add(new JPanel(), "Billing");
-contentPanel.add(new JPanel(), "Payments");
-contentPanel.add(new JPanel(), "Staff");
-contentPanel.add(new JPanel(), "Attendance");
-contentPanel.add(new JPanel(), "Reports");
-contentPanel.add(new JPanel(), "Settings");
+        contentPanel = new JPanel(cardLayout);
+
+        contentPanel.add(new DashboardPanel(), "Dashboard");
+        contentPanel.add(new PatientPanel(), "Patients");
+        contentPanel.add(new JPanel(), "Doctors");
+        contentPanel.add(new JPanel(), "Appointments");
+        contentPanel.add(new JPanel(), "Medical Records");
+        contentPanel.add(new JPanel(), "Prescriptions");
+        contentPanel.add(new JPanel(), "Laboratory");
+        contentPanel.add(new JPanel(), "Inventory");
+        contentPanel.add(new JPanel(), "Billing");
+        contentPanel.add(new JPanel(), "Payments");
+        contentPanel.add(new JPanel(), "Staff");
+        contentPanel.add(new JPanel(), "Attendance");
+        contentPanel.add(new ReportsPanel(), "Reports");
+        contentPanel.add(new JPanel(), "Settings");
+
         add(sidebar, BorderLayout.WEST);
         add(contentPanel, BorderLayout.CENTER);
+
         setVisible(true);
     }
-   private void addButton(String text) {
 
-    JButton button = new JButton(text);
+    private JButton createButton(String text) {
 
-    button.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-    button.setBackground(new Color(16,120,110));
-    button.setForeground(Color.WHITE);
-    button.setFocusPainted(false);
-    button.setBorder(BorderFactory.createEmptyBorder(15,20,15,20));
-    button.addActionListener(e -> {
-        cardLayout.show(contentPanel, text);
-    });
-    sidebar.add(button);
+        JButton button = new JButton(text);
+
+        button.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        button.setBackground(new Color(16, 120, 110));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+
+        button.addActionListener(e -> {
+if (text.equals("Logout")) {
+    UserSession.logout();
+    dispose();
+    new LoginScreen();
+    return;
 }
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new MainFrame();
+            cardLayout.show(contentPanel, text);
         });
 
+        sidebar.add(button);
+
+        return button;
     }
 
+    private void applyRolePermissions() {
+
+        User user = UserSession.getCurrentUser();
+
+        if (user == null) {
+            return;
+        }
+
+        int role = user.getRoleID();
+
+        if (role == 2) { // Doctor
+            btnBilling.setVisible(false);
+            btnPayments.setVisible(false);
+            btnInventory.setVisible(false);
+            btnStaff.setVisible(false);
+            btnAttendance.setVisible(false);
+        }
+
+        if (role == 4) { // Pharmacist
+            btnPatients.setVisible(false);
+            btnDoctors.setVisible(false);
+            btnAppointments.setVisible(false);
+            btnBilling.setVisible(false);
+        }
+
+        if (role == 5) { // Accountant
+            btnLaboratory.setVisible(false);
+            btnPrescriptions.setVisible(false);
+            btnInventory.setVisible(false);
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(MainFrame::new);
+    }
 }

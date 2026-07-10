@@ -3,33 +3,13 @@ package com.hms.dao;
 import com.hms.database.DatabaseConnection;
 
 import javax.swing.table.DefaultTableModel;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 
 public class ReportDAO {
 
-    public DefaultTableModel getPatientReport() {
+    public DefaultTableModel getReport(String sql) {
 
         DefaultTableModel model = new DefaultTableModel();
-
-        model.addColumn("ID");
-        model.addColumn("First Name");
-        model.addColumn("Last Name");
-        model.addColumn("Gender");
-        model.addColumn("Phone");
-        model.addColumn("Email");
-
-        String sql = """
-                SELECT PatientID,
-                       FirstName,
-                       LastName,
-                       Gender,
-                       Phone,
-                       Email
-                FROM Patients
-                ORDER BY PatientID
-                """;
 
         try (
                 Connection conn = DatabaseConnection.getConnection();
@@ -37,17 +17,23 @@ public class ReportDAO {
                 ResultSet rs = ps.executeQuery()
         ) {
 
+            ResultSetMetaData meta = rs.getMetaData();
+
+            int columns = meta.getColumnCount();
+
+            for (int i = 1; i <= columns; i++) {
+                model.addColumn(meta.getColumnName(i));
+            }
+
             while (rs.next()) {
 
-                model.addRow(new Object[]{
-                        rs.getInt("PatientID"),
-                        rs.getString("FirstName"),
-                        rs.getString("LastName"),
-                        rs.getString("Gender"),
-                        rs.getString("Phone"),
-                        rs.getString("Email")
-                });
+                Object[] row = new Object[columns];
 
+                for (int i = 1; i <= columns; i++) {
+                    row[i - 1] = rs.getObject(i);
+                }
+
+                model.addRow(row);
             }
 
         } catch (Exception e) {
@@ -56,5 +42,4 @@ public class ReportDAO {
 
         return model;
     }
-
 }

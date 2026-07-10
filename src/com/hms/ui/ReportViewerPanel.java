@@ -71,9 +71,42 @@ public class ReportViewerPanel extends JPanel {
         // Load Reports
         //--------------------------------
 
-        ReportService service = new ReportService();
+     ReportService service = new ReportService();
+     
+     switch (reportTitle) {
 
-        if (reportTitle.equals("Patient Report")) {
+    case "Patient Report":
+        table.setModel(service.getPatientReport());
+        break;
+
+    case "Doctor Report":
+        table.setModel(service.getDoctorReport());
+        break;
+
+    case "Appointment Report":
+        table.setModel(service.getAppointmentReport());
+        break;
+
+    case "Billing Report":
+        table.setModel(service.getBillingReport());
+        break;
+
+    case "Payment Report":
+        table.setModel(service.getPaymentReport());
+        break;
+
+    case "Inventory Report":
+        table.setModel(service.getInventoryReport());
+        break;
+
+    case "Staff Report":
+        table.setModel(service.getStaffReport());
+        break;
+
+    case "Laboratory Report":
+        table.setModel(service.getLabReport());
+        break;}     
+          {
             table.setModel(service.getPatientReport());
         }
 

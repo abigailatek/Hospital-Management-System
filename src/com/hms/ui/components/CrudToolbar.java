@@ -13,6 +13,7 @@ public class CrudToolbar extends JPanel {
     public final JButton btnRefresh = new JButton("Refresh");
 
     public final JTextField txtSearch = new JTextField(18);
+    public final JButton btnSearch = new JButton("Search");
 
     public CrudToolbar() {
 
@@ -27,9 +28,9 @@ public class CrudToolbar extends JPanel {
 
         add(Box.createHorizontalStrut(25));
 
-        add(new JLabel("Search"));
-
+       add(new JLabel("Search"));
         add(txtSearch);
+        add(btnSearch);
 
     }
 

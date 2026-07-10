@@ -29,7 +29,7 @@ public class ReportsPanel extends JPanel {
         JButton billingBtn = createButton("Billing Report");
         JButton inventoryBtn = createButton("Inventory Report");
         JButton paymentBtn = createButton("Payment Report");
-
+     
         center.add(patientBtn);
         center.add(doctorBtn);
         center.add(appointmentBtn);
@@ -55,6 +55,23 @@ public class ReportsPanel extends JPanel {
 
             frame.setVisible(true);
         });
+        patientBtn.addActionListener(e ->
+        openReport("Patient Report"));
+
+doctorBtn.addActionListener(e ->
+        openReport("Doctor Report"));
+
+appointmentBtn.addActionListener(e ->
+        openReport("Appointment Report"));
+
+billingBtn.addActionListener(e ->
+        openReport("Billing Report"));
+
+paymentBtn.addActionListener(e ->
+        openReport("Payment Report"));
+
+inventoryBtn.addActionListener(e ->
+        openReport("Inventory Report"));
     }
 
     private JButton createButton(String text) {
@@ -67,4 +84,18 @@ public class ReportsPanel extends JPanel {
 
         return button;
     }
+     private void openReport(String title) {
+
+    JFrame frame = new JFrame(title);
+
+    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+    frame.setSize(1200, 700);
+
+    frame.setLocationRelativeTo(null);
+
+    frame.add(new ReportViewerPanel(title));
+
+    frame.setVisible(true);
+} 
 }

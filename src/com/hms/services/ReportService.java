@@ -9,6 +9,42 @@ public class ReportService {
     private final ReportDAO dao = new ReportDAO();
 
     public DefaultTableModel getPatientReport() {
-        return dao.getPatientReport();
+        return dao.getReport(
+                "SELECT * FROM Patients ORDER BY PatientID");
+    }
+
+    public DefaultTableModel getDoctorReport() {
+        return dao.getReport(
+                "SELECT * FROM Doctors ORDER BY DoctorID");
+    }
+
+    public DefaultTableModel getAppointmentReport() {
+        return dao.getReport(
+                "SELECT * FROM Appointments ORDER BY AppointmentID");
+    }
+
+    public DefaultTableModel getBillingReport() {
+        return dao.getReport(
+                "SELECT * FROM Bills ORDER BY BillID");
+    }
+
+    public DefaultTableModel getPaymentReport() {
+        return dao.getReport(
+                "SELECT * FROM Payments ORDER BY PaymentID");
+    }
+
+    public DefaultTableModel getInventoryReport() {
+        return dao.getReport(
+                "SELECT * FROM Inventory ORDER BY ItemID");
+    }
+
+    public DefaultTableModel getStaffReport() {
+        return dao.getReport(
+                "SELECT * FROM Staff ORDER BY StaffID");
+    }
+
+    public DefaultTableModel getLabReport() {
+        return dao.getReport(
+                "SELECT * FROM LabTests ORDER BY TestID");
     }
 }
