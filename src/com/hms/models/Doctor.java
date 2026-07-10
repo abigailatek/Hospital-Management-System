@@ -2,9 +2,8 @@ package com.hms.models;
 
 public class Doctor {
 
-    private int doctorId;
-    private int userId;
-
+    private int doctorID;
+    private int userID;
     private String firstName;
     private String lastName;
     private String specialization;
@@ -14,37 +13,20 @@ public class Doctor {
     public Doctor() {
     }
 
-    public Doctor(int doctorId,
-                  int userId,
-                  String firstName,
-                  String lastName,
-                  String specialization,
-                  String phone,
-                  String email) {
-
-        this.doctorId = doctorId;
-        this.userId = userId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.specialization = specialization;
-        this.phone = phone;
-        this.email = email;
+    public int getDoctorID() {
+        return doctorID;
     }
 
-    public int getDoctorId() {
-        return doctorId;
+    public void setDoctorID(int doctorID) {
+        this.doctorID = doctorID;
     }
 
-    public void setDoctorId(int doctorId) {
-        this.doctorId = doctorId;
+    public int getUserID() {
+        return userID;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 
     public String getFirstName() {
@@ -85,13 +67,5 @@ public class Doctor {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    @Override
-    public String toString() {
-        return doctorId + " | "
-                + firstName + " "
-                + lastName + " | "
-                + specialization;
     }
 }

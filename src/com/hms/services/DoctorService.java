@@ -1,21 +1,28 @@
 package com.hms.services;
 
+import com.hms.dao.DoctorDAO;
 import com.hms.models.Doctor;
-import java.util.ArrayList;
+
+import java.util.List;
 
 public class DoctorService {
 
-    private static ArrayList<Doctor> doctors = new ArrayList<>();
+    private final DoctorDAO dao =
+            new DoctorDAO();
 
-    public static void addDoctor(Doctor d) {
-        doctors.add(d);
+    public boolean createDoctor(
+            Doctor doctor) {
+
+        return dao.addDoctor(doctor);
     }
 
-    public static void deleteDoctor(String name) {
-        doctors.removeIf(d -> d.getFirstName().equalsIgnoreCase(name));
+    public List<Doctor> getAllDoctors() {
+        return dao.getAllDoctors();
     }
 
-    public static ArrayList<Doctor> getDoctors() {
-        return doctors;
+    public boolean deleteDoctor(
+            int doctorID) {
+
+        return dao.deleteDoctor(doctorID);
     }
 }
