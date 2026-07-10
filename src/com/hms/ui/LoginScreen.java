@@ -20,7 +20,6 @@ public class LoginScreen extends JFrame {
     public LoginScreen() {
         initialize();
     }
-
     private void initialize() {
 
         setTitle("LifeCare Hospital Login");
@@ -242,12 +241,14 @@ public class LoginScreen extends JFrame {
             String role) {
 
         User user = null;
+         
 
         String url =
-                "jdbc:sqlserver://localhost:1433;"
-                        + "databaseName=HMS;"
-                        + "encrypt=true;"
-                        + "trustServerCertificate=true";
+        "jdbc:sqlserver://localhost;"
+        + "instanceName=SQLEXPRESS;"
+        + "databaseName=HMS;"
+        + "encrypt=true;"
+        + "trustServerCertificate=true";
 
         String dbUser = "sa";
         String dbPassword = "12345678";
