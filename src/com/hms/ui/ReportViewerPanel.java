@@ -1,5 +1,6 @@
 package com.hms.ui;
 
+import com.hms.services.ReportService;
 import com.hms.utils.Theme;
 
 import javax.swing.*;
@@ -14,13 +15,13 @@ public class ReportViewerPanel extends JPanel {
 
     public ReportViewerPanel(String reportTitle) {
 
-        setLayout(new BorderLayout(15,15));
+        setLayout(new BorderLayout(15, 15));
         setBackground(Theme.BACKGROUND);
-        setBorder(new EmptyBorder(20,20,20,20));
+        setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        //-----------------------------
+        //--------------------------------
         // Title
-        //-----------------------------
+        //--------------------------------
 
         JLabel title = new JLabel(reportTitle);
 
@@ -29,9 +30,9 @@ public class ReportViewerPanel extends JPanel {
 
         add(title, BorderLayout.NORTH);
 
-        //-----------------------------
+        //--------------------------------
         // Toolbar
-        //-----------------------------
+        //--------------------------------
 
         JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
@@ -48,14 +49,13 @@ public class ReportViewerPanel extends JPanel {
         toolbar.add(excelBtn);
 
         toolbar.add(new JLabel("Search"));
-
         toolbar.add(searchField);
 
         add(toolbar, BorderLayout.SOUTH);
 
-        //-----------------------------
+        //--------------------------------
         // Table
-        //-----------------------------
+        //--------------------------------
 
         model = new DefaultTableModel();
 
@@ -67,28 +67,47 @@ public class ReportViewerPanel extends JPanel {
 
         add(scroll, BorderLayout.CENTER);
 
-        //-----------------------------
-        // Temporary events
-        //-----------------------------
+        //--------------------------------
+        // Load Reports
+        //--------------------------------
 
-        refreshBtn.addActionListener(e ->
-                JOptionPane.showMessageDialog(this,"Refresh Coming Soon"));
+        ReportService service = new ReportService();
+
+        if (reportTitle.equals("Patient Report")) {
+            table.setModel(service.getPatientReport());
+        }
+
+        //--------------------------------
+        // Temporary Events
+        //--------------------------------
+
+        refreshBtn.addActionListener(e -> {
+
+            if (reportTitle.equals("Patient Report")) {
+                table.setModel(service.getPatientReport());
+            }
+
+        });
 
         printBtn.addActionListener(e ->
-                JOptionPane.showMessageDialog(this,"Print Coming Soon"));
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Print feature coming soon."
+                )
+        );
 
         pdfBtn.addActionListener(e ->
-                JOptionPane.showMessageDialog(this,"PDF Export Coming Soon"));
+                JOptionPane.showMessageDialog(
+                        this,
+                        "PDF Export coming soon."
+                )
+        );
 
         excelBtn.addActionListener(e ->
-                JOptionPane.showMessageDialog(this,"Excel Export Coming Soon"));
-
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Excel Export coming soon."
+                )
+        );
     }
-
-    public DefaultTableModel getModel(){
-
-        return model;
-
-    }
-
 }

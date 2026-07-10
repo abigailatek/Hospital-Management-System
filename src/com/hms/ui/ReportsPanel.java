@@ -10,9 +10,9 @@ public class ReportsPanel extends JPanel {
 
     public ReportsPanel() {
 
-        setLayout(new BorderLayout(15,15));
+        setLayout(new BorderLayout(15, 15));
         setBackground(Theme.BACKGROUND);
-        setBorder(new EmptyBorder(20,20,20,20));
+        setBorder(new EmptyBorder(20, 20, 20, 20));
 
         JLabel title = new JLabel("Reports");
         title.setFont(new Font("Segoe UI", Font.BOLD, 30));
@@ -20,51 +20,51 @@ public class ReportsPanel extends JPanel {
 
         add(title, BorderLayout.NORTH);
 
-        JPanel center = new JPanel(new GridLayout(3,2,20,20));
+        JPanel center = new JPanel(new GridLayout(3, 2, 20, 20));
         center.setBackground(Theme.BACKGROUND);
 
-       JFrame frame = new JFrame("Patient Report");
+        JButton patientBtn = createButton("Patient Report");
+        JButton doctorBtn = createButton("Doctor Report");
+        JButton appointmentBtn = createButton("Appointment Report");
+        JButton billingBtn = createButton("Billing Report");
+        JButton inventoryBtn = createButton("Inventory Report");
+        JButton paymentBtn = createButton("Payment Report");
 
-       frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-       frame.setSize(1000,600);
-
-       frame.setLocationRelativeTo(null);
-
-       frame.add(new ReportViewerPanel("Patient Report"));
-
-       frame.setVisible(true);
-        center.add(createButton("Doctor Report"));
-
-        center.add(createButton("Appointment Report"));
-        center.add(createButton("Billing Report"));
-
-        center.add(createButton("Inventory Report"));
-        center.add(createButton("Payment Report"));
+        center.add(patientBtn);
+        center.add(doctorBtn);
+        center.add(appointmentBtn);
+        center.add(billingBtn);
+        center.add(inventoryBtn);
+        center.add(paymentBtn);
 
         add(center, BorderLayout.CENTER);
+
+        //---------------------------------
+        // Events
+        //---------------------------------
+
+        patientBtn.addActionListener(e -> {
+
+            JFrame frame = new JFrame("Patient Report");
+
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            frame.setSize(1000, 600);
+            frame.setLocationRelativeTo(null);
+
+            frame.add(new ReportViewerPanel("Patient Report"));
+
+            frame.setVisible(true);
+        });
     }
 
-  private JButton createButton(String text) {
+    private JButton createButton(String text) {
 
-    JButton button = new JButton(text);
+        JButton button = new JButton(text);
 
-    button.setFont(new Font("Segoe UI", Font.BOLD, 18));
-    button.setBackground(Color.WHITE);
-    button.setFocusPainted(false);
+        button.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        button.setBackground(Color.WHITE);
+        button.setFocusPainted(false);
 
-    button.addActionListener(e -> {
-
-        JOptionPane.showMessageDialog(
-                this,
-                text + " will be implemented in the next step.",
-                "LifeCare Hospital",
-                JOptionPane.INFORMATION_MESSAGE
-        );
-
-    });
-
-    return button;
-}
-
+        return button;
+    }
 }

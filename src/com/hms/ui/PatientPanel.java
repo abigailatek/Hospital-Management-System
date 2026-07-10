@@ -2,6 +2,7 @@ package com.hms.ui;
 
 import com.hms.models.Patient;
 import com.hms.services.PatientService;
+import com.hms.ui.components.CrudToolbar;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -13,13 +14,7 @@ public class PatientPanel extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
 
-    private JButton btnAdd;
-    private JButton btnEdit;
-    private JButton btnDelete;
-    private JButton btnRefresh;
-
-    private JTextField txtSearch;
-    private JButton btnSearch;
+    private CrudToolbar toolbar;
 
     public PatientPanel() {
 
@@ -34,48 +29,15 @@ public class PatientPanel extends JPanel {
         title.setFont(new Font("Segoe UI", Font.BOLD, 28));
         title.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
 
-        // ==========================
-        // Search Panel
-        // ==========================
-
-        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        searchPanel.setBackground(new Color(245, 247, 250));
-
-        txtSearch = new JTextField(20);
-        btnSearch = new JButton("Search");
-
-        searchPanel.add(new JLabel("Search:"));
-        searchPanel.add(txtSearch);
-        searchPanel.add(btnSearch);
+        add(title, BorderLayout.NORTH);
 
         // ==========================
-        // Top Panel
+        // Toolbar
         // ==========================
 
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setBackground(new Color(245, 247, 250));
+        toolbar = new CrudToolbar();
 
-        topPanel.add(title, BorderLayout.WEST);
-        topPanel.add(searchPanel, BorderLayout.EAST);
-
-        add(topPanel, BorderLayout.NORTH);
-
-        // ==========================
-        // Buttons
-        // ==========================
-
-        btnAdd = new JButton("Add Patient");
-        btnEdit = new JButton("Edit");
-        btnDelete = new JButton("Delete");
-        btnRefresh = new JButton("Refresh");
-
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        buttonPanel.setBackground(Color.WHITE);
-
-        buttonPanel.add(btnAdd);
-        buttonPanel.add(btnEdit);
-        buttonPanel.add(btnDelete);
-        buttonPanel.add(btnRefresh);
+        add(toolbar, BorderLayout.SOUTH);
 
         // ==========================
         // Table
@@ -97,41 +59,50 @@ public class PatientPanel extends JPanel {
         table = new JTable(tableModel);
 
         table.setRowHeight(25);
-        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
         table.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
 
         JScrollPane scrollPane = new JScrollPane(table);
 
-        // ==========================
-        // Center Panel
-        // ==========================
-
-        JPanel centerPanel = new JPanel(new BorderLayout());
-
-        centerPanel.add(buttonPanel, BorderLayout.NORTH);
-        centerPanel.add(scrollPane, BorderLayout.CENTER);
-
-        add(centerPanel, BorderLayout.CENTER);
+        add(scrollPane, BorderLayout.CENTER);
 
         // ==========================
         // Events
         // ==========================
 
-        btnRefresh.addActionListener(e -> loadPatients());
+        toolbar.btnRefresh.addActionListener(e -> loadPatients());
 
-        // Search button (to be implemented later)
-        btnSearch.addActionListener(e ->
-                JOptionPane.showMessageDialog(this,
-                        "Search functionality coming next.")
+        toolbar.btnSearch.addActionListener(e ->
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Search functionality coming next."
+                )
         );
 
-        // Load data when panel opens
+        toolbar.btnAdd.addActionListener(e ->
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Add Patient coming next."
+                )
+        );
+
+        toolbar.btnEdit.addActionListener(e ->
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Edit Patient coming next."
+                )
+        );
+
+        toolbar.btnDelete.addActionListener(e ->
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Delete Patient coming next."
+                )
+        );
+
         loadPatients();
     }
 
-    /**
-     * Loads all patients from the database into the JTable.
-     */
     private void loadPatients() {
 
         PatientService service = new PatientService();
