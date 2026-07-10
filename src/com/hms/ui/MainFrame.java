@@ -80,16 +80,11 @@ contentPanel.add(new JPanel(), "Settings");
     button.addActionListener(e -> {
         cardLayout.show(contentPanel, text);
     });
-
     sidebar.add(button);
 }
-
     public static void main(String[] args) {
-
         SwingUtilities.invokeLater(() -> {
-
             new MainFrame();
-
         });
 
     }
