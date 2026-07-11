@@ -154,7 +154,7 @@ public class InventoryPanel extends JPanel {
             InventoryService service =
                     new InventoryService();
 
-            if (service.addItem(item)) {
+            if (service.addInventoryItem(item)) {
 
                 JOptionPane.showMessageDialog(
                         this,

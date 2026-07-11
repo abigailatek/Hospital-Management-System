@@ -27,4 +27,8 @@ public class PrescriptionService {
     public boolean deletePrescription(int id) {
         return prescriptionDAO.deletePrescription(id);
     }
+
+    public List<Prescription> searchPrescriptions(int recordId) {
+        return prescriptionDAO.searchPrescriptions(recordId);
+    }
 }

@@ -1,13 +1,10 @@
-
 package com.hms.dao;
-
 import com.hms.database.DatabaseConnection;
 import com.hms.models.Inventory;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
 public class InventoryDAO {
 
     // CREATE

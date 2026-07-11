@@ -1,94 +1,322 @@
 package com.hms.ui;
 
+import com.hms.models.Appointment;
+import com.hms.services.AppointmentService;
 import com.hms.utils.Theme;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 
 public class AppointmentScreen extends JPanel {
 
+    private JTextField patientId;
+    private JTextField doctorId;
+    private JTextField date;
+    private JTextField time;
+    private JComboBox<String> status;
+
+    private JTable table;
+    private DefaultTableModel model;
+
+    private AppointmentService service;
+
     public AppointmentScreen() {
+
+        service = new AppointmentService();
+
         setLayout(new BorderLayout());
         setBackground(Theme.BACKGROUND);
         setBorder(new EmptyBorder(20, 25, 20, 25));
 
-        JLabel title = new JLabel("APPOINTMENTS", SwingConstants.CENTER);
+        JLabel title =
+                new JLabel(
+                        "APPOINTMENTS",
+                        SwingConstants.CENTER);
+
         title.setFont(Theme.TITLE);
         title.setForeground(Theme.PRIMARY_GREEN);
 
-        JPanel form = new JPanel(new GridBagLayout());
+        JPanel form =
+                new JPanel(
+                        new GridBagLayout());
+
         form.setBackground(Color.WHITE);
-        form.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(215, 215, 215)),
-                new EmptyBorder(20, 25, 20, 25)
-        ));
+        form.setBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(215,215,215)),
+                        new EmptyBorder(
+                                20,
+                                25,
+                                20,
+                                25)));
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(8, 10, 8, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        GridBagConstraints gbc =
+                new GridBagConstraints();
 
-        JTextField patientName = new JTextField(18);
-        JTextField doctorName = new JTextField(18);
-        JTextField date = new JTextField(18);
-        JTextField time = new JTextField(18);
-        JComboBox<String> status = new JComboBox<>(new String[]{
-                "Scheduled", "Completed", "Cancelled"
-        });
+        gbc.insets =
+                new Insets(8,10,8,10);
 
-        addRow(form, gbc, 0, "Patient Name:", patientName, "Doctor Name:", doctorName);
-        addRow(form, gbc, 1, "Date:", date, "Time:", time);
-        addRow(form, gbc, 2, "Status:", status, "", new JLabel(""));
+        gbc.fill =
+                GridBagConstraints.HORIZONTAL;
 
-        JButton add = button("Add Appointment");
-        JButton clear = button("Clear");
-        JButton cancel = button("Cancel");
+        patientId =
+                new JTextField(18);
 
-        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
+        doctorId =
+                new JTextField(18);
+
+        date =
+                new JTextField(18);
+
+        time =
+                new JTextField(18);
+
+        status =
+                new JComboBox<>(
+                        new String[]{
+                                "Scheduled",
+                                "Completed",
+                                "Cancelled"
+                        });
+
+        addRow(
+                form,
+                gbc,
+                0,
+                "Patient ID:",
+                patientId,
+                "Doctor ID:",
+                doctorId);
+
+        addRow(
+                form,
+                gbc,
+                1,
+                "Date (yyyy-mm-dd):",
+                date,
+                "Time (HH:mm:ss):",
+                time);
+
+        addRow(
+                form,
+                gbc,
+                2,
+                "Status:",
+                status,
+                "",
+                new JLabel(""));
+
+        JButton add =
+                button("Add Appointment");
+
+        JButton clear =
+                button("Clear");
+
+        JButton delete =
+                button("Delete");
+
+        JPanel buttons =
+                new JPanel(
+                        new FlowLayout(
+                                FlowLayout.CENTER,
+                                15,
+                                5));
+
         buttons.setBackground(Color.WHITE);
+
         buttons.add(add);
         buttons.add(clear);
-        buttons.add(cancel);
+        buttons.add(delete);
 
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.gridwidth = 4;
+
         form.add(buttons, gbc);
 
-        DefaultTableModel model = new DefaultTableModel(
-                new String[]{"Patient", "Doctor", "Date", "Time", "Status"}, 0
-        );
+        model =
+                new DefaultTableModel(
+                        new String[]{
+                                "Appointment ID",
+                                "Patient ID",
+                                "Doctor ID",
+                                "Date",
+                                "Time",
+                                "Status"
+                        },
+                        0);
 
-        JTable table = new JTable(model);
-        JScrollPane scrollPane = new JScrollPane(table);
+        table =
+                new JTable(model);
 
-        add.addActionListener(e -> {
-            model.addRow(new Object[]{
-                    patientName.getText(),
-                    doctorName.getText(),
-                    date.getText(),
-                    time.getText(),
-                    status.getSelectedItem()
-            });
-        });
+        table.setRowHeight(28);
 
-        clear.addActionListener(e -> {
-            patientName.setText("");
-            doctorName.setText("");
-            date.setText("");
-            time.setText("");
-            status.setSelectedIndex(0);
-        });
+        JScrollPane scrollPane =
+                new JScrollPane(table);
 
-        JPanel center = new JPanel(new BorderLayout(15, 15));
-        center.setBackground(Theme.BACKGROUND);
-        center.add(form, BorderLayout.NORTH);
-        center.add(scrollPane, BorderLayout.CENTER);
+        JPanel center =
+                new JPanel(
+                        new BorderLayout(
+                                15,
+                                15));
+
+        center.setBackground(
+                Theme.BACKGROUND);
+
+        center.add(
+                form,
+                BorderLayout.NORTH);
+
+        center.add(
+                scrollPane,
+                BorderLayout.CENTER);
 
         add(title, BorderLayout.NORTH);
         add(center, BorderLayout.CENTER);
+
+        //-----------------------------------
+        // Events
+        //-----------------------------------
+
+        add.addActionListener(
+                e -> addAppointment());
+
+        clear.addActionListener(
+                e -> clearFields());
+
+        delete.addActionListener(
+                e -> deleteAppointment());
+
+        loadAppointments();
     }
+
+    //------------------------------------------------
+
+    private void loadAppointments() {
+
+        model.setRowCount(0);
+
+        List<Appointment> appointments =
+                service.getAllAppointments();
+
+        for (Appointment a : appointments) {
+
+            model.addRow(
+                    new Object[]{
+                            a.getAppointmentId(),
+                            a.getPatientId(),
+                            a.getDoctorId(),
+                            a.getAppointmentDate(),
+                            a.getAppointmentTime(),
+                            a.getStatus()
+                    });
+        }
+    }
+
+    //------------------------------------------------
+
+    private void addAppointment() {
+
+        try {
+
+            Appointment appointment =
+                    new Appointment();
+
+            appointment.setPatientId(
+                    Integer.parseInt(
+                            patientId.getText()));
+
+            appointment.setDoctorId(
+                    Integer.parseInt(
+                            doctorId.getText()));
+
+            appointment.setAppointmentDate(
+                    LocalDate.parse(
+                            date.getText()));
+
+            appointment.setAppointmentTime(
+                    LocalTime.parse(
+                            time.getText()));
+
+            appointment.setStatus(
+                    status.getSelectedItem()
+                            .toString());
+
+            appointment.setReason(
+                    "General Appointment");
+
+            if (service.addAppointment(
+                    appointment)) {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Appointment created.");
+
+                loadAppointments();
+
+                clearFields();
+            }
+
+        } catch (Exception ex) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    ex.getMessage());
+        }
+    }
+
+    //------------------------------------------------
+
+    private void deleteAppointment() {
+
+        int row =
+                table.getSelectedRow();
+
+        if (row < 0) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Select appointment.");
+
+            return;
+        }
+
+        int id =
+                Integer.parseInt(
+                        model.getValueAt(
+                                row,
+                                0)
+                                .toString());
+
+        if (service.deleteAppointment(
+                id)) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Appointment deleted.");
+
+            loadAppointments();
+        }
+    }
+
+    //------------------------------------------------
+
+    private void clearFields() {
+
+        patientId.setText("");
+        doctorId.setText("");
+        date.setText("");
+        time.setText("");
+        status.setSelectedIndex(0);
+    }
+
+    //------------------------------------------------
 
     private void addRow(
             JPanel panel,
@@ -97,8 +325,8 @@ public class AppointmentScreen extends JPanel {
             String label1,
             JComponent field1,
             String label2,
-            JComponent field2
-    ) {
+            JComponent field2) {
+
         gbc.gridy = row;
 
         gbc.gridx = 0;
@@ -115,18 +343,35 @@ public class AppointmentScreen extends JPanel {
     }
 
     private JLabel label(String text) {
-        JLabel label = new JLabel(text);
-        label.setFont(Theme.NORMAL);
-        label.setForeground(Theme.TEXT);
+
+        JLabel label =
+                new JLabel(text);
+
+        label.setFont(
+                Theme.NORMAL);
+
+        label.setForeground(
+                Theme.TEXT);
+
         return label;
     }
 
     private JButton button(String text) {
-        JButton btn = new JButton(text);
-        btn.setFont(Theme.NORMAL);
-        btn.setBackground(Theme.PRIMARY_GREEN);
-        btn.setForeground(Color.WHITE);
+
+        JButton btn =
+                new JButton(text);
+
+        btn.setFont(
+                Theme.NORMAL);
+
+        btn.setBackground(
+                Theme.PRIMARY_GREEN);
+
+        btn.setForeground(
+                Color.WHITE);
+
         btn.setFocusPainted(false);
+
         return btn;
     }
 }

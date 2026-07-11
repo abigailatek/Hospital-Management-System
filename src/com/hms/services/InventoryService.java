@@ -39,4 +39,8 @@ public class InventoryService {
     public List<Inventory> searchItems(String keyword) {
         return dao.searchItems(keyword);
     }
+
+    public boolean addInventoryItem(Inventory item) {
+        throw new UnsupportedOperationException("Unimplemented method 'addInventoryItem'");
+    }
 }

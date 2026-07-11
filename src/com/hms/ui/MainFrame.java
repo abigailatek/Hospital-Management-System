@@ -70,7 +70,7 @@ public class MainFrame extends JFrame {
         contentPanel.add(new DoctorPanel(), "Doctors");
         contentPanel.add(new AppointmentPanel(),"Appointments");
         contentPanel.add(new JPanel(), "Medical Records");
-        contentPanel.add(new JPanel(), "Prescriptions");
+        contentPanel.add(new PrescriptionPanel(),"Prescriptions");
         contentPanel.add(new JPanel(), "Laboratory");
         contentPanel.add(new InventoryPanel(),"Inventory");
         contentPanel.add( new BillingPanel(),"Billing");

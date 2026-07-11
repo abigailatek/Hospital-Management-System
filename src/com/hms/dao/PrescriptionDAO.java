@@ -97,4 +97,59 @@ public class PrescriptionDAO {
 
         return false;
     }
+    public List<Prescription> searchPrescriptions(
+        int recordId) {
+
+    List<Prescription> prescriptions =
+            new ArrayList<>();
+
+    String sql =
+            "SELECT * FROM Prescriptions WHERE RecordID=?";
+
+    try (
+            Connection conn =
+                    DatabaseConnection.getConnection();
+
+            PreparedStatement ps =
+                    conn.prepareStatement(sql)
+    ) {
+
+        ps.setInt(1, recordId);
+
+        ResultSet rs =
+                ps.executeQuery();
+
+        while (rs.next()) {
+
+            Prescription p =
+                    new Prescription();
+
+            p.setPrescriptionId(
+                    rs.getInt("PrescriptionID"));
+
+            p.setRecordId(
+                    rs.getInt("RecordID"));
+
+            p.setMedicineName(
+                    rs.getString("MedicineName"));
+
+            p.setDosage(
+                    rs.getString("Dosage"));
+
+            p.setDuration(
+                    rs.getString("Duration"));
+
+            p.setNotes(
+                    rs.getString("Notes"));
+
+            prescriptions.add(p);
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return prescriptions;
+}
+    
 }

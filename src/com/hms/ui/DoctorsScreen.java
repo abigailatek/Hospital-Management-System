@@ -1,15 +1,33 @@
 package com.hms.ui;
 
+import com.hms.models.Doctor;
+import com.hms.services.DoctorService;
 import com.hms.utils.Theme;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.List;
 
 public class DoctorsScreen extends JPanel {
 
+    private JTextField doctorId;
+    private JTextField fullName;
+    private JTextField specialization;
+    private JTextField phone;
+    private JTextField email;
+    private JTextField availability;
+
+    private JTable table;
+    private DefaultTableModel model;
+
+    private DoctorService service;
+
     public DoctorsScreen() {
+
+        service = new DoctorService();
+
         setLayout(new BorderLayout(15, 15));
         setBackground(Theme.BACKGROUND);
         setBorder(new EmptyBorder(20, 25, 20, 25));
@@ -29,18 +47,31 @@ public class DoctorsScreen extends JPanel {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JTextField doctorId = field();
-        JTextField fullName = field();
-        JTextField specialization = field();
-        JTextField phone = field();
-        JTextField email = field();
-        JTextField availability = field();
+        doctorId = field();
+        fullName = field();
+        specialization = field();
+        phone = field();
+        email = field();
+        availability = field();
 
-        addRow(formPanel, gbc, 0, "Doctor ID:", doctorId, "Full Name:", fullName);
-        addRow(formPanel, gbc, 1, "Specialization:", specialization, "Phone:", phone);
-        addRow(formPanel, gbc, 2, "Email:", email, "Availability:", availability);
+        addRow(formPanel, gbc, 0,
+                "Doctor ID:", doctorId,
+                "Full Name:", fullName);
 
-        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
+        addRow(formPanel, gbc, 1,
+                "Specialization:", specialization,
+                "Phone:", phone);
+
+        addRow(formPanel, gbc, 2,
+                "Email:", email,
+                "Availability:", availability);
+
+        JPanel buttons = new JPanel(
+                new FlowLayout(
+                        FlowLayout.CENTER,
+                        15,
+                        5));
+
         buttons.setBackground(Color.WHITE);
 
         JButton add = button("Add Doctor");
@@ -58,48 +89,228 @@ public class DoctorsScreen extends JPanel {
         gbc.gridwidth = 4;
         formPanel.add(buttons, gbc);
 
-        DefaultTableModel model = new DefaultTableModel(
-                new String[]{"Doctor ID", "Full Name", "Specialization", "Phone", "Email", "Availability"}, 0
+        model = new DefaultTableModel(
+                new String[]{
+                        "Doctor ID",
+                        "Full Name",
+                        "Specialization",
+                        "Phone",
+                        "Email",
+                        "Availability"
+                },
+                0
         );
 
-        JTable table = new JTable(model);
+        table = new JTable(model);
         table.setRowHeight(28);
 
-        JScrollPane tablePane = new JScrollPane(table);
+        JScrollPane tablePane =
+                new JScrollPane(table);
 
-        add.addActionListener(e -> model.addRow(new Object[]{
-                doctorId.getText(),
-                fullName.getText(),
-                specialization.getText(),
-                phone.getText(),
-                email.getText(),
-                availability.getText()
-        }));
+        JPanel center =
+                new JPanel(
+                        new BorderLayout(15, 15));
 
-        clear.addActionListener(e -> {
-            doctorId.setText("");
-            fullName.setText("");
-            specialization.setText("");
-            phone.setText("");
-            email.setText("");
-            availability.setText("");
-        });
-
-        delete.addActionListener(e -> {
-            int row = table.getSelectedRow();
-            if (row >= 0) {
-                model.removeRow(row);
-            }
-        });
-
-        JPanel center = new JPanel(new BorderLayout(15, 15));
         center.setBackground(Theme.BACKGROUND);
         center.add(formPanel, BorderLayout.NORTH);
         center.add(tablePane, BorderLayout.CENTER);
 
         add(title, BorderLayout.NORTH);
         add(center, BorderLayout.CENTER);
+
+        //-------------------------
+        // Events
+        //-------------------------
+
+        add.addActionListener(e -> addDoctor());
+
+        update.addActionListener(e -> updateDoctor());
+
+        delete.addActionListener(e -> deleteDoctor());
+
+        clear.addActionListener(e -> clearFields());
+
+        table.getSelectionModel()
+                .addListSelectionListener(e -> {
+
+                    int row =
+                            table.getSelectedRow();
+
+                    if (row >= 0) {
+
+                        doctorId.setText(
+                                model.getValueAt(
+                                        row,
+                                        0).toString());
+
+                        fullName.setText(
+                                model.getValueAt(
+                                        row,
+                                        1).toString());
+
+                        specialization.setText(
+                                model.getValueAt(
+                                        row,
+                                        2).toString());
+
+                        phone.setText(
+                                model.getValueAt(
+                                        row,
+                                        3).toString());
+
+                        email.setText(
+                                model.getValueAt(
+                                        row,
+                                        4).toString());
+
+                        availability.setText(
+                                model.getValueAt(
+                                        row,
+                                        5).toString());
+                    }
+                });
+
+        loadDoctors();
     }
+
+    //---------------------------------------------------
+
+    private void loadDoctors() {
+
+        model.setRowCount(0);
+
+        List<Doctor> doctors =
+                service.getAllDoctors();
+
+        for (Doctor d : doctors) {
+
+            String name =
+                    d.getFirstName() +
+                            " " +
+                            d.getLastName();
+
+            model.addRow(new Object[]{
+                    d.getDoctorID(),
+                    name,
+                    d.getSpecialization(),
+                    d.getPhone(),
+                    d.getEmail(),
+                    "Available"
+            });
+        }
+    }
+
+    //---------------------------------------------------
+
+    private void addDoctor() {
+
+        try {
+
+            Doctor doctor =
+                    new Doctor();
+
+            doctor.setDoctorID(
+                    Integer.parseInt(
+                            doctorId.getText()));
+
+            String[] names =
+                    fullName.getText()
+                            .trim()
+                            .split(" ", 2);
+
+            doctor.setFirstName(names[0]);
+
+            if (names.length > 1) {
+                doctor.setLastName(names[1]);
+            } else {
+                doctor.setLastName("");
+            }
+
+            doctor.setSpecialization(
+                    specialization.getText());
+
+            doctor.setPhone(
+                    phone.getText());
+
+            doctor.setEmail(
+                    email.getText());
+
+            doctor.setUserID(0);
+
+            if (service.addDoctor(doctor)) {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Doctor added successfully.");
+
+                loadDoctors();
+                clearFields();
+            }
+
+        } catch (Exception ex) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    ex.getMessage());
+        }
+    }
+
+    //---------------------------------------------------
+
+    private void updateDoctor() {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Update functionality can be added later.");
+    }
+
+    //---------------------------------------------------
+
+    private void deleteDoctor() {
+
+        int row =
+                table.getSelectedRow();
+
+        if (row < 0) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Select a doctor.");
+
+            return;
+        }
+
+        int id =
+                Integer.parseInt(
+                        model.getValueAt(
+                                row,
+                                0)
+                                .toString());
+
+        if (service.deleteDoctor(id)) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Doctor deleted.");
+
+            loadDoctors();
+            clearFields();
+        }
+    }
+
+    //---------------------------------------------------
+
+    private void clearFields() {
+
+        doctorId.setText("");
+        fullName.setText("");
+        specialization.setText("");
+        phone.setText("");
+        email.setText("");
+        availability.setText("");
+    }
+
+    //---------------------------------------------------
 
     private void addRow(
             JPanel panel,
@@ -108,8 +319,8 @@ public class DoctorsScreen extends JPanel {
             String label1,
             JComponent field1,
             String label2,
-            JComponent field2
-    ) {
+            JComponent field2) {
+
         gbc.gridy = row;
         gbc.gridwidth = 1;
 
