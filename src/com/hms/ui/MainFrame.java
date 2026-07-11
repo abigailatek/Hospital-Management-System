@@ -67,13 +67,13 @@ public class MainFrame extends JFrame {
         contentPanel = new JPanel(cardLayout);
 
         contentPanel.add(new DashboardPanel(), "Dashboard");
-           contentPanel.add(new DoctorPanel(), "Doctors");
+        contentPanel.add(new DoctorPanel(), "Doctors");
         contentPanel.add(new AppointmentPanel(),"Appointments");
         contentPanel.add(new JPanel(), "Medical Records");
         contentPanel.add(new JPanel(), "Prescriptions");
         contentPanel.add(new JPanel(), "Laboratory");
         contentPanel.add(new JPanel(), "Inventory");
-        contentPanel.add(new JPanel(), "Billing");
+        contentPanel.add( new BillingPanel(),"Billing");
         contentPanel.add(new JPanel(), "Payments");
         contentPanel.add(new JPanel(), "Staff");
         contentPanel.add(new JPanel(), "Attendance");
