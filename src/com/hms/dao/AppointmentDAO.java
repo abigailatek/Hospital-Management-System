@@ -158,29 +158,33 @@ public class AppointmentDAO {
     // SEARCH
     public List<Appointment> searchAppointments(int doctorId) {
 
-        List<Appointment> list = new ArrayList<>();
+    List<Appointment> list = new ArrayList<>();
 
-        String sql = "SELECT * FROM Appointments WHERE DoctorID=?";
+    String sql =
+            "SELECT * FROM Appointments WHERE DoctorID=?";
 
-        try (
-                Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)
-        ) {
+    try (
+            Connection conn =
+                    DatabaseConnection.getConnection();
 
-            ps.setInt(1, doctorId);
+            PreparedStatement ps =
+                    conn.prepareStatement(sql)
+    ) {
 
-            ResultSet rs = ps.executeQuery();
+        ps.setInt(1, doctorId);
 
-            while (rs.next()) {
-                list.add(mapResultSet(rs));
-            }
+        ResultSet rs = ps.executeQuery();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        while (rs.next()) {
+            list.add(mapResultSet(rs));
         }
 
-        return list;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+
+    return list;
+}
 
     // Helper
     private Appointment mapResultSet(ResultSet rs) throws SQLException {

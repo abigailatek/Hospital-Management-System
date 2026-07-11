@@ -20,7 +20,7 @@ public class ReportsPanel extends JPanel {
 
         add(title, BorderLayout.NORTH);
 
-        JPanel center = new JPanel(new GridLayout(3, 2, 20, 20));
+        JPanel center = new JPanel(new GridLayout(4, 2, 20, 20));
         center.setBackground(Theme.BACKGROUND);
 
         JButton patientBtn = createButton("Patient Report");
@@ -29,73 +29,73 @@ public class ReportsPanel extends JPanel {
         JButton billingBtn = createButton("Billing Report");
         JButton inventoryBtn = createButton("Inventory Report");
         JButton paymentBtn = createButton("Payment Report");
-     
+        JButton staffBtn = createButton("Staff Report");
+        JButton labBtn = createButton("Laboratory Report");
+
         center.add(patientBtn);
         center.add(doctorBtn);
         center.add(appointmentBtn);
         center.add(billingBtn);
         center.add(inventoryBtn);
         center.add(paymentBtn);
+        center.add(staffBtn);
+        center.add(labBtn);
 
         add(center, BorderLayout.CENTER);
 
-        //---------------------------------
-        // Events
-        //---------------------------------
+        patientBtn.addActionListener(
+                e -> openReport("Patient Report"));
 
-        patientBtn.addActionListener(e -> {
+        doctorBtn.addActionListener(
+                e -> openReport("Doctor Report"));
 
-            JFrame frame = new JFrame("Patient Report");
+        appointmentBtn.addActionListener(
+                e -> openReport("Appointment Report"));
 
-            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            frame.setSize(1000, 600);
-            frame.setLocationRelativeTo(null);
+        billingBtn.addActionListener(
+                e -> openReport("Billing Report"));
 
-            frame.add(new ReportViewerPanel("Patient Report"));
+        inventoryBtn.addActionListener(
+                e -> openReport("Inventory Report"));
 
-            frame.setVisible(true);
-        });
-        patientBtn.addActionListener(e ->
-        openReport("Patient Report"));
+        paymentBtn.addActionListener(
+                e -> openReport("Payment Report"));
 
-doctorBtn.addActionListener(e ->
-        openReport("Doctor Report"));
+        staffBtn.addActionListener(
+                e -> openReport("Staff Report"));
 
-appointmentBtn.addActionListener(e ->
-        openReport("Appointment Report"));
-
-billingBtn.addActionListener(e ->
-        openReport("Billing Report"));
-
-paymentBtn.addActionListener(e ->
-        openReport("Payment Report"));
-
-inventoryBtn.addActionListener(e ->
-        openReport("Inventory Report"));
+        labBtn.addActionListener(
+                e -> openReport("Laboratory Report"));
     }
 
     private JButton createButton(String text) {
 
         JButton button = new JButton(text);
 
-        button.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        button.setFont(
+                new Font(
+                        "Segoe UI",
+                        Font.BOLD,
+                        18));
+
         button.setBackground(Color.WHITE);
         button.setFocusPainted(false);
 
         return button;
     }
-     private void openReport(String title) {
 
-    JFrame frame = new JFrame(title);
+    private void openReport(String title) {
 
-    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        JFrame frame = new JFrame(title);
 
-    frame.setSize(1200, 700);
+        frame.setDefaultCloseOperation(
+                JFrame.DISPOSE_ON_CLOSE);
 
-    frame.setLocationRelativeTo(null);
+        frame.setSize(1200, 700);
+        frame.setLocationRelativeTo(null);
 
-    frame.add(new ReportViewerPanel(title));
+        frame.add(new ReportViewerPanel(title));
 
-    frame.setVisible(true);
-} 
+        frame.setVisible(true);
+    }
 }
