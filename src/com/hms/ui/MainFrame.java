@@ -74,7 +74,7 @@ public class MainFrame extends JFrame {
         contentPanel.add(new JPanel(), "Laboratory");
         contentPanel.add(new JPanel(), "Inventory");
         contentPanel.add( new BillingPanel(),"Billing");
-        contentPanel.add(new JPanel(), "Payments");
+        contentPanel.add(new PaymentPanel(), "Payments");
         contentPanel.add(new JPanel(), "Staff");
         contentPanel.add(new JPanel(), "Attendance");
         contentPanel.add(new ReportsPanel(), "Reports");
