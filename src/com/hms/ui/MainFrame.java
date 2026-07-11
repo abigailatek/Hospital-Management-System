@@ -72,22 +72,18 @@ public class MainFrame extends JFrame {
         contentPanel.add(new JPanel(), "Medical Records");
         contentPanel.add(new JPanel(), "Prescriptions");
         contentPanel.add(new JPanel(), "Laboratory");
-        contentPanel.add(new JPanel(), "Inventory");
+        contentPanel.add(new InventoryPanel(),"Inventory");
         contentPanel.add( new BillingPanel(),"Billing");
         contentPanel.add(new PaymentPanel(), "Payments");
         contentPanel.add(new JPanel(), "Staff");
         contentPanel.add(new JPanel(), "Attendance");
         contentPanel.add(new ReportsPanel(), "Reports");
         contentPanel.add(new JPanel(), "Settings");
-
         add(sidebar, BorderLayout.WEST);
         add(contentPanel, BorderLayout.CENTER);
-
         setVisible(true);
     }
-
     private JButton createButton(String text) {
-
         JButton button = new JButton(text);
 
         button.setFont(new Font("Segoe UI", Font.PLAIN, 18));
