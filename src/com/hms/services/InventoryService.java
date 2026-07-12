@@ -41,6 +41,19 @@ public class InventoryService {
     }
 
     public boolean addInventoryItem(Inventory item) {
-        throw new UnsupportedOperationException("Unimplemented method 'addInventoryItem'");
+        if (item.getMedicineName() == null ||
+                item.getMedicineName().isBlank()) {
+
+            throw new IllegalArgumentException(
+                    "Medicine name cannot be empty.");
+        }
+
+        if (item.getQuantity() < 0) {
+
+            throw new IllegalArgumentException(
+                    "Quantity cannot be negative.");
+        }
+
+        return dao.addInventoryItem(item);
     }
 }

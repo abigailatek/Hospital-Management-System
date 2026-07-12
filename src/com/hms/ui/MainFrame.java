@@ -41,6 +41,10 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
+        //-----------------------------------
+        // Sidebar
+        //-----------------------------------
+
         sidebar = new JPanel();
         sidebar.setPreferredSize(new Dimension(250, 800));
         sidebar.setBackground(new Color(16, 120, 110));
@@ -62,50 +66,108 @@ public class MainFrame extends JFrame {
         btnSettings = createButton("Settings");
         btnLogout = createButton("Logout");
 
-        cardLayout = new CardLayout();
+        //-----------------------------------
+        // Content Panel
+        //-----------------------------------
 
+        cardLayout = new CardLayout();
         contentPanel = new JPanel(cardLayout);
 
-        contentPanel.add(new DashboardPanel(), "Dashboard");
+        //-----------------------------------
+        // Dashboard
+        //-----------------------------------
+
+        AdminDashboardScreen dashboardPanel =
+                new AdminDashboardScreen(
+                        () -> showPanel("Patients"),
+                        () -> showPanel("Doctors"),
+                        () -> showPanel("Appointments"),
+                        () -> showPanel("Medical Records"),
+                        () -> showPanel("Prescriptions"),
+                        () -> showPanel("Inventory"),
+                        () -> showPanel("Billing"),
+                        () -> showPanel("Reports")
+                );
+
+        //-----------------------------------
+        // Add Panels
+        //-----------------------------------
+
+        contentPanel.add(dashboardPanel, "Dashboard");
         contentPanel.add(new PatientRegistrationScreen(), "Patients");
         contentPanel.add(new DoctorsScreen(), "Doctors");
         contentPanel.add(new AppointmentScreen(), "Appointments");
-        cardLayout.show( contentPanel, "Prescriptions");
+        contentPanel.add(new MedicalRecordsPanel(), "Medical Records");
+        contentPanel.add(new PrescriptionPanel(), "Prescriptions");
+        contentPanel.add(new LaboratoryPanel(), "Laboratory");
+        contentPanel.add(new MedicalStoreScreen(), "Inventory");
         contentPanel.add(new BillingScreen(), "Billing");
         contentPanel.add(new PaymentPanel(), "Payments");
-        contentPanel.add( new MedicalRecordsPanel(),"Medical Records");
-        cardLayout.show(contentPanel,"Medical Records");
-        contentPanel.add(new MedicalStoreScreen(), "Inventory");
-        contentPanel.add(new ReportsPanel(), "Reports");
         contentPanel.add(new AdministrationScreen(), "Staff");
-        contentPanel.add(new AttendancePanel(),"Attendance");
-        contentPanel.add(new SettingsPanel(),"Settings");
-        cardLayout.show(contentPanel, "Attendance");
-        cardLayout.show(contentPanel, "Settings");
-        contentPanel.add(new PrescriptionPanel(),"Prescriptions");
-        cardLayout.show(contentPanel,"Prescriptions");
-        contentPanel.add(new LaboratoryPanel(), "Laboratory");
-        cardLayout.show(contentPanel,"Laboratory");
+        contentPanel.add(new AttendancePanel(), "Attendance");
+        contentPanel.add(new ReportsPanel(), "Reports");
+        contentPanel.add(new SettingsPanel(), "Settings");
+
+        //-----------------------------------
+        // Add to Frame
+        //-----------------------------------
+
         add(sidebar, BorderLayout.WEST);
         add(contentPanel, BorderLayout.CENTER);
+
+        //-----------------------------------
+        // Start on Dashboard
+        //-----------------------------------
+
+        cardLayout.show(contentPanel, "Dashboard");
+
         setVisible(true);
     }
+
+    //-----------------------------------
+    // Change Screen
+    //-----------------------------------
+
+    private void showPanel(String panelName) {
+        cardLayout.show(contentPanel, panelName);
+    }
+
+    //-----------------------------------
+    // Sidebar Buttons
+    //-----------------------------------
+
     private JButton createButton(String text) {
+
         JButton button = new JButton(text);
 
-        button.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-        button.setBackground(new Color(16, 120, 110));
-        button.setForeground(Color.WHITE);
+        button.setFont(
+                new Font(
+                        "Segoe UI",
+                        Font.PLAIN,
+                        18));
+
+        button.setBackground(
+                new Color(
+                        16,
+                        120,
+                        110));
+
+        button.setForeground(
+                Color.WHITE);
+
         button.setFocusPainted(false);
 
         button.addActionListener(e -> {
-if (text.equals("Logout")) {
-    UserSession.logout();
-    dispose();
-    new LoginScreen();
-    return;
-}
-            cardLayout.show(contentPanel, text);
+
+            if (text.equals("Logout")) {
+
+                UserSession.logout();
+                dispose();
+                new LoginScreen();
+                return;
+            }
+
+            showPanel(text);
         });
 
         sidebar.add(button);
@@ -113,17 +175,25 @@ if (text.equals("Logout")) {
         return button;
     }
 
+    //-----------------------------------
+    // Role Permissions
+    //-----------------------------------
+
     private void applyRolePermissions() {
 
-        User user = UserSession.getCurrentUser();
+        User user =
+                UserSession.getCurrentUser();
 
         if (user == null) {
             return;
         }
 
-        int role = user.getRoleID();
+        int role =
+                user.getRoleID();
 
-        if (role == 2) { // Doctor
+        // Doctor
+        if (role == 2) {
+
             btnBilling.setVisible(false);
             btnPayments.setVisible(false);
             btnInventory.setVisible(false);
@@ -131,21 +201,31 @@ if (text.equals("Logout")) {
             btnAttendance.setVisible(false);
         }
 
-        if (role == 4) { // Pharmacist
+        // Pharmacist
+        if (role == 4) {
+
             btnPatients.setVisible(false);
             btnDoctors.setVisible(false);
             btnAppointments.setVisible(false);
             btnBilling.setVisible(false);
         }
 
-        if (role == 5) { // Accountant
+        // Accountant
+        if (role == 5) {
+
             btnLaboratory.setVisible(false);
             btnPrescriptions.setVisible(false);
             btnInventory.setVisible(false);
         }
     }
 
+    //-----------------------------------
+    // Main
+    //-----------------------------------
+
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(MainFrame::new);
+
+        SwingUtilities.invokeLater(
+                MainFrame::new);
     }
 }

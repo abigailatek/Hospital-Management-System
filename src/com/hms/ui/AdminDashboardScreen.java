@@ -10,6 +10,8 @@ import java.awt.*;
 
 public class AdminDashboardScreen extends JPanel {
 
+    private JLabel clockLabel;
+
     public AdminDashboardScreen(
             Runnable openPatients,
             Runnable openDoctors,
@@ -21,113 +23,485 @@ public class AdminDashboardScreen extends JPanel {
             Runnable openReports
     ) {
 
-        setLayout(new BorderLayout(20,20));
-        setBackground(Theme.BACKGROUND);
+        setLayout(new BorderLayout(20, 20));
+        setBackground(new Color(245, 247, 250));
 
-        DashboardService dashboard = new DashboardService();
+        DashboardService dashboard =
+                new DashboardService();
 
-        JPanel mainPanel = new JPanel(new BorderLayout(20,20));
-        mainPanel.setBackground(Theme.BACKGROUND);
-        mainPanel.setBorder(new EmptyBorder(20,20,20,20));
+        //------------------------------------
+        // Main Panel
+        //------------------------------------
 
-        JLabel title = new JLabel("LifeCare Hospital Dashboard");
-        title.setFont(new Font("Segoe UI",Font.BOLD,30));
-        title.setForeground(Theme.PRIMARY_GREEN);
+        JPanel mainPanel =
+                new JPanel(
+                        new BorderLayout(20, 20));
 
-        mainPanel.add(title,BorderLayout.NORTH);
+        mainPanel.setBackground(
+                Theme.BACKGROUND);
 
-        JPanel cards = new JPanel(new GridLayout(3,3,20,20));
-        cards.setBackground(Theme.BACKGROUND);
+        mainPanel.setBorder(
+                new EmptyBorder(
+                        20,
+                        20,
+                        20,
+                        20));
 
-        cards.add(new StatisticCard("👤","Patients",dashboard.getPatientCount()));
-        cards.add(new StatisticCard("🩺","Doctors",dashboard.getDoctorCount()));
-        cards.add(new StatisticCard("📅","Appointments",dashboard.getAppointmentCount()));
-        cards.add(new StatisticCard("💰","Bills",dashboard.getBillCount()));
-        cards.add(new StatisticCard("💳","Payments",dashboard.getPaymentCount()));
-        cards.add(new StatisticCard("🧪","Lab Tests",dashboard.getLabTestCount()));
-        cards.add(new StatisticCard("📦","Inventory",dashboard.getInventoryCount()));
-        cards.add(new StatisticCard("👨‍⚕️","Staff",dashboard.getStaffCount()));
-        cards.add(new StatisticCard("🏥","LifeCare",dashboard.getPatientCount()));
+        mainPanel.add(
+                createHeader(),
+                BorderLayout.NORTH);
 
-        mainPanel.add(cards,BorderLayout.CENTER);
+        //------------------------------------
+        // Dashboard Cards
+        //------------------------------------
 
-        JPanel rightPanel = new JPanel();
-        rightPanel.setLayout(new BoxLayout(rightPanel,BoxLayout.Y_AXIS));
-        rightPanel.setBackground(Theme.BACKGROUND);
-        rightPanel.setPreferredSize(new Dimension(280,0));
+        JPanel cards =
+                new JPanel(
+                        new GridLayout(
+                                3,
+                                3,
+                                25,
+                                25));
 
-        rightPanel.add(createQuickLinks(
-                openPatients,
-                openDoctors,
-                openAppointments,
-                openPrescription,
-                openBilling
-        ));
+        cards.setBackground(
+                new Color(
+                        245,
+                        247,
+                        250));
 
-        rightPanel.add(Box.createVerticalStrut(20));
+        cards.add(new StatisticCard(
+                "👤",
+                "Patients",
+                dashboard.getPatientCount()));
 
-        rightPanel.add(createNotes());
+        cards.add(new StatisticCard(
+                "🩺",
+                "Doctors",
+                dashboard.getDoctorCount()));
 
-        add(mainPanel,BorderLayout.CENTER);
-        add(rightPanel,BorderLayout.EAST);
+        cards.add(new StatisticCard(
+                "📅",
+                "Appointments",
+                dashboard.getAppointmentCount()));
 
+        cards.add(new StatisticCard(
+                "💰",
+                "Bills",
+                dashboard.getBillCount()));
+
+        cards.add(new StatisticCard(
+                "💳",
+                "Payments",
+                dashboard.getPaymentCount()));
+
+        cards.add(new StatisticCard(
+                "🧪",
+                "Lab Tests",
+                dashboard.getLabTestCount()));
+
+        cards.add(new StatisticCard(
+                "📦",
+                "Inventory",
+                dashboard.getInventoryCount()));
+
+        cards.add(new StatisticCard(
+                "👨‍⚕️",
+                "Staff",
+                dashboard.getStaffCount()));
+
+        cards.add(new StatisticCard(
+                "🏥",
+                "LifeCare",
+                dashboard.getPatientCount()));
+
+        mainPanel.add(
+                cards,
+                BorderLayout.CENTER);
+
+        //------------------------------------
+        // Right Panel
+        //------------------------------------
+
+        JPanel rightPanel =
+                new JPanel();
+
+        rightPanel.setLayout(
+                new BoxLayout(
+                        rightPanel,
+                        BoxLayout.Y_AXIS));
+
+        rightPanel.setBackground(
+                Theme.BACKGROUND);
+
+        rightPanel.setPreferredSize(
+                new Dimension(
+                        320,
+                        0));
+
+        rightPanel.add(
+                createQuickLinks(
+                        openPatients,
+                        openDoctors,
+                        openAppointments,
+                        openPrescription,
+                        openBilling));
+
+        rightPanel.add(
+                Box.createVerticalStrut(20));
+
+        rightPanel.add(
+                createNotes());
+
+        rightPanel.add(
+                Box.createVerticalStrut(20));
+
+        rightPanel.add(
+                createRecentActivity());
+
+        add(
+                mainPanel,
+                BorderLayout.CENTER);
+
+        add(
+                rightPanel,
+                BorderLayout.EAST);
+
+        startClock();
     }
 
+    //---------------------------------------------------
+    // HEADER
+    //---------------------------------------------------
+
+    private JPanel createHeader() {
+
+        JPanel panel =
+                new JPanel(
+                        new BorderLayout());
+
+        panel.setBackground(
+                Theme.BACKGROUND);
+
+        JPanel left =
+                new JPanel();
+
+        left.setOpaque(false);
+
+        left.setLayout(
+                new BoxLayout(
+                        left,
+                        BoxLayout.Y_AXIS));
+
+        JLabel title =
+                new JLabel(
+                        "🏥 LifeCare Hospital Dashboard");
+
+        title.setFont(
+                new Font(
+                        "Segoe UI Emoji",
+                        Font.BOLD,
+                        32));
+
+        title.setForeground(
+                Theme.PRIMARY_GREEN);
+
+        JLabel greeting =
+                new JLabel(
+                        "👋 Welcome back, Administrator");
+
+        greeting.setFont(
+                new Font(
+                        "Segoe UI Emoji",
+                        Font.PLAIN,
+                        18));
+
+        greeting.setForeground(
+                Color.GRAY);
+
+        left.add(title);
+        left.add(Box.createVerticalStrut(5));
+        left.add(greeting);
+
+        JPanel right =
+                new JPanel();
+
+        right.setOpaque(false);
+
+        right.setLayout(
+                new BoxLayout(
+                        right,
+                        BoxLayout.Y_AXIS));
+
+        JLabel date =
+                new JLabel(
+                        java.time.LocalDate.now()
+                                .toString());
+
+        date.setFont(
+                new Font(
+                        "Segoe UI",
+                        Font.PLAIN,
+                        16));
+
+        date.setForeground(
+                Color.GRAY);
+
+        clockLabel =
+                new JLabel();
+
+        clockLabel.setFont(
+                new Font(
+                        "Segoe UI",
+                        Font.BOLD,
+                        16));
+
+        clockLabel.setForeground(
+                Theme.PRIMARY_GREEN);
+
+        right.add(date);
+        right.add(clockLabel);
+
+        panel.add(
+                left,
+                BorderLayout.WEST);
+
+        panel.add(
+                right,
+                BorderLayout.EAST);
+
+        return panel;
+    }
+
+    //---------------------------------------------------
+    // CLOCK
+    //---------------------------------------------------
+
+    private void startClock() {
+
+        Timer timer =
+                new Timer(
+                        1000,
+                        e -> clockLabel.setText(
+                                java.time.LocalTime.now()
+                                        .withNano(0)
+                                        .toString()));
+
+        timer.start();
+    }
+
+    //---------------------------------------------------
+    // QUICK LINKS
+    //---------------------------------------------------
 
     private JPanel createQuickLinks(
             Runnable openPatients,
             Runnable openDoctors,
             Runnable openAppointments,
             Runnable openPrescription,
-            Runnable openBilling
-    ){
+            Runnable openBilling) {
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
-        panel.setBackground(Color.WHITE);
-        panel.setBorder(BorderFactory.createTitledBorder("Quick Links"));
+        JPanel panel =
+                new JPanel();
 
-        panel.add(createButton("Patients",openPatients));
-        panel.add(createButton("Doctors",openDoctors));
-        panel.add(createButton("Appointments",openAppointments));
-        panel.add(createButton("Prescription",openPrescription));
-        panel.add(createButton("Billing",openBilling));
+        panel.setLayout(
+                new BoxLayout(
+                        panel,
+                        BoxLayout.Y_AXIS));
+
+        panel.setBackground(
+                Color.WHITE);
+
+        panel.setBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(
+                                        220,
+                                        220,
+                                        220)),
+                        new EmptyBorder(
+                                20,
+                                20,
+                                20,
+                                20)));
+
+        JLabel title =
+                new JLabel(
+                        "⚡ Quick Actions");
+
+        title.setFont(
+                new Font(
+                        "Segoe UI Emoji",
+                        Font.BOLD,
+                        18));
+
+        title.setForeground(
+                Theme.PRIMARY_GREEN);
+
+        panel.add(title);
+        panel.add(Box.createVerticalStrut(20));
+
+        panel.add(createQuickButton(
+                "👤 Patients",
+                openPatients));
+
+        panel.add(Box.createVerticalStrut(12));
+
+        panel.add(createQuickButton(
+                "🩺 Doctors",
+                openDoctors));
+
+        panel.add(Box.createVerticalStrut(12));
+
+        panel.add(createQuickButton(
+                "📅 Appointments",
+                openAppointments));
+
+        panel.add(Box.createVerticalStrut(12));
+
+        panel.add(createQuickButton(
+                "💊 Prescription",
+                openPrescription));
+
+        panel.add(Box.createVerticalStrut(12));
+
+        panel.add(createQuickButton(
+                "💰 Billing",
+                openBilling));
 
         return panel;
     }
 
-    private JPanel createNotes(){
+    //---------------------------------------------------
+    // QUICK BUTTON
+    //---------------------------------------------------
 
-        JPanel panel=new JPanel();
+    private JButton createQuickButton(
+            String text,
+            Runnable action) {
 
-        panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
+        JButton button =
+                new JButton(text);
 
-        panel.setBackground(Color.WHITE);
+        button.setMaximumSize(
+                new Dimension(
+                        Integer.MAX_VALUE,
+                        45));
 
-        panel.setBorder(BorderFactory.createTitledBorder("LifeCare Notes"));
+        button.setFont(
+                new Font(
+                        "Segoe UI Emoji",
+                        Font.BOLD,
+                        14));
 
-        panel.add(new JLabel("✔ Welcome Administrator"));
-        panel.add(Box.createVerticalStrut(10));
-        panel.add(new JLabel("✔ Monitor daily hospital activities"));
-        panel.add(Box.createVerticalStrut(10));
-        panel.add(new JLabel("✔ View reports from the Reports module"));
-        panel.add(Box.createVerticalStrut(10));
-        panel.add(new JLabel("✔ Manage patients and appointments"));
+        button.setBackground(
+                new Color(
+                        245,
+                        250,
+                        248));
 
-        return panel;
-    }
+        button.setForeground(
+                Theme.PRIMARY_GREEN);
 
-    private JButton createButton(String text,Runnable action){
+        button.setFocusPainted(false);
 
-        JButton button=new JButton(text);
+        button.setHorizontalAlignment(
+                SwingConstants.LEFT);
 
-        button.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        button.setMaximumSize(new Dimension(220,40));
-
-        button.addActionListener(e->action.run());
+        button.addActionListener(
+                e -> action.run());
 
         return button;
     }
 
+    //---------------------------------------------------
+    // NOTES
+    //---------------------------------------------------
+
+    private JPanel createNotes() {
+
+        JPanel panel =
+                new JPanel();
+
+        panel.setLayout(
+                new BoxLayout(
+                        panel,
+                        BoxLayout.Y_AXIS));
+
+        panel.setBackground(
+                Color.WHITE);
+
+        panel.setBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(
+                                        220,
+                                        220,
+                                        220)),
+                        new EmptyBorder(
+                                20,
+                                20,
+                                20,
+                                20)));
+
+        panel.add(
+                new JLabel(
+                        "📌 LifeCare Notes"));
+
+        panel.add(Box.createVerticalStrut(20));
+        panel.add(new JLabel("👋 Welcome Administrator"));
+        panel.add(Box.createVerticalStrut(10));
+        panel.add(new JLabel("📊 Monitor hospital activities"));
+        panel.add(Box.createVerticalStrut(10));
+        panel.add(new JLabel("📑 Review reports"));
+        panel.add(Box.createVerticalStrut(10));
+        panel.add(new JLabel("📅 Manage appointments"));
+
+        return panel;
+    }
+
+    //---------------------------------------------------
+    // RECENT ACTIVITY
+    //---------------------------------------------------
+
+    private JPanel createRecentActivity() {
+
+        JPanel panel =
+                new JPanel();
+
+        panel.setLayout(
+                new BoxLayout(
+                        panel,
+                        BoxLayout.Y_AXIS));
+
+        panel.setBackground(
+                Color.WHITE);
+
+        panel.setBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(
+                                        220,
+                                        220,
+                                        220)),
+                        new EmptyBorder(
+                                20,
+                                20,
+                                20,
+                                20)));
+
+        panel.add(
+                new JLabel(
+                        "📈 Recent Activity"));
+
+        panel.add(Box.createVerticalStrut(20));
+        panel.add(new JLabel("🩺 New patient registered"));
+        panel.add(Box.createVerticalStrut(10));
+        panel.add(new JLabel("📅 Appointment scheduled"));
+        panel.add(Box.createVerticalStrut(10));
+        panel.add(new JLabel("💰 Payment received"));
+        panel.add(Box.createVerticalStrut(10));
+        panel.add(new JLabel("🧪 Lab result uploaded"));
+
+        return panel;
+    }
 }

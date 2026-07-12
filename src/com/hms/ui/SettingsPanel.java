@@ -88,8 +88,46 @@ public class SettingsPanel extends JPanel {
     //===================================================
 
     private Component createDatabaseCard() {
-        throw new UnsupportedOperationException("Unimplemented method 'createDatabaseCard'");
-}
+        
+        JPanel card =
+                createCard("💾 Database Settings");
+
+        JTextField txtHost =
+                new JTextField("localhost");
+
+        JTextField txtPort =
+                new JTextField("3306");
+
+        JTextField txtDB =
+                new JTextField("lifecare_db");
+
+        card.add(label("Host"));
+        card.add(txtHost);
+
+        card.add(Box.createVerticalStrut(15));
+
+        card.add(label("Port"));
+        card.add(txtPort);
+
+        card.add(Box.createVerticalStrut(15));
+
+        card.add(label("Database Name"));
+        card.add(txtDB);
+
+        card.add(Box.createVerticalStrut(20));
+
+        JButton save =
+                greenButton("Save Database Settings");
+
+        save.addActionListener(e ->
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Database Settings Updated Successfully."));
+
+        card.add(save);
+
+        return card;
+    }
 
     private JPanel createProfileCard() {
 
@@ -129,11 +167,39 @@ public class SettingsPanel extends JPanel {
     // PREFERENCES CARD
     //===================================================
 
-    private JPanel createCard(String string) {
+    private JPanel createCard(String title) {
 
-        throw new UnsupportedOperationException("Unimplemented method 'createCard'");
+    JPanel panel = new JPanel();
+    panel.setLayout(
+            new BoxLayout(
+                    panel,
+                    BoxLayout.Y_AXIS));
+
+    panel.setBackground(Color.WHITE);
+
+    panel.setBorder(
+            BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(
+                            new Color(220,220,220)),
+                    BorderFactory.createEmptyBorder(20,20, 20, 20)));
+
+    JLabel lblTitle =
+            new JLabel(title);
+
+    lblTitle.setFont(
+            new Font(
+                    "Segoe UI Emoji",
+                    Font.BOLD,
+                    18));
+
+    lblTitle.setForeground(
+            Theme.PRIMARY_GREEN);
+
+    panel.add(lblTitle);
+    panel.add(Box.createVerticalStrut(20));
+
+    return panel;
 }
-
     private JPanel createPreferencesCard() {
 
         JPanel card =
@@ -186,9 +252,17 @@ public class SettingsPanel extends JPanel {
     // SECURITY CARD
     //===================================================
 
-    private void styleCheckBox(JCheckBox chkRemember2) {
-   
-        throw new UnsupportedOperationException("Unimplemented method 'styleCheckBox'");
+    private void styleCheckBox(
+        JCheckBox box) {
+
+    box.setBackground(
+            Color.WHITE);
+
+    box.setFont(
+            new Font(
+                    "Segoe UI Emoji",
+                    Font.PLAIN,
+                    14));
 }
 
     private JPanel createSecurityCard() {
@@ -256,13 +330,37 @@ public class SettingsPanel extends JPanel {
         return card;
     }
 
+    private Component label(String string) {
+       
+        JLabel label =
+                new JLabel(string);
+
+        label.setFont(
+                new Font(
+                        "Segoe UI Emoji",
+                        Font.PLAIN,
+                        14));
+
+        return label;
+    }
     private JButton greenButton(String string) {
 
-        throw new UnsupportedOperationException("Unimplemented method 'greenButton'");
-}
+        JButton button =
+                new JButton(string);
 
-    private Component label(String string) {
-        throw new UnsupportedOperationException("Unimplemented method 'label'");
+        button.setFont(
+                new Font(
+                        "Segoe UI Emoji",
+                        Font.PLAIN,
+                        16));
+
+        button.setBackground(
+                Theme.PRIMARY_GREEN);
+
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+
+        return button;
     }
 }
    
