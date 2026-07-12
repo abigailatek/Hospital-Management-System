@@ -10,96 +10,386 @@ public class SettingsScreen extends JPanel {
 
     public SettingsScreen() {
 
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(15, 15));
         setBackground(Theme.BACKGROUND);
-        setBorder(new EmptyBorder(20,25,20,25));
+        setBorder(new EmptyBorder(20, 25, 20, 25));
 
-        JLabel title = new JLabel("SYSTEM SETTINGS");
+        //------------------------------------
+        // Title
+        //------------------------------------
+
+        JLabel title =
+                new JLabel("SYSTEM SETTINGS");
+
         title.setFont(Theme.TITLE);
         title.setForeground(Theme.PRIMARY_GREEN);
 
-        JPanel card = new JPanel(new GridBagLayout());
-        card.setBackground(Color.WHITE);
-        card.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(220,220,220)),
-                new EmptyBorder(25,25,25,25)
-        ));
+        //------------------------------------
+        // Main Form Panel
+        //------------------------------------
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(12,12,12,12);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        JPanel formPanel =
+                new JPanel(
+                        new GridBagLayout());
 
-        JTextField hospitalName = new JTextField(20);
-        JTextField hospitalEmail = new JTextField(20);
-        JTextField hospitalPhone = new JTextField(20);
-        JTextField address = new JTextField(20);
+        formPanel.setBackground(Color.WHITE);
 
-        JComboBox<String> theme = new JComboBox<>(
-                new String[]{
-                        "Green Theme",
-                        "Blue Theme",
-                        "Dark Theme"
-                });
+        formPanel.setBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(215, 215, 215)),
+                        new EmptyBorder(
+                                20,
+                                25,
+                                20,
+                                25)));
 
-        gbc.gridx=0;
-        gbc.gridy=0;
-        card.add(new JLabel("Hospital Name"),gbc);
+        GridBagConstraints gbc =
+                new GridBagConstraints();
 
-        gbc.gridx=1;
-        card.add(hospitalName,gbc);
+        gbc.insets =
+                new Insets(
+                        10,
+                        10,
+                        10,
+                        10);
 
-        gbc.gridx=0;
-        gbc.gridy=1;
-        card.add(new JLabel("Email"),gbc);
+        gbc.fill =
+                GridBagConstraints.HORIZONTAL;
 
-        gbc.gridx=1;
-        card.add(hospitalEmail,gbc);
+        //------------------------------------
+        // Fields
+        //------------------------------------
 
-        gbc.gridx=0;
-        gbc.gridy=2;
-        card.add(new JLabel("Phone"),gbc);
+        JTextField txtUsername =
+                field();
 
-        gbc.gridx=1;
-        card.add(hospitalPhone,gbc);
+        txtUsername.setText(
+                "Administrator");
 
-        gbc.gridx=0;
-        gbc.gridy=3;
-        card.add(new JLabel("Address"),gbc);
+        JTextField txtEmail =
+                field();
 
-        gbc.gridx=1;
-        card.add(address,gbc);
+        txtEmail.setText(
+                "admin@lifecare.com");
 
-        gbc.gridx=0;
-        gbc.gridy=4;
-        card.add(new JLabel("Theme"),gbc);
+        JPasswordField txtPassword =
+                new JPasswordField(18);
 
-        gbc.gridx=1;
-        card.add(theme,gbc);
+        JPasswordField txtConfirm =
+                new JPasswordField(18);
 
-        JPanel buttons = new JPanel();
+        JCheckBox chkNotifications =
+                new JCheckBox(
+                        "Enable Notifications");
 
-        JButton save = new JButton("Save");
-        JButton reset = new JButton("Reset");
+        JCheckBox chkRemember =
+                new JCheckBox(
+                        "Remember Username");
 
-        save.setBackground(Theme.PRIMARY_GREEN);
-        save.setForeground(Color.WHITE);
+        JCheckBox chkDarkMode =
+                new JCheckBox(
+                        "Dark Mode");
 
-        reset.setBackground(Color.GRAY);
-        reset.setForeground(Color.WHITE);
+        chkNotifications.setBackground(
+                Color.WHITE);
 
-        buttons.add(save);
-        buttons.add(reset);
+        chkRemember.setBackground(
+                Color.WHITE);
 
-        gbc.gridx=0;
-        gbc.gridy=5;
-        gbc.gridwidth=2;
+        chkDarkMode.setBackground(
+                Color.WHITE);
 
-        card.add(buttons,gbc);
+        //------------------------------------
+        // Rows
+        //------------------------------------
 
-        add(title,BorderLayout.NORTH);
-        add(card,BorderLayout.CENTER);
+        addRow(
+                formPanel,
+                gbc,
+                0,
+                "Username:",
+                txtUsername,
+                "Email:",
+                txtEmail);
 
+        addRow(
+                formPanel,
+                gbc,
+                1,
+                "New Password:",
+                txtPassword,
+                "Confirm Password:",
+                txtConfirm);
+
+        //------------------------------------
+        // Preferences
+        //------------------------------------
+
+        JPanel preferencePanel =
+                new JPanel(
+                        new FlowLayout(
+                                FlowLayout.LEFT));
+
+        preferencePanel.setBackground(
+                Color.WHITE);
+
+        preferencePanel.add(
+                chkNotifications);
+
+        preferencePanel.add(
+                chkRemember);
+
+        preferencePanel.add(
+                chkDarkMode);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 4;
+
+        formPanel.add(
+                preferencePanel,
+                gbc);
+
+        //------------------------------------
+        // Buttons
+        //------------------------------------
+
+        JPanel buttons =
+                new JPanel(
+                        new FlowLayout(
+                                FlowLayout.CENTER,
+                                15,
+                                5));
+
+        buttons.setBackground(
+                Color.WHITE);
+
+        JButton btnSave =
+                button(
+                        "Save");
+
+        JButton btnReset =
+                button(
+                        "Reset");
+
+        JButton btnBackup =
+                button(
+                        "Backup");
+
+        buttons.add(btnSave);
+        buttons.add(btnReset);
+        buttons.add(btnBackup);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 4;
+
+        formPanel.add(
+                buttons,
+                gbc);
+
+        //------------------------------------
+        // System Information
+        //------------------------------------
+
+        JPanel infoPanel =
+                new JPanel(
+                        new GridLayout(
+                                4,
+                                1,
+                                5,
+                                5));
+
+        infoPanel.setBackground(
+                Color.WHITE);
+
+        infoPanel.setBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(215,215,215)),
+                        new EmptyBorder(
+                                20,
+                                25,
+                                20,
+                                25)));
+
+        infoPanel.add(
+                new JLabel(
+                        "Hospital Management System"));
+
+        infoPanel.add(
+                new JLabel(
+                        "Version : 1.0"));
+
+        JLabel status =
+                new JLabel(
+                        "Database Status : Connected");
+
+        status.setForeground(
+                new Color(
+                        0,
+                        140,
+                        0));
+
+        infoPanel.add(status);
+
+        infoPanel.add(
+                new JLabel(
+                        "Developed by The Byte Group"));
+
+        //------------------------------------
+        // Events
+        //------------------------------------
+
+        btnSave.addActionListener(e -> {
+
+            String p1 =
+                    new String(
+                            txtPassword.getPassword());
+
+            String p2 =
+                    new String(
+                            txtConfirm.getPassword());
+
+            if (!p1.isBlank()
+                    && !p1.equals(p2)) {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Passwords do not match.");
+
+                return;
+            }
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Settings Saved.");
+        });
+
+        btnReset.addActionListener(e -> {
+
+            txtUsername.setText(
+                    "Administrator");
+
+            txtEmail.setText(
+                    "admin@lifecare.com");
+
+            txtPassword.setText("");
+            txtConfirm.setText("");
+
+            chkNotifications.setSelected(false);
+            chkRemember.setSelected(false);
+            chkDarkMode.setSelected(false);
+        });
+
+        btnBackup.addActionListener(e ->
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Database Backup Complete."));
+
+        //------------------------------------
+        // Layout
+        //------------------------------------
+
+        JPanel center =
+                new JPanel(
+                        new BorderLayout(
+                                15,
+                                15));
+
+        center.setBackground(
+                Theme.BACKGROUND);
+
+        center.add(
+                formPanel,
+                BorderLayout.NORTH);
+
+        center.add(
+                infoPanel,
+                BorderLayout.CENTER);
+
+        add(
+                title,
+                BorderLayout.NORTH);
+
+        add(
+                center,
+                BorderLayout.CENTER);
     }
 
-}
+    //------------------------------------
+    // Helper Methods
+    //------------------------------------
 
+    private void addRow(
+            JPanel panel,
+            GridBagConstraints gbc,
+            int row,
+            String label1,
+            JComponent field1,
+            String label2,
+            JComponent field2) {
+
+        gbc.gridy = row;
+        gbc.gridwidth = 1;
+
+        gbc.gridx = 0;
+        panel.add(label(label1), gbc);
+
+        gbc.gridx = 1;
+        panel.add(field1, gbc);
+
+        gbc.gridx = 2;
+        panel.add(label(label2), gbc);
+
+        gbc.gridx = 3;
+        panel.add(field2, gbc);
+    }
+
+    private JTextField field() {
+
+        JTextField field =
+                new JTextField(18);
+
+        field.setFont(
+                Theme.NORMAL);
+
+        return field;
+    }
+
+    private JLabel label(
+            String text) {
+
+        JLabel label =
+                new JLabel(text);
+
+        label.setFont(
+                Theme.NORMAL);
+
+        label.setForeground(
+                Theme.TEXT);
+
+        return label;
+    }
+
+    private JButton button(
+            String text) {
+
+        JButton btn =
+                new JButton(text);
+
+        btn.setFont(
+                Theme.NORMAL);
+
+        btn.setBackground(
+                Theme.PRIMARY_GREEN);
+
+        btn.setForeground(
+                Color.WHITE);
+
+        btn.setFocusPainted(false);
+
+        return btn;
+    }
+}

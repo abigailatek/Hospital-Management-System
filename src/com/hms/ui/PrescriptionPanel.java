@@ -2,119 +2,234 @@ package com.hms.ui;
 
 import com.hms.models.Prescription;
 import com.hms.services.PrescriptionService;
+import com.hms.utils.Theme;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 
 public class PrescriptionPanel extends JPanel {
 
-    private JTable table;
     private DefaultTableModel model;
-    private JTextField txtSearch;
 
     public PrescriptionPanel() {
 
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(15,15));
+        setBackground(Theme.BACKGROUND);
+        setBorder(new EmptyBorder(20,25,20,25));
 
         JLabel title =
-                new JLabel("Prescription Management");
+                new JLabel("PRESCRIPTIONS");
 
-        title.setFont(
-                new Font(
-                        "Segoe UI",
-                        Font.BOLD,
-                        28));
+        title.setFont(Theme.TITLE);
+        title.setForeground(Theme.PRIMARY_GREEN);
 
-        add(title, BorderLayout.NORTH);
+        JPanel form =
+                new JPanel(new GridBagLayout());
 
-        //--------------------------
-        // Toolbar
-        //--------------------------
+        form.setBackground(Color.WHITE);
 
-        JPanel toolbar = new JPanel();
+        form.setBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(215,215,215)),
+                        new EmptyBorder(
+                                20,
+                                25,
+                                20,
+                                25)));
 
-        JButton btnAdd =
-                new JButton("Add");
+        GridBagConstraints gbc =
+                new GridBagConstraints();
 
-        JButton btnDelete =
-                new JButton("Delete");
+        gbc.insets =
+                new Insets(10,10,10,10);
 
-        JButton btnRefresh =
-                new JButton("Refresh");
+        gbc.fill =
+                GridBagConstraints.HORIZONTAL;
 
-        txtSearch =
-                new JTextField(15);
+        JTextField txtRecordId =
+                new JTextField(18);
 
-        JButton btnSearch =
-                new JButton("Search Record ID");
+        JTextField txtMedicine =
+                new JTextField(18);
 
-        toolbar.add(btnAdd);
-        toolbar.add(btnDelete);
-        toolbar.add(btnRefresh);
-        toolbar.add(txtSearch);
-        toolbar.add(btnSearch);
+        JTextField txtDosage =
+                new JTextField(18);
 
-        add(toolbar,
-                BorderLayout.SOUTH);
+        JTextField txtDuration =
+                new JTextField(18);
 
-        //--------------------------
-        // Table
-        //--------------------------
+        JTextField txtNotes =
+                new JTextField(18);
+
+        addRow(
+                form,
+                gbc,
+                0,
+                "Record ID:",
+                txtRecordId,
+                "Medicine:",
+                txtMedicine);
+
+        addRow(
+                form,
+                gbc,
+                1,
+                "Dosage:",
+                txtDosage,
+                "Duration:",
+                txtDuration);
+
+        addRow(
+                form,
+                gbc,
+                2,
+                "Notes:",
+                txtNotes,
+                "",
+                new JLabel());
+
+        JButton add =
+                new JButton(
+                        "Add Prescription");
+
+        JButton delete =
+                new JButton(
+                        "Delete");
+
+        add.setBackground(
+                Theme.PRIMARY_GREEN);
+
+        add.setForeground(
+                Color.WHITE);
+
+        delete.setBackground(
+                Theme.PRIMARY_GREEN);
+
+        delete.setForeground(
+                Color.WHITE);
+
+        JPanel buttons =
+                new JPanel();
+
+        buttons.setBackground(
+                Color.WHITE);
+
+        buttons.add(add);
+        buttons.add(delete);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 4;
+
+        form.add(buttons, gbc);
 
         model =
-                new DefaultTableModel();
+                new DefaultTableModel(
+                        new Object[]{
+                                "ID",
+                                "Record ID",
+                                "Medicine",
+                                "Dosage",
+                                "Duration",
+                                "Notes"
+                        },
+                        0);
 
-        model.setColumnIdentifiers(
-                new Object[]{
-                        "Prescription ID",
-                        "Record ID",
-                        "Medicine",
-                        "Dosage",
-                        "Duration",
-                        "Notes"
-                });
-
-        table =
+        JTable table =
                 new JTable(model);
 
-        table.setRowHeight(25);
+        table.setRowHeight(28);
 
-        add(
-                new JScrollPane(table),
-                BorderLayout.CENTER);
-
-        //--------------------------
-        // Events
-        //--------------------------
-
-        btnRefresh.addActionListener(
-                e -> loadPrescriptions());
-
-        btnAdd.addActionListener(
-                e -> addPrescription());
-
-        btnDelete.addActionListener(
-                e -> deletePrescription());
-
-        btnSearch.addActionListener(
-                e -> searchPrescriptions());
+        add(title, BorderLayout.NORTH);
+        add(form, BorderLayout.CENTER);
+        add(new JScrollPane(table),
+                BorderLayout.SOUTH);
 
         loadPrescriptions();
+
+        PrescriptionService service =
+                new PrescriptionService();
+
+        add.addActionListener(e -> {
+
+            try {
+
+                Prescription p =
+                        new Prescription();
+
+                p.setRecordId(
+                        Integer.parseInt(
+                                txtRecordId.getText()));
+
+                p.setMedicineName(
+                        txtMedicine.getText());
+
+                p.setDosage(
+                        txtDosage.getText());
+
+                p.setDuration(
+                        txtDuration.getText());
+
+                p.setNotes(
+                        txtNotes.getText());
+
+                if (service.addPrescription(p)) {
+
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Prescription Added");
+
+                    loadPrescriptions();
+
+                    txtRecordId.setText("");
+                    txtMedicine.setText("");
+                    txtDosage.setText("");
+                    txtDuration.setText("");
+                    txtNotes.setText("");
+                }
+
+            } catch (Exception ex) {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        ex.getMessage());
+            }
+        });
+
+        delete.addActionListener(e -> {
+
+            int row =
+                    table.getSelectedRow();
+
+            if (row < 0) {
+                return;
+            }
+
+            int id =
+                    Integer.parseInt(
+                            model.getValueAt(
+                                    row,
+                                    0).toString());
+
+            service.deletePrescription(id);
+
+            loadPrescriptions();
+        });
     }
 
-    //-----------------------------------
-
     private void loadPrescriptions() {
+
+        model.setRowCount(0);
 
         PrescriptionService service =
                 new PrescriptionService();
 
         List<Prescription> list =
                 service.getAllPrescriptions();
-
-        model.setRowCount(0);
 
         for (Prescription p : list) {
 
@@ -130,133 +245,27 @@ public class PrescriptionPanel extends JPanel {
         }
     }
 
-    //-----------------------------------
+    private void addRow(
+            JPanel panel,
+            GridBagConstraints gbc,
+            int row,
+            String label1,
+            JComponent field1,
+            String label2,
+            JComponent field2) {
 
-    private void addPrescription() {
+        gbc.gridy = row;
 
-        try {
+        gbc.gridx = 0;
+        panel.add(new JLabel(label1), gbc);
 
-            Prescription p =
-                    new Prescription();
+        gbc.gridx = 1;
+        panel.add(field1, gbc);
 
-            p.setRecordId(
-                    Integer.parseInt(
-                            JOptionPane.showInputDialog(
-                                    this,
-                                    "Record ID")));
+        gbc.gridx = 2;
+        panel.add(new JLabel(label2), gbc);
 
-            p.setMedicineName(
-                    JOptionPane.showInputDialog(
-                            this,
-                            "Medicine Name"));
-
-            p.setDosage(
-                    JOptionPane.showInputDialog(
-                            this,
-                            "Dosage"));
-
-            p.setDuration(
-                    JOptionPane.showInputDialog(
-                            this,
-                            "Duration"));
-
-            p.setNotes(
-                    JOptionPane.showInputDialog(
-                            this,
-                            "Notes"));
-
-            PrescriptionService service =
-                    new PrescriptionService();
-
-            if (service.addPrescription(p)) {
-
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Prescription added.");
-
-                loadPrescriptions();
-            }
-
-        } catch (Exception e) {
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Invalid input.");
-        }
-    }
-
-    //-----------------------------------
-
-    private void deletePrescription() {
-
-        int row =
-                table.getSelectedRow();
-
-        if (row == -1) {
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Select a prescription.");
-
-            return;
-        }
-
-        int id =
-                (Integer)
-                        model.getValueAt(
-                                row,
-                                0);
-
-        PrescriptionService service =
-                new PrescriptionService();
-
-        if (service.deletePrescription(id)) {
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Prescription deleted.");
-
-            loadPrescriptions();
-        }
-    }
-
-    //-----------------------------------
-
-    private void searchPrescriptions() {
-
-        try {
-
-            int recordId =
-                    Integer.parseInt(
-                            txtSearch.getText());
-
-            PrescriptionService service =
-                    new PrescriptionService();
-
-            List<Prescription> list =
-                    service.searchPrescriptions(
-                            recordId);
-
-            model.setRowCount(0);
-
-            for (Prescription p : list) {
-
-                model.addRow(
-                        new Object[]{
-                                p.getPrescriptionId(),
-                                p.getRecordId(),
-                                p.getMedicineName(),
-                                p.getDosage(),
-                                p.getDuration(),
-                                p.getNotes()
-                        });
-            }
-
-        } catch (Exception e) {
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Enter a valid Record ID.");
-        }
+        gbc.gridx = 3;
+        panel.add(field2, gbc);
     }
 }

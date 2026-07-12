@@ -31,7 +31,10 @@ public class PaymentPanel extends JPanel {
         add(title, BorderLayout.NORTH);
 
         JPanel toolbar =
-                new JPanel();
+        new JPanel(
+                new FlowLayout( FlowLayout.LEFT,10,10));
+
+       toolbar.setBackground(new Color(245,247,250));
 
         JButton btnAdd =
                 new JButton("Add");
@@ -41,25 +44,25 @@ public class PaymentPanel extends JPanel {
 
         JButton btnRefresh =
                 new JButton("Refresh");
-
+        
         txtSearch =
                 new JTextField(15);
-
+         txtSearch.setFont(
+        new Font( "Segoe UI", Font.PLAIN, 14));
         JButton btnSearch =
                 new JButton("Search Bill ID");
-
+        styleButton(btnAdd);
+        styleButton(btnDelete);
+        styleButton(btnRefresh);
+        styleButton(btnSearch);
         toolbar.add(btnAdd);
         toolbar.add(btnDelete);
         toolbar.add(btnRefresh);
         toolbar.add(txtSearch);
         toolbar.add(btnSearch);
 
-        add(toolbar,
-                BorderLayout.SOUTH);
-
-        model =
-                new DefaultTableModel();
-
+        add(toolbar,BorderLayout.SOUTH);
+        model =new DefaultTableModel();
         model.setColumnIdentifiers(
                 new Object[]{
                         "Payment ID",
@@ -72,8 +75,7 @@ public class PaymentPanel extends JPanel {
         table =
                 new JTable(model);
 
-        add(
-                new JScrollPane(table),
+        add(  new JScrollPane(table),
                 BorderLayout.CENTER);
 
         btnRefresh.addActionListener(
@@ -223,4 +225,24 @@ public class PaymentPanel extends JPanel {
                     "Enter a valid Bill ID.");
         }
     }
+    private void styleButton(JButton button) {
+
+    button.setBackground(
+            new Color(16,120,110));
+
+    button.setForeground(
+            Color.WHITE);
+
+    button.setFocusPainted(false);
+
+    button.setFont(
+            new Font(
+                    "Segoe UI",
+                    Font.BOLD,
+                    13));
+
+    button.setCursor(
+            new Cursor(
+                    Cursor.HAND_CURSOR));
+}
 }

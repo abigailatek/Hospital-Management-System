@@ -70,37 +70,25 @@ public class PatientPanel extends JPanel {
         // Events
         // ==========================
 
-        toolbar.btnRefresh.addActionListener(e -> loadPatients());
+       
+      toolbar.btnRefresh.addActionListener(e ->
+        loadPatients());
 
-        toolbar.btnSearch.addActionListener(e ->
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Search functionality coming next."
-                )
-        );
+toolbar.btnSearch.addActionListener(e ->
+        searchPatient());
 
-        toolbar.btnAdd.addActionListener(e ->
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Add Patient coming next."
-                )
-        );
+toolbar.btnDelete.addActionListener(e ->
+        deletePatient());
 
-        toolbar.btnEdit.addActionListener(e ->
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Edit Patient coming next."
-                )
-        );
+toolbar.btnAdd.addActionListener(e ->
+        JOptionPane.showMessageDialog(
+                this,
+                "Use the Patient Registration screen to add new patients."));
 
-        toolbar.btnDelete.addActionListener(e ->
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Delete Patient coming next."
-                )
-        );
-
-        loadPatients();
+toolbar.btnEdit.addActionListener(e ->
+        JOptionPane.showMessageDialog(
+                this,
+                "Edit functionality coming soon."));
     }
 
     private void loadPatients() {
@@ -125,4 +113,100 @@ public class PatientPanel extends JPanel {
             });
         }
     }
+    private void searchPatient() {
+
+    String input =
+            JOptionPane.showInputDialog(
+                    this,
+                    "Enter Patient ID");
+
+    if (input == null ||
+            input.isBlank()) {
+        return;
+    }
+
+    try {
+
+        int patientId =
+                Integer.parseInt(input);
+
+        PatientService service =
+                new PatientService();
+
+        Patient patient =
+                service.getPatientById(patientId);
+
+        tableModel.setRowCount(0);
+
+        if (patient != null) {
+
+            tableModel.addRow(
+                    new Object[]{
+                            patient.getPatientID(),
+                            patient.getFirstName(),
+                            patient.getLastName(),
+                            patient.getGender(),
+                            patient.getPhone(),
+                            patient.getEmail(),
+                            patient.getAddress(),
+                            patient.getEmergencyContact()
+                    });
+
+        } else {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Patient not found.");
+        }
+
+    } catch (Exception e) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Invalid Patient ID.");
+    }
+}
+    private void deletePatient() {
+
+    int row =
+            table.getSelectedRow();
+
+    if (row < 0) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Select a patient first.");
+
+        return;
+    }
+
+    int patientId =
+            Integer.parseInt(
+                    tableModel.getValueAt(
+                            row,
+                            0).toString());
+
+    int choice =
+            JOptionPane.showConfirmDialog(
+                    this,
+                    "Delete this patient?",
+                    "Confirm",
+                    JOptionPane.YES_NO_OPTION);
+
+    if (choice != JOptionPane.YES_OPTION) {
+        return;
+    }
+
+    PatientService service =
+            new PatientService();
+
+    if (service.deletePatient(patientId)) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Patient deleted.");
+
+        loadPatients();
+    }
+}
 }

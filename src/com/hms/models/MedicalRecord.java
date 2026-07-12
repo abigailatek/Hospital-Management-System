@@ -2,6 +2,9 @@ package com.hms.models;
 
 import java.time.LocalDate;
 
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
 public class MedicalRecord {
 
     private int recordId;
@@ -14,6 +17,8 @@ public class MedicalRecord {
     private String chronicConditions;
 
     private LocalDate recordDate;
+    private JTable table;
+private DefaultTableModel model;
 
     public MedicalRecord() {
     }
@@ -81,4 +86,5 @@ public class MedicalRecord {
     public void setRecordDate(LocalDate recordDate) {
         this.recordDate = recordDate;
     }
+    
 }

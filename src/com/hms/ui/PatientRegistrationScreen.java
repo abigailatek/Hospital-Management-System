@@ -1,7 +1,9 @@
 package com.hms.ui;
 
 import com.hms.utils.Theme;
-
+import com.hms.models.Patient;
+import com.hms.services.PatientService;
+import java.time.LocalDate;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -84,6 +86,70 @@ public class PatientRegistrationScreen extends JPanel {
         form.add(buttons, gbc);
 
         add(title, BorderLayout.NORTH);
+        save.addActionListener(e -> {
+
+    try {
+
+        Patient patient = new Patient();
+
+        patient.setFirstName(firstName.getText());
+        patient.setLastName(lastName.getText());
+        patient.setDateOfBirth(
+                LocalDate.parse(
+                        dob.getText()));
+
+        String gender = "";
+
+        if (male.isSelected()) {
+            gender = "Male";
+        }
+        else if (female.isSelected()) {
+            gender = "Female";
+        }
+        else {
+            gender = "Other";
+        }
+
+        patient.setGender(gender);
+        patient.setPhone(phone.getText());
+        patient.setEmail(email.getText());
+        patient.setAddress(address.getText());
+
+        PatientService service =
+                new PatientService();
+
+        if (service.addPatient(patient)) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Patient registered successfully.");
+
+            firstName.setText("");
+            lastName.setText("");
+            dob.setText("");
+            phone.setText("");
+            email.setText("");
+            address.setText("");
+            genderGroup.clearSelection();
+        }
+
+    } catch (Exception ex) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                ex.getMessage());
+    }
+});
+
+cancel.addActionListener(e -> {
+    genderGroup.clearSelection();
+    firstName.setText("");
+    lastName.setText("");
+    dob.setText("");
+    phone.setText("");
+    email.setText("");
+    address.setText("");
+});
         add(form, BorderLayout.CENTER);
 
         clear.addActionListener(e -> {

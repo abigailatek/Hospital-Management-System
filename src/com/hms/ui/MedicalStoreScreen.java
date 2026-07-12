@@ -1,11 +1,16 @@
 package com.hms.ui;
 
 import com.hms.utils.Theme;
-
+import com.hms.models.Inventory;
+import com.hms.services.InventoryService;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+
 
 public class MedicalStoreScreen extends JPanel {
 
@@ -64,15 +69,57 @@ public class MedicalStoreScreen extends JPanel {
 
         JTable table = new JTable(model);
         table.setRowHeight(28);
+          loadItems(model);
+       InventoryService service =
+        new InventoryService();
 
-        add.addActionListener(e -> model.addRow(new Object[]{
-                medicineId.getText(),
-                medicineName.getText(),
-                category.getText(),
-                quantity.getText(),
-                supplier.getText(),
-                expiryDate.getText()
-        }));
+add.addActionListener(e -> {
+
+    try {
+
+        Inventory item =
+                new Inventory();
+
+        item.setMedicineName(
+                medicineName.getText());
+
+        item.setQuantity(
+                Integer.parseInt(
+                        quantity.getText()));
+
+        item.setUnitPrice(
+                BigDecimal.ZERO);
+
+        item.setExpiryDate(
+                LocalDate.parse(
+                        expiryDate.getText()));
+
+        item.setSupplier(
+                supplier.getText());
+
+        if (service.addInventoryItem(item)) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Medicine added.");
+
+            loadItems(model);
+
+            medicineId.setText("");
+            medicineName.setText("");
+            category.setText("");
+            quantity.setText("");
+            supplier.setText("");
+            expiryDate.setText("");
+        }
+
+    } catch (Exception ex) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                ex.getMessage());
+    }
+});
 
         clear.addActionListener(e -> {
             medicineId.setText("");
@@ -82,13 +129,25 @@ public class MedicalStoreScreen extends JPanel {
             supplier.setText("");
             expiryDate.setText("");
         });
-
         delete.addActionListener(e -> {
-            int row = table.getSelectedRow();
-            if (row >= 0) {
-                model.removeRow(row);
-            }
-        });
+
+    int row =
+            table.getSelectedRow();
+
+    if (row < 0) {
+        return;
+    }
+
+    int id =
+            Integer.parseInt(
+                    model.getValueAt(
+                            row,
+                            0).toString());
+
+    service.deleteItem(id);
+
+    loadItems(model);
+});
 
         JPanel center = new JPanel(new BorderLayout(15, 15));
         center.setBackground(Theme.BACKGROUND);
@@ -145,4 +204,28 @@ public class MedicalStoreScreen extends JPanel {
         btn.setFocusPainted(false);
         return btn;
     }
+    private void loadItems(
+        DefaultTableModel model) {
+
+    model.setRowCount(0);
+
+    InventoryService service =
+            new InventoryService();
+
+    List<Inventory> items =
+            service.getAllItems();
+
+    for (Inventory i : items) {
+
+        model.addRow(
+                new Object[]{
+                        i.getItemId(),
+                        i.getMedicineName(),
+                        "",
+                        i.getQuantity(),
+                        i.getSupplier(),
+                        i.getExpiryDate()
+                });
+    }
+}
 }

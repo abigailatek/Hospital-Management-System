@@ -237,7 +237,7 @@ public class DoctorsScreen extends JPanel {
 
             doctor.setUserID(0);
 
-            if (service.addDoctor(doctor)) {
+            if (service.updateDoctor(doctor)) {
 
                 JOptionPane.showMessageDialog(
                         this,
