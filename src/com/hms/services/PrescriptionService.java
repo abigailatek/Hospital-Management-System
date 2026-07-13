@@ -7,14 +7,34 @@ import java.util.List;
 
 public class PrescriptionService {
 
-    private PrescriptionDAO prescriptionDAO = new PrescriptionDAO();
+    private final PrescriptionDAO prescriptionDAO;
+
+    public PrescriptionService() {
+        prescriptionDAO = new PrescriptionDAO();
+    }
 
     public boolean addPrescription(Prescription prescription) {
 
-        if (prescription.getMedicineName() == null ||
-                prescription.getMedicineName().isBlank()) {
+        if (prescription.getRecordId() <= 0) {
+            throw new IllegalArgumentException("Invalid Record ID.");
+        }
 
-            throw new IllegalArgumentException("Medicine name is required.");
+        if (prescription.getMedicineName() == null
+                || prescription.getMedicineName().isBlank()) {
+            throw new IllegalArgumentException(
+                    "Medicine name is required.");
+        }
+
+        if (prescription.getDosage() == null
+                || prescription.getDosage().isBlank()) {
+            throw new IllegalArgumentException(
+                    "Dosage is required.");
+        }
+
+        if (prescription.getDuration() == null
+                || prescription.getDuration().isBlank()) {
+            throw new IllegalArgumentException(
+                    "Duration is required.");
         }
 
         return prescriptionDAO.addPrescription(prescription);
@@ -28,7 +48,8 @@ public class PrescriptionService {
         return prescriptionDAO.deletePrescription(id);
     }
 
-    public List<Prescription> searchPrescriptions(int recordId) {
+    public List<Prescription> searchPrescriptions(
+            int recordId) {
         return prescriptionDAO.searchPrescriptions(recordId);
     }
 }

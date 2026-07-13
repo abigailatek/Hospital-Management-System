@@ -12,19 +12,38 @@ import java.util.List;
 
 public class PrescriptionPanel extends JPanel {
 
+    private JTextField txtRecordId;
+    private JTextField txtMedicine;
+    private JTextField txtDosage;
+    private JTextField txtDuration;
+    private JTextField txtNotes;
+
+    private JTable table;
     private DefaultTableModel model;
+
+    private PrescriptionService service;
 
     public PrescriptionPanel() {
 
-        setLayout(new BorderLayout(15,15));
+        service = new PrescriptionService();
+
+        setLayout(new BorderLayout(15, 15));
         setBackground(Theme.BACKGROUND);
-        setBorder(new EmptyBorder(20,25,20,25));
+        setBorder(new EmptyBorder(20, 25, 20, 25));
+
+        //-------------------------------------
+        // TITLE
+        //-------------------------------------
 
         JLabel title =
                 new JLabel("PRESCRIPTIONS");
 
         title.setFont(Theme.TITLE);
         title.setForeground(Theme.PRIMARY_GREEN);
+
+        //-------------------------------------
+        // FORM PANEL
+        //-------------------------------------
 
         JPanel form =
                 new JPanel(new GridBagLayout());
@@ -34,7 +53,7 @@ public class PrescriptionPanel extends JPanel {
         form.setBorder(
                 BorderFactory.createCompoundBorder(
                         BorderFactory.createLineBorder(
-                                new Color(215,215,215)),
+                                new Color(215, 215, 215)),
                         new EmptyBorder(
                                 20,
                                 25,
@@ -45,24 +64,24 @@ public class PrescriptionPanel extends JPanel {
                 new GridBagConstraints();
 
         gbc.insets =
-                new Insets(10,10,10,10);
+                new Insets(10, 10, 10, 10);
 
         gbc.fill =
                 GridBagConstraints.HORIZONTAL;
 
-        JTextField txtRecordId =
+        txtRecordId =
                 new JTextField(18);
 
-        JTextField txtMedicine =
+        txtMedicine =
                 new JTextField(18);
 
-        JTextField txtDosage =
+        txtDosage =
                 new JTextField(18);
 
-        JTextField txtDuration =
+        txtDuration =
                 new JTextField(18);
 
-        JTextField txtNotes =
+        txtNotes =
                 new JTextField(18);
 
         addRow(
@@ -92,40 +111,45 @@ public class PrescriptionPanel extends JPanel {
                 "",
                 new JLabel());
 
+        //-------------------------------------
+        // BUTTONS
+        //-------------------------------------
+
         JButton add =
-                new JButton(
+                createButton(
                         "Add Prescription");
 
         JButton delete =
-                new JButton(
+                createButton(
                         "Delete");
 
-        add.setBackground(
-                Theme.PRIMARY_GREEN);
+        JButton search =
+                createButton(
+                        "Search");
 
-        add.setForeground(
-                Color.WHITE);
-
-        delete.setBackground(
-                Theme.PRIMARY_GREEN);
-
-        delete.setForeground(
-                Color.WHITE);
+        JButton refresh =
+                createButton(
+                        "Refresh");
 
         JPanel buttons =
                 new JPanel();
 
-        buttons.setBackground(
-                Color.WHITE);
+        buttons.setBackground(Color.WHITE);
 
         buttons.add(add);
         buttons.add(delete);
+        buttons.add(search);
+        buttons.add(refresh);
 
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.gridwidth = 4;
 
         form.add(buttons, gbc);
+
+        //-------------------------------------
+        // TABLE
+        //-------------------------------------
 
         model =
                 new DefaultTableModel(
@@ -139,20 +163,34 @@ public class PrescriptionPanel extends JPanel {
                         },
                         0);
 
-        JTable table =
+        table =
                 new JTable(model);
 
         table.setRowHeight(28);
 
+        JScrollPane scrollPane =
+                new JScrollPane(table);
+
+        scrollPane.setPreferredSize(
+                new Dimension(1000, 350));
+
+        //-------------------------------------
+        // ADD COMPONENTS
+        //-------------------------------------
+
         add(title, BorderLayout.NORTH);
         add(form, BorderLayout.CENTER);
-        add(new JScrollPane(table),
-                BorderLayout.SOUTH);
+        add(scrollPane, BorderLayout.SOUTH);
+
+        //-------------------------------------
+        // LOAD DATA
+        //-------------------------------------
 
         loadPrescriptions();
 
-        PrescriptionService service =
-                new PrescriptionService();
+        //-------------------------------------
+        // ADD EVENT
+        //-------------------------------------
 
         add.addActionListener(e -> {
 
@@ -183,13 +221,8 @@ public class PrescriptionPanel extends JPanel {
                             this,
                             "Prescription Added");
 
+                    clearFields();
                     loadPrescriptions();
-
-                    txtRecordId.setText("");
-                    txtMedicine.setText("");
-                    txtDosage.setText("");
-                    txtDuration.setText("");
-                    txtNotes.setText("");
                 }
 
             } catch (Exception ex) {
@@ -200,12 +233,30 @@ public class PrescriptionPanel extends JPanel {
             }
         });
 
+        //-------------------------------------
+        // DELETE EVENT
+        //-------------------------------------
+
         delete.addActionListener(e -> {
 
             int row =
                     table.getSelectedRow();
 
             if (row < 0) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Select a prescription.");
+                return;
+            }
+
+            int option =
+                    JOptionPane.showConfirmDialog(
+                            this,
+                            "Delete this prescription?",
+                            "Confirm",
+                            JOptionPane.YES_NO_OPTION);
+
+            if (option != JOptionPane.YES_OPTION) {
                 return;
             }
 
@@ -213,20 +264,68 @@ public class PrescriptionPanel extends JPanel {
                     Integer.parseInt(
                             model.getValueAt(
                                     row,
-                                    0).toString());
+                                    0)
+                                    .toString());
 
             service.deletePrescription(id);
 
             loadPrescriptions();
         });
+
+        //-------------------------------------
+        // SEARCH EVENT
+        //-------------------------------------
+
+        search.addActionListener(e -> {
+
+            try {
+
+                int recordId =
+                        Integer.parseInt(
+                                txtRecordId.getText());
+
+                model.setRowCount(0);
+
+                List<Prescription> list =
+                        service.searchPrescriptions(
+                                recordId);
+
+                for (Prescription p : list) {
+
+                    model.addRow(
+                            new Object[]{
+                                    p.getPrescriptionId(),
+                                    p.getRecordId(),
+                                    p.getMedicineName(),
+                                    p.getDosage(),
+                                    p.getDuration(),
+                                    p.getNotes()
+                            });
+                }
+
+            } catch (Exception ex) {
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        ex.getMessage());
+            }
+        });
+
+        //-------------------------------------
+        // REFRESH EVENT
+        //-------------------------------------
+
+        refresh.addActionListener(e -> {
+            clearFields();
+            loadPrescriptions();
+        });
     }
+
+    //--------------------------------------------------
 
     private void loadPrescriptions() {
 
         model.setRowCount(0);
-
-        PrescriptionService service =
-                new PrescriptionService();
 
         List<Prescription> list =
                 service.getAllPrescriptions();
@@ -244,6 +343,37 @@ public class PrescriptionPanel extends JPanel {
                     });
         }
     }
+
+    //--------------------------------------------------
+
+    private void clearFields() {
+
+        txtRecordId.setText("");
+        txtMedicine.setText("");
+        txtDosage.setText("");
+        txtDuration.setText("");
+        txtNotes.setText("");
+    }
+
+    //--------------------------------------------------
+
+    private JButton createButton(String text) {
+
+        JButton btn =
+                new JButton(text);
+
+        btn.setBackground(
+                Theme.PRIMARY_GREEN);
+
+        btn.setForeground(
+                Color.WHITE);
+
+        btn.setFocusPainted(false);
+
+        return btn;
+    }
+
+    //--------------------------------------------------
 
     private void addRow(
             JPanel panel,

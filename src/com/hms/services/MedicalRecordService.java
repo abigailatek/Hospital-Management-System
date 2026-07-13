@@ -1,5 +1,7 @@
 package com.hms.services;
 
+import java.util.List;
+
 import com.hms.dao.MedicalRecordDAO;
 import com.hms.models.MedicalRecord;
 
@@ -35,4 +37,32 @@ public class MedicalRecordService {
 
         return medicalRecordDAO.addMedicalRecord(record);
     }
+      public List<MedicalRecord>
+getAllMedicalRecords() {
+
+    return medicalRecordDAO
+            .getAllMedicalRecords();
+}
+
+public boolean updateMedicalRecord(
+        MedicalRecord record) {
+
+    return medicalRecordDAO
+            .updateMedicalRecord(record);
+}
+
+public boolean deleteMedicalRecord(
+        int id) {
+
+    return medicalRecordDAO
+            .deleteMedicalRecord(id);
+}
+
+public List<MedicalRecord>
+searchMedicalRecords(
+        int patientId) {
+
+    return medicalRecordDAO
+            .searchMedicalRecords(patientId);
+}
 }
