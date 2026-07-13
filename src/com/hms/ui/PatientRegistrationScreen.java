@@ -35,7 +35,7 @@ public class PatientRegistrationScreen extends JPanel {
         JTextField dob = new JTextField(18);
         JTextField phone = new JTextField(18);
         JTextField email = new JTextField(18);
-
+        JTextField emergencyContact =new JTextField(18);
         JRadioButton male = new JRadioButton("M");
         JRadioButton female = new JRadioButton("F");
         JRadioButton other = new JRadioButton("O");
@@ -57,14 +57,15 @@ public class PatientRegistrationScreen extends JPanel {
 
         addRow(form, gbc, 0, "First Name:", firstName, "Last Name:", lastName);
         addRow(form, gbc, 1, "DOB:", dob, "Gender:", genderPanel);
-        addRow(form, gbc, 2, "Phone:", phone, "Email:", email);
+        addRow(form, gbc, 2, "Phone:", phone,"Email:", email);
+        addRow(form, gbc, 3,"Emergency Contact:",emergencyContact,"", new JLabel());
 
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         form.add(label("Address:"), gbc);
 
         gbc.gridx = 1;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         gbc.gridwidth = 3;
         form.add(new JScrollPane(address), gbc);
         gbc.gridwidth = 1;
@@ -81,7 +82,7 @@ public class PatientRegistrationScreen extends JPanel {
         buttons.add(cancel);
 
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         gbc.gridwidth = 4;
         form.add(buttons, gbc);
 

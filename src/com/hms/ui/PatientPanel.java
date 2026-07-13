@@ -85,11 +85,99 @@ toolbar.btnAdd.addActionListener(e ->
                 this,
                 "Use the Patient Registration screen to add new patients."));
 
-toolbar.btnEdit.addActionListener(e ->
+     toolbar.btnEdit.addActionListener(e -> {
+
+    int row = table.getSelectedRow();
+
+    if (row == -1) {
+
         JOptionPane.showMessageDialog(
                 this,
-                "Edit functionality coming soon."));
+                "Select a patient first.");
+
+        return;
     }
+
+    int patientId =
+            Integer.parseInt(
+                    tableModel.getValueAt(
+                            row,
+                            0).toString());
+
+    Patient patient =
+            new Patient();
+
+    patient.setPatientID(patientId);
+
+    patient.setFirstName(
+            JOptionPane.showInputDialog(
+                    this,
+                    "First Name",
+                    tableModel.getValueAt(
+                            row,
+                            1)));
+
+    patient.setLastName(
+            JOptionPane.showInputDialog(
+                    this,
+                    "Last Name",
+                    tableModel.getValueAt(
+                            row,
+                            2)));
+
+    patient.setGender(
+            JOptionPane.showInputDialog(
+                    this,
+                    "Gender",
+                    tableModel.getValueAt(
+                            row,
+                            3)));
+
+    patient.setPhone(
+            JOptionPane.showInputDialog(
+                    this,
+                    "Phone",
+                    tableModel.getValueAt(
+                            row,
+                            4)));
+
+    patient.setEmail(
+            JOptionPane.showInputDialog(
+                    this,
+                    "Email",
+                    tableModel.getValueAt(
+                            row,
+                            5)));
+
+    patient.setAddress(
+            JOptionPane.showInputDialog(
+                    this,
+                    "Address",
+                    tableModel.getValueAt(
+                            row,
+                            6)));
+
+    patient.setEmergencyContact(
+            JOptionPane.showInputDialog(
+                    this,
+                    "Emergency Contact",
+                    tableModel.getValueAt(
+                            row,
+                            7)));
+
+    PatientService service =
+            new PatientService();
+
+    if (service.updatePatient(patient)) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Patient updated successfully.");
+
+        loadPatients();
+    }
+});
+}
 
     private void loadPatients() {
 
