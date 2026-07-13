@@ -18,6 +18,7 @@ public class AppointmentScreen extends JPanel {
     private JTextField doctorId;
     private JTextField date;
     private JTextField time;
+    private JTextField reason;
     private JComboBox<String> status;
 
     private JTable table;
@@ -76,7 +77,8 @@ public class AppointmentScreen extends JPanel {
 
         time =
                 new JTextField(18);
-
+        reason =
+                 new JTextField(18);
         status =
                 new JComboBox<>(
                         new String[]{
@@ -107,10 +109,10 @@ public class AppointmentScreen extends JPanel {
                 form,
                 gbc,
                 2,
+                "Reason:",
+                reason,
                 "Status:",
-                status,
-                "",
-                new JLabel(""));
+                status);
 
         JButton add =
                 button("Add Appointment");
@@ -120,6 +122,15 @@ public class AppointmentScreen extends JPanel {
 
         JButton delete =
                 button("Delete");
+
+         JButton update =
+        button("Update");
+
+        JButton search =
+        button("Search");
+
+        JButton refresh =
+        button("Refresh");
 
         JPanel buttons =
                 new JPanel(
@@ -131,8 +142,11 @@ public class AppointmentScreen extends JPanel {
         buttons.setBackground(Color.WHITE);
 
         buttons.add(add);
+        buttons.add(update);
+        buttons.add(search);
+        buttons.add(refresh);
         buttons.add(clear);
-        buttons.add(delete);
+        buttons.add(delete); 
 
         gbc.gridx = 0;
         gbc.gridy = 3;
@@ -192,8 +206,40 @@ public class AppointmentScreen extends JPanel {
 
         delete.addActionListener(
                 e -> deleteAppointment());
+         update.addActionListener(
+        e -> updateAppointment());
+
+        search.addActionListener(
+        e -> searchAppointments());
+
+         refresh.addActionListener(
+        e -> loadAppointments());
 
         loadAppointments();
+        table.getSelectionModel()
+        .addListSelectionListener(e -> {
+
+            int row = table.getSelectedRow();
+
+            if (row < 0) {
+                return;
+            }
+
+            patientId.setText(
+                    model.getValueAt(row,1).toString());
+
+            doctorId.setText(
+                    model.getValueAt(row,2).toString());
+
+            date.setText(
+                    model.getValueAt(row,3).toString());
+
+            time.setText(
+                    model.getValueAt(row,4).toString());
+
+            status.setSelectedItem(
+                    model.getValueAt(row,5).toString());
+        });
     }
 
     //------------------------------------------------
@@ -249,7 +295,7 @@ public class AppointmentScreen extends JPanel {
                             .toString());
 
             appointment.setReason(
-                    "General Appointment");
+                         reason.getText());
 
             if (service.addAppointment(
                     appointment)) {
@@ -306,18 +352,23 @@ public class AppointmentScreen extends JPanel {
     }
 
     //------------------------------------------------
-
-    private void clearFields() {
-
-        patientId.setText("");
-        doctorId.setText("");
-        date.setText("");
-        time.setText("");
-        status.setSelectedIndex(0);
-    }
+ private void clearFields() {
+    patientId.setText("");
+    doctorId.setText("");
+    date.setText("");
+    time.setText("");
+    reason.setText("");
+    status.setSelectedIndex(0);
+ }
 
     //------------------------------------------------
+        private void updateAppointment() {
+    // code I gave you earlier
+     }
 
+      private void searchAppointments() {
+    // code I gave you earlier
+   }
     private void addRow(
             JPanel panel,
             GridBagConstraints gbc,
@@ -374,4 +425,5 @@ public class AppointmentScreen extends JPanel {
 
         return btn;
     }
+
 }

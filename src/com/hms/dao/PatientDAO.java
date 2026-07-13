@@ -177,9 +177,7 @@ if (dob != null) {
 
     return false;
 }public List<Patient> searchPatients(String keyword) {
-
     List<Patient> patients = new ArrayList<>();
-
     String sql = """
         SELECT *
         FROM Patients

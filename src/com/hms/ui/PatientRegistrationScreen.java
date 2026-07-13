@@ -92,7 +92,7 @@ public class PatientRegistrationScreen extends JPanel {
     try {
 
         Patient patient = new Patient();
-
+         patient.setEmergencyContact(emergencyContact.getText());
         patient.setFirstName(firstName.getText());
         patient.setLastName(lastName.getText());
         patient.setDateOfBirth(
@@ -131,6 +131,7 @@ public class PatientRegistrationScreen extends JPanel {
             phone.setText("");
             email.setText("");
             address.setText("");
+            emergencyContact.setText("");
             genderGroup.clearSelection();
         }
 
