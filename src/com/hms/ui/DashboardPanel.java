@@ -7,153 +7,250 @@ import java.awt.*;
 
 public class DashboardPanel extends JPanel {
 
-    private DashboardService service;
+   public DashboardPanel() {
+        DashboardService
 
-    public DashboardPanel() {
+    service = new DashboardService();
 
-        service = new DashboardService();
+    setLayout(new BorderLayout(20,20));
+    setBackground(new Color(245,247,250));
 
-        setLayout(new BorderLayout());
-        setBackground(new Color(245, 247, 250));
+    //----------------------------------
+    // Header
+    //----------------------------------
 
-        //-------------------------
-        // Header
-        //-------------------------
+    JPanel header =
+            new JPanel(new BorderLayout());
 
-        JLabel title = new JLabel("Dashboard");
-        title.setFont(new Font("Segoe UI", Font.BOLD, 28));
-        title.setBorder(
-                BorderFactory.createEmptyBorder(
-                        20, 20, 20, 20));
+    header.setOpaque(false);
 
-        add(title, BorderLayout.NORTH);
+    JPanel left =
+            new JPanel();
 
-        //-------------------------
-        // Statistics
-        //-------------------------
+    left.setOpaque(false);
+    left.setLayout(
+            new BoxLayout(
+                    left,
+                    BoxLayout.Y_AXIS));
 
-        JPanel cards =
-                new JPanel(
-                        new GridLayout(
-                                2,
-                                4,
-                                20,
-                                20));
+    JLabel title =
+            new JLabel(
+                    "🏥 LifeCare Hospital Dashboard");
 
-        cards.setBorder(
-                BorderFactory.createEmptyBorder(
-                        20,
-                        20,
-                        20,
-                        20));
+    title.setFont(
+            new Font(
+                    "Segoe UI Emoji",
+                    Font.BOLD,
+                    32));
 
-        cards.setBackground(
-                new Color(
-                        245,
-                        247,
-                        250));
+    title.setForeground(
+            new Color(16,120,110));
 
-        cards.add(createCard(
-                "Patients",
-                String.valueOf(
-                        service.getPatientCount())));
+    JLabel greeting =
+            new JLabel(
+                    "👋 Welcome back, Administrator");
 
-        cards.add(createCard(
-                "Doctors",
-                String.valueOf(
-                        service.getDoctorCount())));
+    greeting.setFont(
+            new Font(
+                    "Segoe UI Emoji",
+                    Font.PLAIN,
+                    18));
 
-        cards.add(createCard(
-                "Appointments",
-                String.valueOf(
-                        service.getAppointmentCount())));
+    greeting.setForeground(Color.GRAY);
 
-        cards.add(createCard(
-                "Bills",
-                String.valueOf(
-                        service.getBillCount())));
+    left.add(title);
+    left.add(Box.createVerticalStrut(5));
+    left.add(greeting);
 
-        cards.add(createCard(
-                "Lab Tests",
-                String.valueOf(
-                        service.getLabTestCount())));
+    JLabel date =
+            new JLabel(
+                    java.time.LocalDate.now().toString());
 
-        cards.add(createCard(
-                "Staff",
-                String.valueOf(
-                        service.getStaffCount())));
+    date.setFont(
+            new Font(
+                    "Segoe UI",
+                    Font.PLAIN,
+                    16));
 
-        cards.add(createCard(
-                "Inventory",
-                String.valueOf(
-                        service.getInventoryCount())));
+    date.setForeground(Color.GRAY);
 
-        cards.add(createCard(
-                "Payments",
-                String.valueOf(
-                        service.getPaymentCount())));
+    header.add(left, BorderLayout.WEST);
+    header.add(date, BorderLayout.EAST);
 
-        add(cards, BorderLayout.CENTER);
-    }
+    add(header, BorderLayout.NORTH);
 
-    private JPanel createCard(
-            String title,
-            String value) {
+    //----------------------------------
+    // Cards
+    //----------------------------------
 
-        JPanel panel =
-                new JPanel(
-                        new BorderLayout());
+    JPanel cards =
+            new JPanel(
+                    new GridLayout(
+                            2,
+                            4,
+                            25,
+                            25));
 
-        panel.setBackground(Color.WHITE);
-           
-        panel.setBorder(
-                BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(
-                                new Color(
-                                        220,
-                                        220,
-                                        220)),
-        
-                        BorderFactory.createEmptyBorder(
-                                20,
-                                20,
-                                20,
-                                20)));
+    cards.setBorder(
+            BorderFactory.createEmptyBorder(
+                    20,
+                    20,
+                    20,
+                    20));
 
-        JLabel lblTitle =
-                new JLabel(title);
+    cards.setBackground(
+            new Color(
+                    245,
+                    247,
+                    250));
 
-        lblTitle.setFont(
-                new Font(
-                        "Segoe UI",
-                        Font.PLAIN,
-                        18));
+    cards.add(createCard(
+            "👤 Patients",
+            String.valueOf(
+                    service.getPatientCount())));
 
-        JLabel lblValue =
-                new JLabel(
-                        value,
-                        SwingConstants.CENTER);
+    cards.add(createCard(
+            "🩺 Doctors",
+            String.valueOf(
+                    service.getDoctorCount())));
 
-        lblValue.setFont(
-                new Font(
-                        "Segoe UI",
-                        Font.BOLD,
-                        36));
+    cards.add(createCard(
+            "📅 Appointments",
+            String.valueOf(
+                    service.getAppointmentCount())));
 
-        lblValue.setForeground(
-                new Color(
-                        16,
-                        120,
-                        110));
+    cards.add(createCard(
+            "💰 Bills",
+            String.valueOf(
+                    service.getBillCount())));
 
-        panel.add(
-                lblTitle,
-                BorderLayout.NORTH);
+    cards.add(createCard(
+            "🧪 Lab Tests",
+            String.valueOf(
+                    service.getLabTestCount())));
 
-        panel.add(
-                lblValue,
-                BorderLayout.CENTER);
+    cards.add(createCard(
+            "👨‍⚕️ Staff",
+            String.valueOf(
+                    service.getStaffCount())));
 
-        return panel;
-    }
+    cards.add(createCard(
+            "📦 Inventory",
+            String.valueOf(
+                    service.getInventoryCount())));
+
+    cards.add(createCard(
+            "💳 Payments",
+            String.valueOf(
+                    service.getPaymentCount())));
+
+    add(cards, BorderLayout.CENTER);
+}
+    
+private JPanel createCard(
+        String title,
+        String value) {
+
+    JPanel panel =
+            new JPanel(
+                    new BorderLayout());
+
+    panel.setBackground(Color.WHITE);
+
+    panel.setBorder(
+            BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(
+                            new Color(
+                                    225,
+                                    225,
+                                    225)),
+                    BorderFactory.createEmptyBorder(
+                            20,
+                            20,
+                            20,
+                            20)));
+
+    panel.setPreferredSize(
+            new Dimension(
+                    250,
+                    180));
+
+    JLabel lblTitle =
+            new JLabel(title);
+
+    lblTitle.setFont(
+            new Font(
+                    "Segoe UI Emoji",
+                    Font.BOLD,
+                    18));
+
+    lblTitle.setForeground(
+            new Color(
+                    16,
+                    120,
+                    110));
+
+    JLabel lblValue =
+            new JLabel(
+                    value,
+                    SwingConstants.CENTER);
+
+    lblValue.setFont(
+            new Font(
+                    "Segoe UI",
+                    Font.BOLD,
+                    48));
+
+    lblValue.setForeground(
+            new Color(
+                    16,
+                    120,
+                    110));
+
+    JLabel subtitle =
+            new JLabel(
+                    "Total Records",
+                    SwingConstants.CENTER);
+
+    subtitle.setForeground(
+            Color.GRAY);
+
+    subtitle.setFont(
+            new Font(
+                    "Segoe UI",
+                    Font.PLAIN,
+                    14));
+
+    JPanel center =
+            new JPanel();
+
+    center.setOpaque(false);
+
+    center.setLayout(
+            new BoxLayout(
+                    center,
+                    BoxLayout.Y_AXIS));
+
+    lblValue.setAlignmentX(
+            Component.CENTER_ALIGNMENT);
+
+    subtitle.setAlignmentX(
+            Component.CENTER_ALIGNMENT);
+
+    center.add(Box.createVerticalGlue());
+    center.add(lblValue);
+    center.add(Box.createVerticalStrut(5));
+    center.add(subtitle);
+    center.add(Box.createVerticalGlue());
+
+    panel.add(
+            lblTitle,
+            BorderLayout.NORTH);
+
+    panel.add(
+            center,
+            BorderLayout.CENTER);
+
+    return panel;
+}
 }

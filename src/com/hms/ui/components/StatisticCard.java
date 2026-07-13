@@ -10,41 +10,40 @@ public class StatisticCard extends JPanel {
 
     private JLabel valueLabel;
 
-    public StatisticCard(
-            String icon,
-            String title,
-            int value) {
+    public StatisticCard(String icon,
+                         String title,
+                         int value) {
 
-        setLayout(new BorderLayout(15, 15));
-
+        setLayout(new BorderLayout());
         setBackground(Color.WHITE);
 
-        setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(
-                        new Color(225, 225, 225), 1),
-                new EmptyBorder(
-                        20,
-                        20,
-                        20,
-                        20)));
+        setBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(225,225,225)),
+                        new EmptyBorder(
+                                25,
+                                25,
+                                25,
+                                25)));
 
         setPreferredSize(
                 new Dimension(
-                        260,
-                        180));
+                        250,
+                        105));
 
         //---------------------------------
-        // TOP SECTION
+        // Top section
         //---------------------------------
 
-        JPanel header =
+        JPanel top =
                 new JPanel(
                         new FlowLayout(
                                 FlowLayout.LEFT,
                                 10,
                                 0));
 
-        header.setOpaque(false);
+        top.setOpaque(false);
 
         JLabel iconLabel =
                 new JLabel(icon);
@@ -53,7 +52,7 @@ public class StatisticCard extends JPanel {
                 new Font(
                         "Segoe UI Emoji",
                         Font.PLAIN,
-                        32));
+                        30));
 
         JLabel titleLabel =
                 new JLabel(title);
@@ -67,20 +66,21 @@ public class StatisticCard extends JPanel {
         titleLabel.setForeground(
                 Theme.PRIMARY_GREEN);
 
-        header.add(iconLabel);
-        header.add(titleLabel);
+        top.add(iconLabel);
+        top.add(titleLabel);
 
         //---------------------------------
-        // VALUE SECTION
+        // Bottom section
         //---------------------------------
 
-        JPanel center =
+        JPanel bottom =
                 new JPanel();
 
-        center.setOpaque(false);
-        center.setLayout(
+        bottom.setOpaque(false);
+
+        bottom.setLayout(
                 new BoxLayout(
-                        center,
+                        bottom,
                         BoxLayout.Y_AXIS));
 
         valueLabel =
@@ -91,13 +91,13 @@ public class StatisticCard extends JPanel {
                 new Font(
                         "Segoe UI",
                         Font.BOLD,
-                        52));
+                        36));
 
         valueLabel.setForeground(
-                Theme.PRIMARY_GREEN);
-
-        valueLabel.setAlignmentX(
-                Component.CENTER_ALIGNMENT);
+                new Color(
+                        40,
+                        40,
+                        40));
 
         JLabel subtitle =
                 new JLabel(
@@ -106,82 +106,22 @@ public class StatisticCard extends JPanel {
         subtitle.setFont(
                 new Font(
                         "Segoe UI",
-                        Font.PLAIN,
+                        Font.BOLD,
                         14));
 
         subtitle.setForeground(
                 Color.GRAY);
 
-        subtitle.setAlignmentX(
-                Component.CENTER_ALIGNMENT);
+        bottom.add(valueLabel);
+        bottom.add(Box.createVerticalStrut(5));
+        bottom.add(subtitle);
 
-        center.add(Box.createVerticalGlue());
-        center.add(valueLabel);
-        center.add(Box.createVerticalStrut(5));
-        center.add(subtitle);
-        center.add(Box.createVerticalGlue());
-
-        //---------------------------------
-        // ADD COMPONENTS
-        //---------------------------------
-
-        add(header, BorderLayout.NORTH);
-        add(center, BorderLayout.CENTER);
+        add(top, BorderLayout.NORTH);
+        add(bottom, BorderLayout.CENTER);
     }
-
-    //---------------------------------
-    // UPDATE VALUE
-    //---------------------------------
 
     public void setValue(int value) {
         valueLabel.setText(
                 String.valueOf(value));
     }
-    @Override
-protected void paintComponent(Graphics g) {
-    super.paintComponent(g);
-
-    Graphics2D g2 =
-            (Graphics2D) g;
-
-    g2.setRenderingHint(
-            RenderingHints.KEY_ANTIALIASING,
-            RenderingHints.VALUE_ANTIALIAS_ON);
-
-    g2.setColor(Color.WHITE);
-
-    g2.fillRoundRect(
-            0,
-            0,
-            getWidth()-1,
-            getHeight()-1,
-            30,
-            30);
-
-    g2.setColor(
-            new Color(
-                    225,
-                    225,
-                    225));
-
-    g2.drawRoundRect(
-            0,
-            0,
-            getWidth()-1,
-            getHeight()-1,
-            30,
-            30);
-
-    g2.setColor(
-            Theme.PRIMARY_GREEN);
-
-    g2.fillRoundRect(
-            0,
-            0,
-            getWidth(),
-            10,
-            30,
-            30);
-}
-    
 }
