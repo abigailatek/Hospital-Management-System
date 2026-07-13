@@ -155,17 +155,17 @@ public class AppointmentScreen extends JPanel {
         form.add(buttons, gbc);
 
         model =
-                new DefaultTableModel(
-                        new String[]{
-                                "Appointment ID",
-                                "Patient ID",
-                                "Doctor ID",
-                                "Date",
-                                "Time",
-                                "Status"
-                        },
-                        0);
-
+        new DefaultTableModel(
+                new String[]{
+                        "Appointment ID",
+                        "Patient ID",
+                        "Doctor ID",
+                        "Date",
+                        "Time",
+                        "Reason",
+                        "Status"
+                },
+                0);
         table =
                 new JTable(model);
 
@@ -236,9 +236,11 @@ public class AppointmentScreen extends JPanel {
 
             time.setText(
                     model.getValueAt(row,4).toString());
+             reason.setText(
+        model.getValueAt(row,5).toString());
 
-            status.setSelectedItem(
-                    model.getValueAt(row,5).toString());
+             status.setSelectedItem(
+        model.getValueAt(row,6).toString());
         });
     }
 
@@ -253,15 +255,16 @@ public class AppointmentScreen extends JPanel {
 
         for (Appointment a : appointments) {
 
-            model.addRow(
-                    new Object[]{
-                            a.getAppointmentId(),
-                            a.getPatientId(),
-                            a.getDoctorId(),
-                            a.getAppointmentDate(),
-                            a.getAppointmentTime(),
-                            a.getStatus()
-                    });
+         model.addRow(
+        new Object[]{
+                a.getAppointmentId(),
+                a.getPatientId(),
+                a.getDoctorId(),
+                a.getAppointmentDate(),
+                a.getAppointmentTime(),
+                a.getReason(),
+                a.getStatus()
+        });
         }
     }
 
@@ -352,6 +355,110 @@ public class AppointmentScreen extends JPanel {
     }
 
     //------------------------------------------------
+
+       private void updateAppointment() {
+
+    int row = table.getSelectedRow();
+
+    if (row < 0) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Select an appointment.");
+
+        return;
+    }
+
+    try {
+
+        Appointment appointment =
+                new Appointment();
+
+        appointment.setAppointmentId(
+                Integer.parseInt(
+                        model.getValueAt(
+                                row,
+                                0).toString()));
+
+        appointment.setPatientId(
+                Integer.parseInt(
+                        patientId.getText()));
+
+        appointment.setDoctorId(
+                Integer.parseInt(
+                        doctorId.getText()));
+
+        appointment.setAppointmentDate(
+                LocalDate.parse(
+                        date.getText()));
+
+        appointment.setAppointmentTime(
+                LocalTime.parse(
+                        time.getText()));
+
+        appointment.setStatus(
+                status.getSelectedItem()
+                        .toString());
+
+        appointment.setReason(
+                reason.getText());
+
+        if (service.updateAppointment(
+                appointment)) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Appointment updated successfully.");
+            loadAppointments();
+            clearFields();
+        }
+
+    } catch (Exception ex) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                ex.getMessage());
+    }
+}
+
+
+private void searchAppointments() {
+
+    try {
+
+        int doctor =
+                Integer.parseInt(
+                        JOptionPane.showInputDialog(
+                                this,
+                                "Enter Doctor ID"));
+
+        List<Appointment> appointments =
+                service.searchAppointments(
+                        doctor);
+
+        model.setRowCount(0);
+
+        for (Appointment a : appointments) {
+
+         model.addRow(
+        new Object[]{
+                a.getAppointmentId(),
+                a.getPatientId(),
+                a.getDoctorId(),
+                a.getAppointmentDate(),
+                a.getAppointmentTime(),
+                a.getReason(),
+                a.getStatus()
+        });
+        }
+
+    } catch (Exception ex) {
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Invalid Doctor ID.");
+    }
+}
  private void clearFields() {
     patientId.setText("");
     doctorId.setText("");
@@ -360,15 +467,7 @@ public class AppointmentScreen extends JPanel {
     reason.setText("");
     status.setSelectedIndex(0);
  }
-
     //------------------------------------------------
-        private void updateAppointment() {
-    // code I gave you earlier
-     }
-
-      private void searchAppointments() {
-    // code I gave you earlier
-   }
     private void addRow(
             JPanel panel,
             GridBagConstraints gbc,
