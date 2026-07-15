@@ -40,13 +40,16 @@ public class MedicalStoreScreen extends JPanel {
         JTextField quantity = field();
         JTextField supplier = field();
         JTextField expiryDate = field();
+        JTextField unitPrice = field();
+        JTextField txtSearch = new JTextField(20);
+        JButton btnSearch = button("Search");
+        JButton btnRefresh =button("Refresh");
 
         addRow(formPanel, gbc, 0, "Medicine ID:", medicineId, "Medicine Name:", medicineName);
         addRow(formPanel, gbc, 1, "Category:", category, "Quantity:", quantity);
         addRow(formPanel, gbc, 2, "Supplier:", supplier, "Expiry Date:", expiryDate);
-
-        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
-        buttons.setBackground(Color.WHITE);
+        addRow(formPanel, gbc, 3, "Unit Price:", unitPrice,"", new JLabel());
+        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 5)); buttons.setBackground(Color.WHITE);
 
         JButton add = button("Add Medicine");
         JButton update = button("Update");
@@ -59,9 +62,25 @@ public class MedicalStoreScreen extends JPanel {
         buttons.add(delete);
 
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         gbc.gridwidth = 4;
         formPanel.add(buttons, gbc);
+        JPanel searchPanel =
+        new JPanel( new FlowLayout( FlowLayout.RIGHT));
+
+       searchPanel.setBackground( Color.WHITE);
+
+       searchPanel.add( new JLabel("Search:"));
+
+      searchPanel.add(txtSearch);
+      searchPanel.add(btnSearch);
+      searchPanel.add(btnRefresh);
+
+      gbc.gridx = 0;
+      gbc.gridy = 5;
+      gbc.gridwidth = 4;
+
+     formPanel.add(searchPanel, gbc); 
 
         DefaultTableModel model = new DefaultTableModel(
                 new String[]{"Medicine ID", "Medicine Name", "Category", "Quantity", "Supplier", "Expiry Date"}, 0
@@ -87,8 +106,7 @@ add.addActionListener(e -> {
                 Integer.parseInt(
                         quantity.getText()));
 
-        item.setUnitPrice(
-                BigDecimal.ZERO);
+        item.setUnitPrice(new BigDecimal( unitPrice.getText()));
 
         item.setExpiryDate(
                 LocalDate.parse(
@@ -148,6 +166,33 @@ add.addActionListener(e -> {
 
     loadItems(model);
 });
+           btnSearch.addActionListener(e -> {
+
+    model.setRowCount(0);
+
+    List<Inventory> items =
+            service.searchItems(
+                    txtSearch.getText());
+
+    for (Inventory i : items) {
+
+        model.addRow(
+                new Object[]{
+                        i.getItemId(),
+                        i.getMedicineName(),
+                        "",
+                        i.getQuantity(),
+                        i.getSupplier(),
+                        i.getExpiryDate()
+                });
+    }
+});    
+btnRefresh.addActionListener(e -> {
+
+    txtSearch.setText("");
+
+    loadItems(model);
+});
 
         JPanel center = new JPanel(new BorderLayout(15, 15));
         center.setBackground(Theme.BACKGROUND);
@@ -188,7 +233,6 @@ add.addActionListener(e -> {
         field.setFont(Theme.NORMAL);
         return field;
     }
-
     private JLabel label(String text) {
         JLabel label = new JLabel(text);
         label.setFont(Theme.NORMAL);
@@ -217,15 +261,16 @@ add.addActionListener(e -> {
 
     for (Inventory i : items) {
 
-        model.addRow(
-                new Object[]{
-                        i.getItemId(),
-                        i.getMedicineName(),
-                        "",
-                        i.getQuantity(),
-                        i.getSupplier(),
-                        i.getExpiryDate()
-                });
+    
+model.addRow(
+        new Object[]{
+                i.getItemId(),
+                i.getMedicineName(),
+                i.getQuantity(),
+                i.getUnitPrice(),
+                i.getSupplier(),
+                i.getExpiryDate()
+        });
     }
 }
 }

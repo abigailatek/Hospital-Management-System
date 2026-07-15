@@ -8,7 +8,7 @@ import java.util.List;
 public class InventoryDAO {
 
     // CREATE
-    public boolean addItem(Inventory item) {
+    public boolean addInventoryItem {
 
         String sql = """
                 INSERT INTO Inventory
