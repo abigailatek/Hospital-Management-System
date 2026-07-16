@@ -27,7 +27,7 @@ public class MainFrame extends JFrame {
     private JButton btnReports;
     private JButton btnSettings;
     private JButton btnLogout;
-
+    private JButton btnNotifications;
     public MainFrame() {
         initialize();
         applyRolePermissions();
@@ -63,6 +63,7 @@ public class MainFrame extends JFrame {
         btnStaff = createButton("Staff");
         btnAttendance = createButton("Attendance");
         btnReports = createButton("Reports");
+        btnNotifications =createButton( "Notifications");
         btnSettings = createButton("Settings");
         btnLogout = createButton("Logout");
 
@@ -107,7 +108,7 @@ public class MainFrame extends JFrame {
         contentPanel.add(new AttendancePanel(), "Attendance");
         contentPanel.add(new ReportsPanel(), "Reports");
         contentPanel.add(new SettingsPanel(), "Settings");
-
+         contentPanel.add(new NotificationPanel(),  "Notifications");
         //-----------------------------------
         // Add to Frame
         //-----------------------------------

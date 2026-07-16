@@ -259,4 +259,9 @@ public int getAppointmentCount() {
 
     return 0;
 }
+    public List<Appointment> getTodayAppointments() {
+        return null;
+    
+}
+   
 }

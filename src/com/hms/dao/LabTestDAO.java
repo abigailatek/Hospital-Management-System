@@ -204,4 +204,8 @@ public class LabTestDAO {
 
     return 0;
 }
+    public List<LabTest> getPendingTests() {
+        return null;
+
+}
 }

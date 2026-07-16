@@ -41,11 +41,7 @@ public class AdminDashboardScreen extends JPanel {
                 Theme.BACKGROUND);
 
         mainPanel.setBorder(
-                new EmptyBorder(
-                        20,
-                        20,
-                        20,
-                        20));
+                new EmptyBorder(20,20, 20,20));
 
         mainPanel.add(
                 createHeader(),
