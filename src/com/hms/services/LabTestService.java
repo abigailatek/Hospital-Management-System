@@ -1,5 +1,7 @@
 package com.hms.services;
 
+import java.util.List;
+
 import com.hms.dao.LabTestDAO;
 import com.hms.models.LabTest;
 
@@ -15,4 +17,16 @@ public class LabTestService {
 
         return dao.addLabTest(test);
     }
+     public List<LabTest> getAllLabTests() {
+    return dao.getAllLabTests();
+}
+
+public boolean deleteLabTest(int id) {
+    return dao.deleteLabTest(id);
+}
+
+public List<LabTest> searchLabTests(int patientId) {
+    return dao.searchLabTests(patientId);
+}
+    
 }

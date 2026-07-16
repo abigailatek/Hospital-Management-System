@@ -129,6 +129,7 @@ add.addActionListener(e -> {
             quantity.setText("");
             supplier.setText("");
             expiryDate.setText("");
+            unitPrice.setText("");
         }
 
     } catch (Exception ex) {
@@ -146,6 +147,7 @@ add.addActionListener(e -> {
             quantity.setText("");
             supplier.setText("");
             expiryDate.setText("");
+            unitPrice.setText("");
         });
         delete.addActionListener(e -> {
 
@@ -163,8 +165,6 @@ add.addActionListener(e -> {
                             0).toString());
 
     service.deleteItem(id);
-
-    loadItems(model);
 });
            btnSearch.addActionListener(e -> {
 
@@ -192,6 +192,8 @@ btnRefresh.addActionListener(e -> {
     txtSearch.setText("");
 
     loadItems(model);
+    JTextArea alerts = null;
+    loadAlerts(alerts);
 });
 
         JPanel center = new JPanel(new BorderLayout(15, 15));
@@ -201,8 +203,26 @@ btnRefresh.addActionListener(e -> {
 
         add(title, BorderLayout.NORTH);
         add(center, BorderLayout.CENTER);
-    }
+             JTextArea alerts =
+        new JTextArea(6, 30);
 
+alerts.setEditable(false);
+
+alerts.setBackground(
+        new Color(255, 248, 220));
+
+alerts.setFont(
+        new Font(
+                "Segoe UI",
+                Font.PLAIN,
+                13));
+
+loadAlerts(alerts);
+
+add(new JScrollPane(alerts),
+        BorderLayout.SOUTH);
+    }
+     
     private void addRow(
             JPanel panel,
             GridBagConstraints gbc,
@@ -271,6 +291,42 @@ model.addRow(
                 i.getSupplier(),
                 i.getExpiryDate()
         });
+    }
+} 
+       private void loadAlerts(
+        JTextArea alerts) {
+
+    InventoryService service =
+            new InventoryService();
+
+    alerts.setText("");
+
+    alerts.append(
+            "LOW STOCK ITEMS\n");
+
+    for (Inventory i :
+            service.getLowStockItems()) {
+
+        alerts.append(
+                "• "
+                + i.getMedicineName()
+                + " ("
+                + i.getQuantity()
+                + " left)\n");
+    }
+
+    alerts.append(
+            "\n EXPIRING SOON\n");
+
+    for (Inventory i :
+            service.getExpiringItems()) {
+
+        alerts.append(
+                "• "
+                + i.getMedicineName()
+                + " ("
+                + i.getExpiryDate()
+                + ")\n");
     }
 }
 }

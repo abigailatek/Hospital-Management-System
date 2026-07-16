@@ -210,4 +210,30 @@ public List<Doctor> searchDoctors(String keyword) {
 
     return doctors;
 }
+       public int getDoctorCount() {
+
+    String sql =
+            "SELECT COUNT(*) FROM Doctors";
+
+    try (
+            Connection conn =
+                    DatabaseConnection.getConnection();
+
+            PreparedStatement ps =
+                    conn.prepareStatement(sql);
+
+            ResultSet rs =
+                    ps.executeQuery()
+    ) {
+
+        if (rs.next()) {
+            return rs.getInt(1);
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return 0;
+}
 }

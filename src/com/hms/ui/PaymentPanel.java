@@ -2,6 +2,7 @@ package com.hms.ui;
 
 import com.hms.models.Payment;
 import com.hms.services.PaymentService;
+import com.hms.utils.Theme;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -244,5 +245,47 @@ public class PaymentPanel extends JPanel {
     button.setCursor(
             new Cursor(
                     Cursor.HAND_CURSOR));
+}
+      private JPanel createStatCard(
+        String title,
+        String value) {
+
+    JPanel card = new JPanel(
+            new BorderLayout());
+
+    card.setBackground(Color.WHITE);
+
+    card.setBorder(
+            BorderFactory.createEmptyBorder(
+                    20,
+                    20,
+                    20,
+                    20));
+
+    JLabel lblTitle =
+            new JLabel(title);
+
+    lblTitle.setFont(
+            new Font(
+                    "Segoe UI",
+                    Font.BOLD,
+                    16));
+
+    JLabel lblValue =
+            new JLabel(value);
+
+    lblValue.setFont(
+            new Font(
+                    "Segoe UI",
+                    Font.BOLD,
+                    24));
+
+    lblValue.setForeground(
+            Theme.PRIMARY_GREEN);
+
+    card.add(lblTitle, BorderLayout.NORTH);
+    card.add(lblValue, BorderLayout.CENTER);
+
+    return card;
 }
 }

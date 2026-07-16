@@ -8,7 +8,7 @@ import java.util.List;
 public class InventoryDAO {
 
     // CREATE
-    public boolean addInventoryItem {
+    public boolean addItem(Inventory item) {
 
         String sql = """
                 INSERT INTO Inventory
@@ -180,4 +180,52 @@ public class InventoryDAO {
 
         return false;
     }
+    public boolean updateItem(Inventory item) {
+
+    String sql = """
+            UPDATE Inventory
+            SET
+            MedicineName=?,
+            Quantity=?,
+            UnitPrice=?,
+            ExpiryDate=?,
+            Supplier=?
+            WHERE ItemID=?
+            """;
+
+    try (
+            Connection conn =
+                    DatabaseConnection.getConnection();
+
+            PreparedStatement ps =
+                    conn.prepareStatement(sql)
+    ) {
+
+        ps.setString(1,
+                item.getMedicineName());
+
+        ps.setInt(2,
+                item.getQuantity());
+
+        ps.setBigDecimal(3,
+                item.getUnitPrice());
+
+        ps.setDate(4,
+                Date.valueOf(
+                        item.getExpiryDate()));
+
+        ps.setString(5,
+                item.getSupplier());
+
+        ps.setInt(6,
+                item.getItemId());
+
+        return ps.executeUpdate() > 0;
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return false;
+}
 }

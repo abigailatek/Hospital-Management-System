@@ -494,13 +494,13 @@ public class AdminDashboardScreen extends JPanel {
                         "📈 Recent Activity"));
 
         panel.add(Box.createVerticalStrut(20));
-        panel.add(new JLabel("🩺 New patient registered"));
+        panel.add(new JLabel(" New patient registered"));
         panel.add(Box.createVerticalStrut(10));
-        panel.add(new JLabel("📅 Appointment scheduled"));
+        panel.add(new JLabel(" Appointment scheduled"));
         panel.add(Box.createVerticalStrut(10));
-        panel.add(new JLabel("💰 Payment received"));
+        panel.add(new JLabel(" Payment received"));
         panel.add(Box.createVerticalStrut(10));
-        panel.add(new JLabel("🧪 Lab result uploaded"));
+        panel.add(new JLabel(" Lab result uploaded"));
 
         return panel;
     }

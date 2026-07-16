@@ -3,6 +3,7 @@ package com.hms.dao;
 import com.hms.database.DatabaseConnection;
 import com.hms.models.Payment;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -144,4 +145,30 @@ public class PaymentDAO {
 
         return payment;
     }
+        public BigDecimal getTotalRevenue() {
+
+    String sql =
+            "SELECT ISNULL(SUM(Amount),0) FROM Payments";
+
+    try (
+            Connection conn =
+                    DatabaseConnection.getConnection();
+
+            PreparedStatement ps =
+                    conn.prepareStatement(sql);
+
+            ResultSet rs =
+                    ps.executeQuery()
+    ) {
+
+        if (rs.next()) {
+            return rs.getBigDecimal(1);
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return BigDecimal.ZERO;
+}
 }

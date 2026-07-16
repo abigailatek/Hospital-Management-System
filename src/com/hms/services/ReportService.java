@@ -1,6 +1,12 @@
 package com.hms.services;
 
 import com.hms.dao.ReportDAO;
+import com.hms.dao.PatientDAO;
+import com.hms.dao.DoctorDAO;
+import com.hms.dao.AppointmentDAO;
+import com.hms.dao.LabTestDAO;
+import com.hms.dao.PaymentDAO;
+import java.math.BigDecimal;
 
 import javax.swing.table.DefaultTableModel;
 
@@ -47,4 +53,24 @@ public class ReportService {
         return dao.getReport(
                 "SELECT * FROM LabTests ORDER BY TestID");
     }
+      
+public int getPatientCount() {
+    return new PatientDAO().getPatientCount();
+}
+
+public int getDoctorCount() {
+    return new DoctorDAO().getDoctorCount();
+}
+
+public int getAppointmentCount() {
+    return new AppointmentDAO().getAppointmentCount();
+}
+
+public int getLabTestCount() {
+    return new LabTestDAO().getLabTestCount();
+}
+
+public BigDecimal getTotalRevenue() {
+    return new PaymentDAO().getTotalRevenue();
+}
 }
