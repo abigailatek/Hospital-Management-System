@@ -1,6 +1,6 @@
 package com.hms.ui;
  import com.hms.Dashboard;
- import com.hms.DoctorDashboard;
+ import com.hms.models.User;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -28,11 +28,11 @@ public void initialize() {
     tfUsername.setBackground(Color.WHITE);
     tfUsername.setBorder(BorderFactory.createLineBorder(new Color(245,245,220),2));
 
-    JLabel lblRole = new JLabel("Role");
-    lblRole.setFont(mainFont);
-    lblRole.setForeground(Color.WHITE);
+    JLabel lblSwitchUser = new JLabel("SwitchUser");
+    lblSwitchUser.setFont(mainFont);
+    lblSwitchUser.setForeground(Color.WHITE);
 
-    cbRole = new JComboBox<>(new String[]{"Admin", "Doctor","Patient"});
+    cbRole = new JComboBox<>(new String[]{"User","Admin"});
     cbRole.setFont(mainFont);
     cbRole.setBackground(Color.WHITE);
 
@@ -92,7 +92,7 @@ JButton btnForgotPassword = new JButton("Forgot Password?");
     formPanel.add(lblHospitalName);
     formPanel.add(lblUsername);
     formPanel.add(tfUsername);
-    formPanel.add(lblRole);
+    formPanel.add(lblSwitchUser);
     formPanel.add(cbRole);
     formPanel.add(IbPassword);
     formPanel.add(pfPassword);
@@ -123,40 +123,22 @@ User user = getAuthenticatedUser(
     role
 );
 
-           if (user != null) {
-
-    if(role.equals("Admin")){
+          if (user != null) {
 
     Dashboard dashboard = new Dashboard();
     dashboard.setVisible(true);
-
-}
-else if(role.equals("Doctor")){
-
-    DoctorDashboard dashboard = new DoctorDashboard();
-    dashboard.setVisible(true);
-
-}
-else if(role.equals("Patient")){
-
-    PatientScreen screen = new PatientScreen();
-    screen.setVisible(true);
-
-}
-
     dispose();
+
+} else {
+    JOptionPane.showMessageDialog(
+        LoginScreen.this,
+        "Username or Password Invalid",
+        "Try again",
+        JOptionPane.ERROR_MESSAGE
+    );
 }
-            else{
-                JOptionPane.showMessageDialog(LoginScreen.this,
-                    "Email or Password Invalid",
-                    "Try again",
-                    JOptionPane.ERROR_MESSAGE
-                );
-            }
-        }
-
-
-    });
+}
+});
 
     JButton btnClear = new JButton("Clear");
     btnClear.setFont(mainFont);
@@ -217,25 +199,31 @@ private User getAuthenticatedUser(String username,
     try{
         Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
         //Connected to database successfully........
-        String sql = "SELECT * FROM users WHERE username=? AND email=? AND password=? AND role=?";
+        String sql = "SELECT * FROM Users WHERE Username=? AND PasswordHash=? AND RoleID=?";
         PreparedStatement preparedStatement = conn.prepareStatement(sql);
         preparedStatement.setString(1,username);
-        preparedStatement.setString(3,password);
-        preparedStatement.setString(4, role);
-        
+        preparedStatement.setString(2,password);
+        int roleId;
+
+         if (role.equals("Admin")) {
+    roleId = 1;
+         } else {
+         roleId = 2;
+                }
+
+        preparedStatement.setInt(3, roleId);
+         
+
         ResultSet resultSet = preparedStatement.executeQuery();
         if (resultSet.next()) {
-            user = new User();
-            user.name = resultSet.getString("name");
-            user.email = resultSet.getString("email");
-            user.phone = resultSet.getString("phone");
-            user.address = resultSet.getString("address");
-            user.password = resultSet.getString("password");
+           user = new User();
+           user.setUsername(resultSet.getString("Username"));
+           user.setPasswordHash(resultSet.getString("PasswordHash"));
         }
         preparedStatement.close();
         conn.close();
     }catch(Exception e){
-        System.out.println("Database connection failed!");
+        e.printStackTrace();
     }
 
 
